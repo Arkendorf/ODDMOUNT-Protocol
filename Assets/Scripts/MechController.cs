@@ -15,15 +15,8 @@ public class MechController : MonoBehaviour
             mech = GetComponent<Rigidbody>();
     }
 
-    private void OnEnable()
+    public void Turn(Vector2 input)
     {
-        // Attach callbacks to input actions
-
-    }
-
-    private void OnDisable()
-    {
-        // Detach callbacks to input actions
     }
 
     public void Jump(InputAction.CallbackContext context) { Jump(); }

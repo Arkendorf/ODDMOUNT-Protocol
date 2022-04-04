@@ -145,7 +145,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionAssets:
   - {fileID: -944628639613478452, guid: 0ca04523b489a074892106413c39e350, type: 3}
-  - {fileID: -944628639613478452, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
 --- !u!1 &4877793295564599453
 GameObject:
   m_ObjectHideFlags: 0

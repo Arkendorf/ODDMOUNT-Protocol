@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 6286607713202424552}
   - component: {fileID: 4312573021424740935}
   - component: {fileID: 6793076892604499740}
+  - component: {fileID: 8457168319156977563}
   m_Layer: 0
   m_Name: Mech
   m_TagString: Untagged
@@ -252,11 +253,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionAsset: {fileID: -944628639613478452, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  LeftSecondaryLocomotionMapName: Mech LeftHand Secondary Locomotion
-  RightSecondaryLocomotionMapName: Mech RightHand Secondary Locomotion
-  turnActionName: Turn
-  jumpActionName: Jump
-  boostActionName: Boost
+  turn: {fileID: 2863324542491878515, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  jump: {fileID: 7457462953141783662, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  boost: {fileID: 4292185797715868729, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+--- !u!114 &8457168319156977563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6286607713202424554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8443da585bc9a504d811fde4449084f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionAsset: {fileID: -944628639613478452, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  turn: {fileID: 8426537494302437966, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  jump: {fileID: 7955073920718686220, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  boost: {fileID: -1325077760585784933, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
 --- !u!1 &6286607713340587230
 GameObject:
   m_ObjectHideFlags: 0

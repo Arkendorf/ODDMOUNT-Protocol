@@ -9,16 +9,19 @@ public class MechPlayerInput : MonoBehaviour
     [Tooltip("The action asset used for mech actions in this project")]
     public InputActionAsset actionAsset;
     [Header("Secondary Locomotion")]
-    public string LeftSecondaryLocomotionMapName;
-    public string RightSecondaryLocomotionMapName;
-    [Space()]
-    public string turnActionName;
-    public string jumpActionName;
-    public string boostActionName;
+    public InputActionReference turn;
+    public InputActionReference jump;
+    public InputActionReference boost;
 
     // Mech controller to attach callbacks to
     private MechController mechController;
-    
+
+    private void Update()
+    {
+        // Update secondary locomotion
+        if (turn.action.enabled)
+            mechController.Turn(turn.action.ReadValue<Vector2>());
+    }
 
     private void OnEnable()
     {
@@ -26,23 +29,11 @@ public class MechPlayerInput : MonoBehaviour
         mechController = GetComponent<MechController>();
 
         // Attach callbacks for secondary locomotion
-        AttachSecondaryLocomotion(actionAsset.FindActionMap(LeftSecondaryLocomotionMapName));
-        AttachSecondaryLocomotion(actionAsset.FindActionMap(RightSecondaryLocomotionMapName));
+        jump.action.performed += mechController.Jump;
     }
     private void OnDisable()
     {
         // Detach callbacks for secondary locomotion
-        DetachSecondaryLocomotion(actionAsset.FindActionMap(LeftSecondaryLocomotionMapName));
-        DetachSecondaryLocomotion(actionAsset.FindActionMap(RightSecondaryLocomotionMapName));
-    }
-
-    private void AttachSecondaryLocomotion(InputActionMap map)
-    {
-        map.FindAction(jumpActionName).performed += mechController.Jump;
-    }
-
-    private void DetachSecondaryLocomotion(InputActionMap map)
-    {
-        map.FindAction(jumpActionName).performed -= mechController.Jump;
+        jump.action.performed -= mechController.Jump;
     }
 }
