@@ -9,16 +9,23 @@ public class RigidbodyController : MonoBehaviour
     [Tooltip("Transform to attempt to match")]
     public Transform target;
     [Space]
-    public float maxForce;
+    public bool alignX = true;
+    public bool alignY = true;
+    public bool alignZ = true;
+    public float moveSpeed = 1000;
+    public float moveDamping = 50;
+    public float maxForce = Mathf.Infinity;
     [Space]
-    public float alignmentSpeed;
-    public float alignmentDamping;
-    public float maxTorque;
-    public float maxAngularVelocity;
+    public bool alignForward = true;
+    public bool alignUp = true;
+    public bool alignRight = true;
+    public float rotateSpeed = 1;
+    public float rotateDamping = 5;
+    public float maxTorque = Mathf.Infinity;
+    public float maxAngularVelocity = 7;
     [Space]
-    public bool correctGravity;
     [Range(0, 1)]
-    public float correctionPercent = 1;
+    public float gravityResistance = 0;
 
     private new Rigidbody rigidbody;
 
@@ -50,12 +57,33 @@ public class RigidbodyController : MonoBehaviour
 
     public void CorrectPosition()
     {
-        Vector3 force = Vector3.zero;
+        // damping prevents overshooting the target position
+        Vector3 force = -moveDamping * rigidbody.velocity;
+
+        Vector3 delta = target.position - transform.position;
+
+        if (!alignX)
+        {
+            delta.x = 0;
+            force.x = 0; // Don't damp unaligned axes
+        }
+        if (!alignY)
+        {
+            delta.y = 0;
+            force.y = 0;
+        }        
+        if (!alignZ)
+        {
+            delta.z = 0;
+            force.z = 0;
+        }         
+
+        force += delta * moveSpeed;
 
         // Correct against gravity
-        if (correctGravity && rigidbody.useGravity)
+        if (rigidbody.useGravity)
         {
-            force -= rigidbody.mass * Physics.gravity * correctionPercent;
+            force -= rigidbody.mass * Physics.gravity * gravityResistance;
         }
 
         // Cap force
@@ -69,13 +97,16 @@ public class RigidbodyController : MonoBehaviour
 
     public void CorrectRotation()
     {
-        // alignmentDamping prevents overshooting the target rotation
-        Vector3 torque = -alignmentDamping * rigidbody.angularVelocity;
+        // damping prevents overshooting the target rotation
+        Vector3 torque = -rotateDamping * rigidbody.angularVelocity;
 
         // Align directions
-        torque += AlignVectors(transform.forward, target.forward);
-        torque += AlignVectors(transform.up, target.up);
-        torque += AlignVectors(transform.right, target.right);
+        if (alignForward)
+            torque += AlignVectors(transform.forward, target.forward);
+        if (alignUp)
+            torque += AlignVectors(transform.up, target.up);
+        if (alignRight)
+            torque += AlignVectors(transform.right, target.right);
 
         // Cap torque
         if (torque.sqrMagnitude > maxTorque * maxTorque)
@@ -92,6 +123,6 @@ public class RigidbodyController : MonoBehaviour
         // Align y
         Quaternion delta = Quaternion.FromToRotation(current, goal);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
-        return axis.normalized * angle * alignmentSpeed;
+        return axis.normalized * angle * rotateSpeed;
     }
 }
