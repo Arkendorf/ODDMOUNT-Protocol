@@ -24,6 +24,7 @@ public class InputDevice : MonoBehaviour
     private Transform modelParent;
     private Vector3 modelLocalPosition;
     private Quaternion modelLocalRotation;
+    private Vector3 modelLocalScale;
 
     private void Start()
     {
@@ -79,11 +80,12 @@ public class InputDevice : MonoBehaviour
             // Save parent, position, and rotation before overriding them
             modelParent = controller.model.parent;
             modelLocalPosition = controller.model.localPosition;
-            modelLocalRotation = controller.model.localRotation;           
+            modelLocalRotation = controller.model.localRotation;
+            modelLocalScale = controller.model.localScale;
 
             // If the interactable has an attach transform, get the relevant data
-            Vector3 attachPosition = Vector3.zero;
-            Quaternion attachRotation = Quaternion.identity;
+            Vector3 attachPosition = interactable.transform.position;
+            Quaternion attachRotation = interactable.transform.rotation;
             if (interactable.attachTransform)
             {
                 attachPosition = interactable.attachTransform.position;
@@ -128,6 +130,7 @@ public class InputDevice : MonoBehaviour
             controller.model.SetParent(modelParent);
             controller.model.localPosition = modelLocalPosition;
             controller.model.localRotation = modelLocalRotation;
+            controller.model.localScale = modelLocalScale;
         }
 
         // Clear values

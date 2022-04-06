@@ -136,6 +136,62 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Mech LeftHand Primary Locomotion",
+            "id": "64773113-8632-49d6-ba28-05e53108f6b3",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "fe575f94-0495-4533-b4e1-5ce7e31f6d64",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c44ec8c3-aea0-4c9b-8764-f3ce5e9f7d7d",
+                    "path": "<XRController>{LeftHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Mech RightHand Primary Locomotion",
+            "id": "ca6ea781-750f-4d97-9016-4864ea068953",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "63f86113-81f6-46ee-88f1-611ee34f6357",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "38bb1c88-93b9-41ec-aa6f-946f87300071",
+                    "path": "<XRController>{RightHand}/primary2DAxis",
+                    "interactions": "",
+                    "processors": "StickDeadzone",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
