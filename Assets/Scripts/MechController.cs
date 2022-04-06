@@ -10,12 +10,8 @@ public class MechController : MonoBehaviour
     private RigidbodyController rigidbodyController;
     public Transform target;
     [Header("Move")]
-    [Tooltip("How fast the mech should move in meters per second (which may be limited by physics)")]
-    public float moveSpeed = 15;
-    [Tooltip("How quickly to reset movement")]
-    public float moveReset = 10;
-    [Tooltip("Maximum distance difference between desired mech position and current mech position")]
-    public float maxMove = .5f;
+    [Tooltip("Force to apply to move the mech")]
+    public float moveForce = 6000;
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneMoveDamping = .5f;
@@ -37,9 +33,11 @@ public class MechController : MonoBehaviour
     [Range(0, 1)]
     public float gravityResistance = .8f;
 
+    // Whether the mech is receiving the move input or not
+    private bool moving;
+    private Vector2 moveInput;
     // Whether the mech is airborne or not
     private bool airborne;
-
 
     // Start is called before the first frame update
     void Start()
@@ -66,38 +64,36 @@ public class MechController : MonoBehaviour
         rigidbodyController.CollisionExit -= CollisionExit;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
-        // Return target rotation to mech rotation
-        //float deltaRotation = Vector3.SignedAngle(mech.transform.forward, target.forward, Vector3.up);
-        //if (deltaRotation > 0)
-        //    target.Rotate(Vector3.up, Mathf.Min(deltaRotation, turnReset * Time.deltaTime));
-        //else
-        //    target.Rotate(Vector3.up, Mathf.Max(deltaRotation, -turnReset * Time.deltaTime));
+        // Move the mech
+        if (moving)
+        {
+            Vector3 force = mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y) * moveForce;
+            if (airborne)
+                force *= airborneMoveDamping;
 
-        // Return target position to mech position
-        Vector3 deltaPosition = mech.transform.position - target.position;
-        target.position += deltaPosition.normalized * Mathf.Min(deltaPosition.magnitude, moveReset * Time.deltaTime);
-        // Always set target y to match mech
-        target.position = new Vector3(target.position.x, mech.transform.position.y, target.position.z);
+            mech.AddForce(force);
+        }    
+    }
+
+    public void StartMove()
+    {
+        moving = true;
     }
 
     public void Move(Vector2 input)
     {
-        // Get move amount based on input
-        Vector3 offset = mech.transform.rotation * new Vector3(input.x, 0, input.y) * moveSpeed * Time.deltaTime;
-        if (airborne)
-            offset *= airborneMoveDamping;
+        moveInput = input;
+    }
 
-        // Set target position
-        target.position += offset;
+    public void StopMove()
+    {
+        moving = false;
+    }
 
-        // Cap difference between mech and goal position by maxMove
-        Vector3 delta = target.position - mech.transform.position;
-        if (delta.sqrMagnitude > maxMove * maxMove)
-        {
-            target.position = mech.transform.position + delta.normalized * maxMove;
-        }
+    public void StartTurn()
+    {
     }
 
     // Update desired mech angle
@@ -123,6 +119,12 @@ public class MechController : MonoBehaviour
         }
     }
 
+    public void StopTurn()
+    {
+        // Reset goal rotation when turn ends
+        target.rotation = mech.transform.rotation;
+    }
+
     public void Jump()
     {
         // Don't allow jumps while airborne
@@ -130,20 +132,27 @@ public class MechController : MonoBehaviour
         {
             mech.AddForce(mech.transform.rotation * jumpForce);
             // Mark as airborne
-            CollisionExit();
+            airborne = true;
+        }           
+    }
+
+    public void CollisionEnter(Collision collision)
+    {
+        // If colliding with the ground, no longer airborne
+        if (collision.gameObject.layer == 6)
+        {
+            airborne = false;
+            rigidbodyController.gravityResistance = gravityResistance;
+        }    
+    }
+
+    public void CollisionExit(Collision collision)
+    {
+        // If colliding with the ground, no longer airborne
+        if (collision.gameObject.layer == 6)
+        {
+            airborne = true;
+            rigidbodyController.gravityResistance = 0;
         }
-                   
-    }
-
-    public void CollisionEnter()
-    {
-        airborne = false;
-        rigidbodyController.gravityResistance = gravityResistance;
-    }
-
-    public void CollisionExit()
-    {
-        airborne = true;
-        rigidbodyController.gravityResistance = 0;
     }
 }

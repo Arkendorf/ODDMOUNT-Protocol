@@ -39,21 +39,21 @@ public class MechPlayerInput : MonoBehaviour
         mechController = GetComponent<MechController>();
 
         // Attach callbacks for primary locomotion
-        move.action.performed += context => { movePerformed = true; };
-        move.action.canceled += context => { movePerformed = false; };
+        move.action.performed += context => { mechController.StartMove(); movePerformed = true; };
+        move.action.canceled += context => { mechController.StopMove(); movePerformed = false; };
         // Attach callbacks for secondary locomotion
-        turn.action.performed += context => { turnPerformed = true; };
-        turn.action.canceled += context => { turnPerformed = false; };
+        turn.action.performed += context => { mechController.StartTurn(); turnPerformed = true; };
+        turn.action.canceled += context => { mechController.StopTurn(); turnPerformed = false; };
         jump.action.performed += context => { mechController.Jump(); };
     }
     private void OnDisable()
     {
         // Detach callbacks for primary locomotion
-        move.action.performed -= context => { movePerformed = true; };
-        move.action.canceled -= context => { movePerformed = false; };
+        move.action.performed -= context => { mechController.StartMove(); movePerformed = true; };
+        move.action.canceled -= context => { mechController.StopMove(); movePerformed = false; };
         // Detach callbacks for secondary locomotion
-        turn.action.performed -= context => { turnPerformed = true; };
-        turn.action.canceled -= context => { turnPerformed = false; };
+        turn.action.performed -= context => { mechController.StartTurn(); turnPerformed = true; };
+        turn.action.canceled -= context => { mechController.StartTurn(); turnPerformed = false; };
         jump.action.performed -= context => { mechController.Jump(); };
     }
 }

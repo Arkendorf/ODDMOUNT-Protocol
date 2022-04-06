@@ -201,9 +201,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 76401018520369292}
-  alignX: 1
+  alignX: 0
   alignY: 0
-  alignZ: 1
+  alignZ: 0
   moveSpeed: 200000
   moveDamping: 12000
   maxForce: Infinity
@@ -426,12 +426,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 6286607712535649114}
   target: {fileID: 76401018520369292}
-  moveSpeed: 15
-  stopSpeed: 10
-  maxMove: 0.5
-  airborneMoveDamping: 0.5
+  moveForce: 5000
+  airborneMoveDamping: 0.2
   jumpForce: {x: 0, y: 100000, z: 0}
   turnSpeed: 90
+  turnReset: 60
   maxTurn: 90
   airborneTurnDamping: 0.5
   gravityResistance: 0.8

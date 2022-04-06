@@ -29,7 +29,7 @@ public class RigidbodyController : MonoBehaviour
 
     private new Rigidbody rigidbody;
 
-    public delegate void CollisionEvents();
+    public delegate void CollisionEvents(Collision collision);
     public event CollisionEvents CollisionEnter;
     public event CollisionEvents CollisionExit;
 
@@ -47,12 +47,12 @@ public class RigidbodyController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        CollisionEnter?.Invoke();
+        CollisionEnter?.Invoke(collision);
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        CollisionExit?.Invoke();
+        CollisionExit?.Invoke(collision);
     }
 
     public void CorrectPosition()
