@@ -18,8 +18,6 @@ public class MechController : MonoBehaviour
     [Header("Turn Properties")]
     [Tooltip("How fast the mech should turn, in degrees per second (which may be limited by physics)")]
     public float turnSpeed = 90;
-    [Tooltip("How quickly to reset rotation")]
-    public float turnReset = 60;
     [Tooltip("Maximum angle difference between desired mech angle and current mech angle")]
     public float maxTurn = 90;
     [Tooltip("Percentage of normal turn speed while airborne")]
@@ -31,6 +29,10 @@ public class MechController : MonoBehaviour
     [Header("Boost Properties")]
     [Tooltip("Force to apply per-frame while boosting (in the boost direction)")]
     public Vector3 boostForce;
+    [Tooltip("Mech's maximum fuel")]
+    public float maxFuel = 100;
+    [Tooltip("Fuel cost per application of boost force")]
+    public float boostCost = .1f;
     [Header("Other Properties")]
     [Tooltip("Percent of gravity to resist")]
     [Range(0, 1)]
@@ -44,12 +46,17 @@ public class MechController : MonoBehaviour
     private Vector3 directionalBoostForce;
     // Whether the mech is airborne or not
     private bool airborne;
+    
+    // Mech's current amount of fuel
+    private float fuel;
 
     // Start is called before the first frame update
     void Start()
     {
         if (!mech)
-            mech = GetComponent<Rigidbody>();  
+            mech = GetComponent<Rigidbody>();
+
+        fuel = maxFuel;
     }
 
     private void OnEnable()
@@ -70,6 +77,26 @@ public class MechController : MonoBehaviour
         rigidbodyController.CollisionExit -= CollisionExit;
     }
 
+    //private void Update()
+    //{
+    //    if (mech.transform.eulerAngles.y < 45)
+    //    {
+    //        StartTurn();
+    //        Turn(new Vector2(1, 0));
+    //    }
+    //    else
+    //    {
+    //        if (!boosting)
+    //        {
+    //            StartBoost();
+    //        }
+    //        else
+    //        {
+    //            Boost();
+    //        }
+    //    }
+    //}
+
     private void FixedUpdate()
     {
         // Move the mech
@@ -83,15 +110,18 @@ public class MechController : MonoBehaviour
         }
 
         // Boost the mech
-        if (boosting)
+        if (boosting && fuel > 0)
         {
             mech.AddForce(directionalBoostForce);
+            // Consume fuel
+            fuel = Mathf.Max(0, fuel - boostCost);
         }
     }
 
     public void StartMove()
     {
         moving = true;
+        Debug.Log("Starting move");
     }
 
     public void Move(Vector2 input)
@@ -102,6 +132,8 @@ public class MechController : MonoBehaviour
     public void StopMove()
     {
         moving = false;
+        Debug.Log("Stopping move");
+
     }
 
     public void StartTurn()
@@ -159,6 +191,7 @@ public class MechController : MonoBehaviour
         {
             directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
         }
+        Debug.Log("Starting boost");
     }
 
     public void Boost()
@@ -175,9 +208,11 @@ public class MechController : MonoBehaviour
         {
             rigidbodyController.gravityResistance = gravityResistance;
         }
+
+        Debug.Log("Stopping boost");
     }
 
-    public void CollisionEnter(Collision collision)
+    private void CollisionEnter(Collision collision)
     {
         // If colliding with the ground, no longer airborne
         if (collision.gameObject.layer == 6)
@@ -187,7 +222,7 @@ public class MechController : MonoBehaviour
         }    
     }
 
-    public void CollisionExit(Collision collision)
+    private void CollisionExit(Collision collision)
     {
         // If colliding with the ground, no longer airborne
         if (collision.gameObject.layer == 6)
@@ -195,5 +230,11 @@ public class MechController : MonoBehaviour
             airborne = true;
             rigidbodyController.gravityResistance = 0;
         }
+    }
+
+    // Add to mech's current fuel levels
+    public void AddFuel(float amount)
+    {
+        fuel = Mathf.Min(maxFuel, fuel + amount);
     }
 }

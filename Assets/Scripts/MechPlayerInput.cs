@@ -32,6 +32,8 @@ public class MechPlayerInput : MonoBehaviour
         // Update secondary locomotion
         if (turnPerformed)
             mechController.Turn(turn.action.ReadValue<Vector2>());
+        if (boostPerformed)
+            mechController.Boost();
     }
 
     private void OnEnable()
