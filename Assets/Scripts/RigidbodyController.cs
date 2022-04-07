@@ -28,6 +28,7 @@ public class RigidbodyController : MonoBehaviour
     public float gravityResistance = 0;
 
     private new Rigidbody rigidbody;
+    private float totalMass;
 
     public delegate void CollisionEvents(Collision collision);
     public event CollisionEvents CollisionEnter;
@@ -37,6 +38,8 @@ public class RigidbodyController : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.maxAngularVelocity = maxAngularVelocity;
+
+        totalMass = GetTotalMass();
     }
 
     private void FixedUpdate()
@@ -83,7 +86,7 @@ public class RigidbodyController : MonoBehaviour
         // Correct against gravity
         if (rigidbody.useGravity)
         {
-            force -= rigidbody.mass * Physics.gravity * gravityResistance;
+            force -= totalMass * Physics.gravity * gravityResistance;
         }
 
         // Cap force
@@ -124,5 +127,58 @@ public class RigidbodyController : MonoBehaviour
         Quaternion delta = Quaternion.FromToRotation(current, goal);
         delta.ToAngleAxis(out float angle, out Vector3 axis);
         return axis.normalized * angle * rotateSpeed;
+    }
+
+    // Returns aggregate mass of this rigidbody and all rigidbodies attached to thos one via joints (as long as joints are in siblings or descendents)
+    private float GetTotalMass()
+    {
+        float totalMass = 0;
+        Dictionary<Rigidbody, bool> seen = new Dictionary<Rigidbody, bool>();
+
+        if (transform.parent)
+        {
+            for (int i = 0; i < transform.parent.childCount; i++)
+            {
+                Rigidbody childRigidbody = transform.parent.GetChild(i).GetComponent<Rigidbody>();
+                if (childRigidbody)
+                {
+                    totalMass += GetTotalMassRecursive(childRigidbody, seen);
+                }
+            }
+        }
+        else
+        {
+            totalMass += GetTotalMassRecursive(rigidbody, seen);
+        } 
+
+        return totalMass;
+    }
+
+    // Returns aggregate mass of the given rigidbody and all rigidbodies attached to given one via joints (as long as joints are in descendents)
+    private float GetTotalMassRecursive(Rigidbody rigidbody, Dictionary<Rigidbody, bool> seen)
+    {
+        float totalMass = 0;
+
+        if (!seen.ContainsKey(rigidbody))
+        {
+            totalMass += rigidbody.mass;
+            seen[rigidbody] = true;
+
+            Joint[] joints = rigidbody.GetComponentsInChildren<Joint>();
+            foreach (Joint joint in joints)
+            {
+                Rigidbody jointRigidbody = joint.GetComponent<Rigidbody>();
+                if (jointRigidbody == rigidbody)
+                {
+                    totalMass += GetTotalMassRecursive(joint.connectedBody, seen);
+                }
+                if (joint.connectedBody == rigidbody)
+                {
+                    totalMass += GetTotalMassRecursive(jointRigidbody, seen);
+                }
+            }
+        }       
+
+        return totalMass;
     }
 }

@@ -428,12 +428,13 @@ MonoBehaviour:
   target: {fileID: 76401018520369292}
   moveForce: 5000
   airborneMoveDamping: 0.2
-  jumpForce: {x: 0, y: 100000, z: 0}
   turnSpeed: 90
   turnReset: 60
   maxTurn: 90
   airborneTurnDamping: 0.5
-  gravityResistance: 0.8
+  jumpForce: {x: 0, y: 100000, z: 0}
+  boostForce: {x: 0, y: 1000, z: 3000}
+  gravityResistance: 0.4
 --- !u!114 &6793076892604499740
 MonoBehaviour:
   m_ObjectHideFlags: 0

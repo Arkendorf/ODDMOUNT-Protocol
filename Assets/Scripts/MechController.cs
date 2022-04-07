@@ -15,9 +15,6 @@ public class MechController : MonoBehaviour
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneMoveDamping = .5f;
-    [Header("Jump Properties")]
-    [Tooltip("Force to apply when the jump button is pressed")]
-    public Vector3 jumpForce;
     [Header("Turn Properties")]
     [Tooltip("How fast the mech should turn, in degrees per second (which may be limited by physics)")]
     public float turnSpeed = 90;
@@ -28,6 +25,12 @@ public class MechController : MonoBehaviour
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneTurnDamping = .5f;
+    [Header("Jump Properties")]
+    [Tooltip("Force to apply when the jump button is pressed")]
+    public Vector3 jumpForce;
+    [Header("Boost Properties")]
+    [Tooltip("Force to apply per-frame while boosting (in the boost direction)")]
+    public Vector3 boostForce;
     [Header("Other Properties")]
     [Tooltip("Percent of gravity to resist")]
     [Range(0, 1)]
@@ -36,6 +39,9 @@ public class MechController : MonoBehaviour
     // Whether the mech is receiving the move input or not
     private bool moving;
     private Vector2 moveInput;
+    // Whether the mech is boosting
+    private bool boosting;
+    private Vector3 directionalBoostForce;
     // Whether the mech is airborne or not
     private bool airborne;
 
@@ -74,7 +80,13 @@ public class MechController : MonoBehaviour
                 force *= airborneMoveDamping;
 
             mech.AddForce(force);
-        }    
+        }
+
+        // Boost the mech
+        if (boosting)
+        {
+            mech.AddForce(directionalBoostForce);
+        }
     }
 
     public void StartMove()
@@ -134,6 +146,35 @@ public class MechController : MonoBehaviour
             // Mark as airborne
             airborne = true;
         }           
+    }
+
+    public void StartBoost()
+    {
+        // Mark that boosting has started
+        boosting = true;
+
+        // Calculate boost force
+        directionalBoostForce = mech.transform.rotation * boostForce;
+        if (moving)
+        {
+            directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
+        }
+    }
+
+    public void Boost()
+    {
+        // Counteract gravity while boosting
+        rigidbodyController.gravityResistance = 1;
+    }
+
+    public void StopBoost()
+    {
+        boosting = false;
+
+        if (!airborne)
+        {
+            rigidbodyController.gravityResistance = gravityResistance;
+        }
     }
 
     public void CollisionEnter(Collision collision)

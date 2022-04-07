@@ -21,6 +21,7 @@ public class MechPlayerInput : MonoBehaviour
     // Action states
     private bool movePerformed;
     private bool turnPerformed;
+    private bool boostPerformed;
 
     private void Update()
     {
@@ -45,6 +46,8 @@ public class MechPlayerInput : MonoBehaviour
         turn.action.performed += context => { mechController.StartTurn(); turnPerformed = true; };
         turn.action.canceled += context => { mechController.StopTurn(); turnPerformed = false; };
         jump.action.performed += context => { mechController.Jump(); };
+        boost.action.performed += context => { mechController.StartBoost(); boostPerformed = true; };
+        boost.action.canceled += context => { mechController.StopBoost(); boostPerformed = false; };
     }
     private void OnDisable()
     {
@@ -55,5 +58,7 @@ public class MechPlayerInput : MonoBehaviour
         turn.action.performed -= context => { mechController.StartTurn(); turnPerformed = true; };
         turn.action.canceled -= context => { mechController.StartTurn(); turnPerformed = false; };
         jump.action.performed -= context => { mechController.Jump(); };
+        boost.action.performed -= context => { mechController.StartBoost(); boostPerformed = true; };
+        boost.action.canceled -= context => { mechController.StopBoost(); boostPerformed = false; };
     }
 }
