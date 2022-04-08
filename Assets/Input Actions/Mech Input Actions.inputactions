@@ -2,7 +2,103 @@
     "name": "Mech Input Actions",
     "maps": [
         {
-            "name": "Mech LeftHand Secondary Locomotion",
+            "name": "Mech LeftHand Locomotion",
+            "id": "56d336be-f290-4396-8054-dd5b337b51d1",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "198e6484-ae14-44fa-ae6b-eb5385bee239",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Boost",
+                    "type": "Button",
+                    "id": "722ece63-3a94-4709-98ce-0d018ac55897",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f7401067-d119-44cc-a08f-6f24ee8cbe04",
+                    "path": "<XRController>{LeftHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aba43e16-4211-4b0c-a621-36a8bba7f42b",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Mech RightHand Locomotion",
+            "id": "858dd0e5-f935-4696-8403-4d0f196bd7b7",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "88c8eb35-a797-4a00-835a-76413711a9b8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Boost",
+                    "type": "Button",
+                    "id": "3b3ae161-edd6-4c3f-ab9a-2b59e37788cc",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0b955d37-f6e4-4ee8-9f4a-743b85db00ef",
+                    "path": "<XRController>{RightHand}/primaryButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0b1c7eb2-9da3-4c5a-94b9-207d4e1b604e",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "OLD: Mech LeftHand Secondary Locomotion",
             "id": "e02ac021-9f2f-4b87-a1fc-b3bb85d6aa41",
             "actions": [
                 {
@@ -70,7 +166,7 @@
             ]
         },
         {
-            "name": "Mech RightHand Secondary Locomotion",
+            "name": "OLD: Mech RightHand Secondary Locomotion",
             "id": "8e6451c2-b3ad-4374-8678-b0cafce63ba0",
             "actions": [
                 {
@@ -138,7 +234,7 @@
             ]
         },
         {
-            "name": "Mech LeftHand Primary Locomotion",
+            "name": "OLD: Mech LeftHand Primary Locomotion",
             "id": "64773113-8632-49d6-ba28-05e53108f6b3",
             "actions": [
                 {
@@ -166,7 +262,7 @@
             ]
         },
         {
-            "name": "Mech RightHand Primary Locomotion",
+            "name": "OLD: Mech RightHand Primary Locomotion",
             "id": "ca6ea781-750f-4d97-9016-4864ea068953",
             "actions": [
                 {

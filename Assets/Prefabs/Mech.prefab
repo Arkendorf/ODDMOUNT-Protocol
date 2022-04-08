@@ -435,10 +435,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionAsset: {fileID: -944628639613478452, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  move: {fileID: 5271826302671477815, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  turn: {fileID: 2863324542491878515, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  jump: {fileID: 7457462953141783662, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  boost: {fileID: 4292185797715868729, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  jump: {fileID: -3925080792544244785, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  boost: {fileID: 2163699955177206740, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
 --- !u!114 &8457168319156977563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,10 +450,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionAsset: {fileID: -944628639613478452, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  move: {fileID: -4462495520617912461, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  turn: {fileID: 8426537494302437966, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  jump: {fileID: 7955073920718686220, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
-  boost: {fileID: -1325077760585784933, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  jump: {fileID: 1654592414324378313, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
+  boost: {fileID: 6685718133827096844, guid: ba6ca656f3a62b54f9effd16578d85fa, type: 3}
 --- !u!1 &6286607713340587230
 GameObject:
   m_ObjectHideFlags: 0

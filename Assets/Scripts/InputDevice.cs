@@ -15,10 +15,16 @@ public class InputDevice : MonoBehaviour
     [Tooltip("The action map within the above action asset to activate if this control device is grabbed with the right controller")]
     public string rightActionMap;
 
+
     // XR interactable component on this gameobject
     [HideInInspector] public XRGrabInteractable interactable { get; private set; }
     [HideInInspector] public XRBaseController controller { get; private set; }
     private XRDirectInteractor interactor;
+
+    // Transform data;
+    private Transform parent;
+    private Quaternion localRotation;
+    private Vector3 localPosition;
 
     // Model data to store while device is interacted with
     private Transform modelParent;
@@ -31,6 +37,10 @@ public class InputDevice : MonoBehaviour
         // Start actions as disabled
         actionAsset.FindActionMap(leftActionMap).Disable();
         actionAsset.FindActionMap(rightActionMap).Disable();
+
+        parent = transform.parent;
+        localPosition = transform.localPosition;
+        localRotation = transform.localRotation;
     }
 
     private void OnEnable()
@@ -74,6 +84,10 @@ public class InputDevice : MonoBehaviour
         // Get the controller and the interactor interacting with this control device
         interactor = arg.interactorObject.transform.GetComponent<XRDirectInteractor>();
         controller = interactor.xrController;
+
+        transform.parent = parent;
+        transform.localPosition = localPosition;
+        transform.localRotation = localRotation;
 
         if (controller.model)
         {

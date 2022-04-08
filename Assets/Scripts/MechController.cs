@@ -79,26 +79,6 @@ public class MechController : MonoBehaviour
         rigidbodyController.CollisionExit -= CollisionExit;
     }
 
-    //private void Update()
-    //{
-    //    if (mech.transform.eulerAngles.y < 45)
-    //    {
-    //        StartTurn();
-    //        Turn(new Vector2(1, 0));
-    //    }
-    //    else
-    //    {
-    //        if (!boosting)
-    //        {
-    //            StartBoost();
-    //        }
-    //        else
-    //        {
-    //            Boost();
-    //        }
-    //    }
-    //}
-
     private void FixedUpdate()
     {
         // Move the mech
@@ -174,6 +154,7 @@ public class MechController : MonoBehaviour
 
     public void Jump()
     {
+        Debug.Log("Jump");
         // Don't allow jumps while airborne
         if (!airborne)
         {
@@ -185,14 +166,18 @@ public class MechController : MonoBehaviour
 
     public void StartBoost()
     {
-        // Mark that boosting has started
-        boosting = true;
-
-        // Calculate boost force
-        directionalBoostForce = mech.transform.rotation * boostForce;
-        if (moving)
+        Debug.Log("Boost");
+        if (!boosting)
         {
-            directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
+            // Mark that boosting has started
+            boosting = true;
+
+            // Calculate boost force
+            directionalBoostForce = mech.transform.rotation * boostForce;
+            if (moving)
+            {
+                directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
+            }
         }
     }
 
