@@ -39,16 +39,18 @@ public class MechController : MonoBehaviour
     public float gravityResistance = .8f;
 
     // Whether the mech is receiving the move input or not
-    private bool moving;
+    [HideInInspector] public bool moving { get; private set; }
     private Vector2 moveInput;
+    // Whether the mech is turning
+    [HideInInspector] public bool turning { get; private set; }
     // Whether the mech is boosting
-    private bool boosting;
+    [HideInInspector] public bool boosting { get; private set; }
     private Vector3 directionalBoostForce;
     // Whether the mech is airborne or not
-    private bool airborne;
-    
+    [HideInInspector] public bool airborne { get; private set; }
+
     // Mech's current amount of fuel
-    private float fuel;
+    [HideInInspector] public float fuel { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -121,7 +123,6 @@ public class MechController : MonoBehaviour
     public void StartMove()
     {
         moving = true;
-        Debug.Log("Starting move");
     }
 
     public void Move(Vector2 input)
@@ -132,12 +133,12 @@ public class MechController : MonoBehaviour
     public void StopMove()
     {
         moving = false;
-        Debug.Log("Stopping move");
 
     }
 
     public void StartTurn()
     {
+        turning = true;
     }
 
     // Update desired mech angle
@@ -167,6 +168,8 @@ public class MechController : MonoBehaviour
     {
         // Reset goal rotation when turn ends
         target.rotation = mech.transform.rotation;
+
+        turning = false;
     }
 
     public void Jump()
@@ -191,7 +194,6 @@ public class MechController : MonoBehaviour
         {
             directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
         }
-        Debug.Log("Starting boost");
     }
 
     public void Boost()
@@ -208,8 +210,6 @@ public class MechController : MonoBehaviour
         {
             rigidbodyController.gravityResistance = gravityResistance;
         }
-
-        Debug.Log("Stopping boost");
     }
 
     private void CollisionEnter(Collision collision)

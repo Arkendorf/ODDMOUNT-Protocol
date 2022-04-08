@@ -16,8 +16,8 @@ public class InputDevice : MonoBehaviour
     public string rightActionMap;
 
     // XR interactable component on this gameobject
-    private XRGrabInteractable interactable;
-    private XRBaseController controller;
+    [HideInInspector] public XRGrabInteractable interactable { get; private set; }
+    [HideInInspector] public XRBaseController controller { get; private set; }
     private XRDirectInteractor interactor;
 
     // Model data to store while device is interacted with
