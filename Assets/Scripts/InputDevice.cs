@@ -15,6 +15,11 @@ public class InputDevice : MonoBehaviour
     [Tooltip("The action map within the above action asset to activate if this control device is grabbed with the right controller")]
     public string rightActionMap;
 
+    public List<AudioSource> buttonAudio;
+
+    public AudioClip pressClip;
+    public AudioClip releaseClip;
+
 
     // XR interactable component on this gameobject
     [HideInInspector] public XRGrabInteractable interactable { get; private set; }
@@ -54,6 +59,8 @@ public class InputDevice : MonoBehaviour
 
     private void OnDisable()
     {
+        SelectExited();
+
         // Remove callbacks for selected
         interactable.selectEntered.RemoveListener(SelectEntered);
         interactable.selectExited.AddListener(SelectExited);
@@ -114,29 +121,38 @@ public class InputDevice : MonoBehaviour
 
 
         // Activate proper action map depending on which hand is grabbing
+        InputActionMap map;
         if (interactor.CompareTag("Left Hand"))
         {
-            InputActionMap map = actionAsset.FindActionMap(leftActionMap);
-            if (map != null) { map.Enable(); }
+            map = actionAsset.FindActionMap(leftActionMap);    
         }
         else
         {
-            InputActionMap map = actionAsset.FindActionMap(rightActionMap);
-            if (map != null) { map.Enable(); }
-        }    
+            map = actionAsset.FindActionMap(rightActionMap);
+        }
+        if (map != null) { map.Enable(); }
+        AttachAudio(map);
     }
-
     private void SelectExited(SelectExitEventArgs arg)
     {
-        // Activate proper action map depending on which hand is grabbing
+        SelectExited();
+    }
+
+
+    private void SelectExited()
+    {
+        // Deactivate proper action map depending on which hand is grabbing
+        InputActionMap map;
         if (interactor.CompareTag("Left Hand"))
         {
-            actionAsset.FindActionMap(leftActionMap).Disable();
+            map = actionAsset.FindActionMap(leftActionMap);
         }
         else
         {
-            actionAsset.FindActionMap(rightActionMap).Disable();
+            map = actionAsset.FindActionMap(rightActionMap);
         }
+        DetachAudio(map);
+        map.Disable();
 
         if (controller.model)
         {
@@ -150,5 +166,43 @@ public class InputDevice : MonoBehaviour
         // Clear values
         controller = null;
         interactor = null;
+    }
+
+    // Attach audio to buttons
+    private void AttachAudio(InputActionMap map)
+    {
+        int i = 0;
+        foreach (InputAction action in map.actions)
+        {
+            if (action.type == InputActionType.Button)
+            {
+                int button = i;
+                action.performed += context => PlayAudio(button, pressClip);
+                action.canceled += context => PlayAudio(button, releaseClip);
+                i++;
+            }          
+        }
+    }
+
+    private void DetachAudio(InputActionMap map)
+    {
+        int i = 0;
+        foreach (InputAction action in map.actions)
+        {
+            if (action.type == InputActionType.Button)
+            {
+                int button = i;
+                action.performed -= context => PlayAudio(button, pressClip);
+                action.canceled -= context => PlayAudio(button, releaseClip);
+                i++;
+            }
+        }
+    }
+
+    private void PlayAudio(int button, AudioClip clip)
+    {
+        buttonAudio[button].clip = clip;
+        buttonAudio[button].pitch = UnityEngine.Random.Range(0.75f, 1.2f);
+        buttonAudio[button].Play();
     }
 }

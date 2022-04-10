@@ -15,20 +15,26 @@ public class WheelControl : MonoBehaviour
     public InputDevice left;
     [Tooltip("The right input device on the wheel")]
     public InputDevice right;
+    [Tooltip("Sound to play")]
+    public new AudioSource audio;
 
     [Header("Move Properties")]
-    [Header("Maximum angle wheel can be pushed forward")]
+    [Tooltip("Maximum angle wheel can be pushed forward")]
     public float maxXAngle = 30;
-    [Header("Maximum angle wheel can be pulled backward")]
+    [Tooltip("Maximum angle wheel can be pulled backward")]
     public float minXAngle = -30;
-    [Header("Maximum angle wheel can be pushed to the right")]
+    [Tooltip("Maximum angle wheel can be pushed to the right")]
     public float maxZAngle = 30;
-    [Header("Maximum angle wheel can be pushed to the left")]
+    [Tooltip("Maximum angle wheel can be pushed to the left")]
     public float minZAngle = -30;
+    [Tooltip("Deadzone (in degrees) that must be moved for the shaft to move")]
+    public float shaftDeadzone = 5;
 
     [Header("Turn Properties")]
     public float maxWheelAngle = 30;
     public float minWheelAngle = -30;
+    [Tooltip("Deadzone (in degrees) that must be moved for the wheel to move")]
+    public float wheelDeadzone = 5;
 
     [Header("Wheel Properties")]
     public float moveSpeed = 8;
@@ -42,15 +48,18 @@ public class WheelControl : MonoBehaviour
     private Quaternion goalShaftRotation;
     private Quaternion goalWheelRotation;
 
-    //public Transform leftTran;
-    //public Transform rightTran;
+    private Dictionary<int,bool> soundPlayed;
 
     // Start is called before the first frame update
     void Start()
     {
         defaultXAngle = shaft.eulerAngles.x;
+        if (defaultXAngle < 0)
+            defaultXAngle = 0;
         defaultYAngle = shaft.eulerAngles.y;
         defaultZAngle = 0;
+
+        soundPlayed = new Dictionary<int, bool>();
     }
 
     // Update is called once per frame
@@ -80,7 +89,7 @@ public class WheelControl : MonoBehaviour
             // Reset shaft to neutral
             goalShaftRotation = Quaternion.Euler(defaultXAngle, defaultYAngle, defaultZAngle);
             // Reset wheel to neutral
-            goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(transform.right, -shaft.forward), -shaft.forward);
+            goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(transform.right, goalShaftRotation * Vector3.back), goalShaftRotation * Vector3.back);
 
             // Reset mech
             if (mechController)
@@ -89,7 +98,10 @@ public class WheelControl : MonoBehaviour
                     mechController.StopMove();
                 if (mechController.turning)
                     mechController.StopTurn();
-            }          
+            }
+
+            PlaySound(0);
+            AllowSound(0);
 
             reset = true;
         }
@@ -121,14 +133,42 @@ public class WheelControl : MonoBehaviour
 
         // Cap angles
         if (angles.x > maxXAngle)
+        {
             angles.x = maxXAngle;
-        else if (angles.x < minXAngle)
+            PlaySound(1);
+        }
+        else
+            AllowSound(1);
+            
+        if (angles.x < minXAngle)
+        {
             angles.x = minXAngle;
+            PlaySound(2);
+        }
+        else
+            AllowSound(2);
 
         if (angles.z > maxZAngle)
+        {
             angles.z = maxZAngle;
-        else if (angles.z < minZAngle)
+            PlaySound(3);
+        }
+        else
+            AllowSound(3);
+
+        if (angles.z < minZAngle)
+        {
             angles.z = minZAngle;
+            PlaySound(4);
+        }
+        else
+            AllowSound(4);
+
+        // Apply deadzones
+        if ((angles.x > defaultXAngle && angles.x <= defaultXAngle + shaftDeadzone) || (angles.x < defaultXAngle && angles.x >= defaultXAngle - shaftDeadzone))
+            angles.x = defaultXAngle;
+        if ((angles.z > defaultZAngle && angles.z <= defaultZAngle + shaftDeadzone) || (angles.z < defaultZAngle && angles.z >= defaultZAngle - shaftDeadzone))
+            angles.z = defaultZAngle;
 
         // Rotate shaft
         goalShaftRotation = Quaternion.Euler(angles);
@@ -139,19 +179,25 @@ public class WheelControl : MonoBehaviour
             // Create input
             Vector2 input = new Vector2();
             if (angles.z > defaultZAngle)
-                input.x = -(angles.z - defaultZAngle) / (maxZAngle - defaultZAngle);
-            else
-                input.x = (angles.z - defaultZAngle) / (minZAngle - defaultZAngle);
+                input.x = -(angles.z - defaultZAngle - shaftDeadzone) / (maxZAngle - defaultZAngle - shaftDeadzone);
+            else if (angles.z < defaultZAngle)
+                input.x = (angles.z - defaultZAngle + shaftDeadzone) / (minZAngle - defaultZAngle + shaftDeadzone);
 
             if (angles.x > defaultXAngle)
-                input.y = (angles.x - defaultXAngle) / (maxXAngle - defaultXAngle);
-            else
-                input.y = -(angles.x - defaultXAngle) / (minXAngle - defaultXAngle);
+                input.y = (angles.x - defaultXAngle - shaftDeadzone) / (maxXAngle - defaultXAngle - shaftDeadzone);
+            else if(angles.x < defaultXAngle)
+                input.y = -(angles.x - defaultXAngle + shaftDeadzone) / (minXAngle - defaultXAngle + shaftDeadzone);
 
             // Move the mech
-            if (!mechController.moving)
-                mechController.StartMove();
-            mechController.Move(input);
+            if (input.x != 0 || input.y != 0) {
+                if (!mechController.moving)
+                    mechController.StartMove();
+                mechController.Move(input);
+            }
+            else if (mechController.moving)
+            {
+                mechController.StopMove();
+            }         
         }
     }
 
@@ -178,10 +224,26 @@ public class WheelControl : MonoBehaviour
         Vector3 delta = Vector3.ProjectOnPlane(rightPos, wheel.up) - Vector3.ProjectOnPlane(leftPos, wheel.up);
         float angle = Vector3.SignedAngle(transform.right, delta, wheel.up);
 
+        // Cap angle
         if (angle > maxWheelAngle)
+        {
             angle = maxWheelAngle;
-        else if (angle < minWheelAngle)
+            PlaySound(5);
+        }
+        else
+            AllowSound(5);
+
+        if (angle < minWheelAngle)
+        {
             angle = minWheelAngle;
+            PlaySound(6);
+        }
+        else
+            AllowSound(6);
+
+        // Apply deadzone
+        if ((angle > 0 && angle <= wheelDeadzone) || (angle < 0 && angle >= -wheelDeadzone))
+            angle = 0;
 
         // Rotate wheel
         goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(shaft.forward, transform.right), -shaft.forward) * Quaternion.Euler(0, angle, 0);
@@ -195,14 +257,36 @@ public class WheelControl : MonoBehaviour
             // Create input
             Vector2 input = new Vector2();
             if (angle > 0)
-                input.x = angle / maxWheelAngle;
-            else
-                input.x = -angle / minWheelAngle;
+                input.x = (angle - wheelDeadzone) / (maxWheelAngle - wheelDeadzone);
+            else if (angle < 0)
+                input.x = -(angle + wheelDeadzone) / (minWheelAngle + wheelDeadzone);
 
-            // Move the mech
-            if (!mechController.turning)
-                mechController.StartTurn();
-            mechController.Turn(input);
+            // Turn the mech         
+            if (input.x != 0 || input.y != 0)
+            {
+                if (!mechController.turning)
+                    mechController.StartTurn();
+                mechController.Turn(input);
+            }
+            else if (mechController.turning)
+            {
+                mechController.StopTurn();
+            }
         }
+    }
+
+    private void PlaySound(int id)
+    {
+        if (!audio.isPlaying && soundPlayed[id] == false)
+        {
+            audio.pitch = Random.Range(0.75f, 1.2f);
+            audio.Play();
+            soundPlayed[id] = true;
+        }
+    }
+
+    private void AllowSound(int id)
+    {
+        soundPlayed[id] = false;
     }
 }

@@ -154,7 +154,6 @@ public class MechController : MonoBehaviour
 
     public void Jump()
     {
-        Debug.Log("Jump");
         // Don't allow jumps while airborne
         if (!airborne)
         {
@@ -166,7 +165,6 @@ public class MechController : MonoBehaviour
 
     public void StartBoost()
     {
-        Debug.Log("Boost");
         if (!boosting)
         {
             // Mark that boosting has started
