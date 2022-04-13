@@ -98,6 +98,62 @@
             ]
         },
         {
+            "name": "Mech LeftHand Weapon",
+            "id": "fe6cb080-e1b7-4b29-a25d-b1db11ddd7a3",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "f8c4b5c4-1124-4798-874c-f31a49ddcd3a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d33a1748-064c-4997-a890-807e3a501522",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Mech RightHand Weapon",
+            "id": "d7d8da52-2f4a-4821-ad16-e3e9323cad50",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "a148c40a-981d-4713-a46a-bbe4ce107b9a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "cdb8b483-ded6-4074-9ef4-eaf28a850e05",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
             "name": "OLD: Mech LeftHand Secondary Locomotion",
             "id": "e02ac021-9f2f-4b87-a1fc-b3bb85d6aa41",
             "actions": [

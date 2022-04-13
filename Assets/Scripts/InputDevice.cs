@@ -37,6 +37,10 @@ public class InputDevice : MonoBehaviour
     private Quaternion modelLocalRotation;
     private Vector3 modelLocalScale;
 
+    public delegate void InputEvent();
+    public InputEvent Selected;
+    public InputEvent Deselected;
+
     private void Start()
     {
         // Start actions as disabled
@@ -52,6 +56,7 @@ public class InputDevice : MonoBehaviour
     {
         // Get the XR interactable component
         interactable = GetComponent<XRGrabInteractable>();
+
         // Add callbacks for selection
         interactable.selectEntered.AddListener(SelectEntered);
         interactable.selectExited.AddListener(SelectExited);
@@ -132,13 +137,15 @@ public class InputDevice : MonoBehaviour
         }
         if (map != null) { map.Enable(); }
         AttachAudio(map);
+
+        // Once setup is done, call event
+        Selected?.Invoke();
     }
+
     private void SelectExited(SelectExitEventArgs arg)
     {
         SelectExited();
     }
-
-
     private void SelectExited()
     {
         // Deactivate proper action map depending on which hand is grabbing
@@ -166,6 +173,9 @@ public class InputDevice : MonoBehaviour
         // Clear values
         controller = null;
         interactor = null;
+
+        // Once setup is done, call event
+        Deselected?.Invoke();
     }
 
     // Attach audio to buttons
