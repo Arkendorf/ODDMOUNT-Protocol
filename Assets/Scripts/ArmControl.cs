@@ -6,10 +6,16 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class ArmControl : MonoBehaviour
 {
+    [Tooltip("Mech to control with this arm control")]
+    public MechController mechController;
+    [Tooltip("Mech wrist transform this control should manipulate")]
+    public Transform mechWrist;
     [Tooltip("Input interactable")]
     public InputDevice input;
     [Tooltip("IK Controller")]
     public DitzelGames.FastIK.FastIKFabric ik;
+    [Tooltip("IK Pole")]
+    public Transform pole;
 
     [Tooltip("Arm Properties")]
     public float moveSpeed = 8;
@@ -21,15 +27,20 @@ public class ArmControl : MonoBehaviour
     // Offset between controller
     private Vector3 offset;
 
+    // Up vector
+    private Vector3 up;
+
     // Goal position and rotation for IK
     private Vector3 goalPosition;
     private Quaternion goalRotation;
+
+    private GameObject[] rigidbodyTargets;
 
     // Start is called before the first frame update
     void Start()
     {
         // Create the target
-        target = new GameObject("Target");
+        target = new GameObject("IKTarget");
         target.transform.parent = transform;
 
         // Set initial transform
@@ -44,6 +55,9 @@ public class ArmControl : MonoBehaviour
         // Attach callbacks to events
         input.Selected += Selected;
         input.Deselected += Deselected;
+
+        // Attach controllers
+        AssignControl(3);
     }
 
     private void OnDisable()
@@ -51,6 +65,25 @@ public class ArmControl : MonoBehaviour
         // Remove callbacks
         input.Selected -= Selected;
         input.Deselected -= Deselected;
+    }
+
+    // Create and assign RigidbodyController targets
+    private void AssignControl(int segments)
+    {
+        rigidbodyTargets = new GameObject[segments];
+
+        Transform segment = mechWrist;
+        for (int i = 0; i < segments; i++)
+        {
+            rigidbodyTargets[i] = new GameObject("RigidbodyTarget" + i);
+            rigidbodyTargets[i].transform.parent = transform;
+
+            RigidbodyController controller = segment.GetComponent<RigidbodyController>();
+            if (controller)
+                controller.target = rigidbodyTargets[i].transform;
+
+            segment = segment.parent;
+        }
     }
 
     private void Selected()
@@ -71,12 +104,27 @@ public class ArmControl : MonoBehaviour
         // Update goal position and rotation
         if (input.interactable.isSelected)
         {
-            goalPosition = hand.position - hand.rotation * offset;
-            goalRotation = hand.rotation;
+            goalPosition = hand.position - goalRotation * offset;
+            up = hand.up;
         }
 
         // Lerp position
         target.transform.position = Vector3.Lerp(target.transform.position, goalPosition, moveSpeed * Time.deltaTime);
-        target.transform.rotation = Quaternion.Lerp(target.transform.rotation, goalRotation, moveSpeed * Time.deltaTime);
+        // Get goal rotation
+        goalRotation = Quaternion.LookRotation(ik.transform.parent.forward, up);
+        Quaternion currentRotation = Quaternion.LookRotation(ik.transform.parent.forward, target.transform.up);
+        // Lerp rotation
+        target.transform.rotation = Quaternion.Lerp(currentRotation, goalRotation, moveSpeed * Time.deltaTime);
+
+        // Update IK pole
+        pole.position = new Vector3(pole.position.x, (transform.position.y + ik.transform.position.y) / 2, pole.position.z);
+
+        // Update RigidbodyController targets
+        Transform controlSegment = ik.transform;
+        for (int i = 0; i < rigidbodyTargets.Length; i++)
+        {
+            rigidbodyTargets[i].transform.rotation = Quaternion.Inverse(transform.rotation) * mechController.mech.transform.rotation * controlSegment.rotation;
+            controlSegment = controlSegment.parent;
+        }
     }
 }

@@ -80,8 +80,6 @@ public class HandAnim : MonoBehaviour
             // Get trigger position
             float gripTarget = gripAction.ReadValue<float>();
 
-            Debug.Log("Grip: " + gripTarget);
-
             float grip_state_delta = gripTarget - grip_state;
             if (grip_state_delta > 0f)
             {
@@ -99,8 +97,6 @@ public class HandAnim : MonoBehaviour
         {
             // Get trigger position
             float triggerTarget = triggerAction.ReadValue<float>();
-
-            Debug.Log("Trigger: " + triggerTarget);
 
             float trigger_state_delta = triggerTarget - trigger_state;
             if (trigger_state_delta > 0f)
@@ -120,8 +116,6 @@ public class HandAnim : MonoBehaviour
             // Get trigger touch position
             float triggerCapTarget = triggerTouchAction.ReadValue<float>();
 
-            Debug.Log("Trigger touch: " + triggerCapTarget);
-
             float triggerCap_state_delta = triggerCapTarget - triggerCap_state;
             if (triggerCap_state_delta > 0f)
             {
@@ -138,8 +132,6 @@ public class HandAnim : MonoBehaviour
         {
             // Get thumb touch position
             float thumbCapTarget = thumbTouchAction.ReadValue<float>();
-
-            Debug.Log("Thumb touch: " + thumbCapTarget);
 
             float thumbCap_state_delta = thumbCapTarget - thumbCap_state;
             if (thumbCap_state_delta > 0f)

@@ -25,6 +25,7 @@ public class RigidbodyController : MonoBehaviour
     [Space]
     [Range(0, 1)]
     public float gravityResistance = 0;
+    public bool compoundMass = true;
 
     private new Rigidbody rigidbody;
     private float totalMass;
@@ -38,7 +39,10 @@ public class RigidbodyController : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         rigidbody.maxAngularVelocity = maxAngularVelocity;
 
-        totalMass = GetTotalMass();
+        if (compoundMass)
+            totalMass = GetTotalMass();
+        else
+            totalMass = rigidbody.mass;
     }
 
     private void FixedUpdate()

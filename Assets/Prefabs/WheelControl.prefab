@@ -943,7 +943,7 @@ MonoBehaviour:
   maxWheelAngle: 30
   minWheelAngle: -30
   wheelDeadzone: 5
-  moveSpeed: 20
+  moveSpeed: 12
 --- !u!1 &8554962863153962583
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,7 +968,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8554962863153962583}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.875, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8554962863354398346}
@@ -1084,8 +1084,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8554962863583746951}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.25, y: 1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0.3125, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.625, z: 0.1}
   m_Children: []
   m_Father: {fileID: 8554962863602286561}
   m_RootOrder: 0
