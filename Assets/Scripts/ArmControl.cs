@@ -30,6 +30,10 @@ public class ArmControl : PhysicalControl
 
     private GameObject[] rigidbodyTargets;
 
+    // Audio variables
+    private float audioThreshold = .001f;
+    private float moveScale = 8;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -117,5 +121,18 @@ public class ArmControl : PhysicalControl
             rigidbodyTargets[i].transform.rotation = Quaternion.Inverse(transform.rotation) * mechController.mech.transform.rotation * controlSegment.rotation;
             controlSegment = controlSegment.parent;
         }
-    }
+
+
+        // Audio
+        Vector3 delta = (goalPosition - target.transform.position);
+        if (delta.sqrMagnitude >= audioThreshold * audioThreshold)
+        {
+            PlayMoveSound();
+            UpdateMoveSound(delta.magnitude * moveScale);
+        }
+        else
+        {
+            StopMoveSound();
+        }
+    }    
 }

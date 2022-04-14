@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class WheelControl : PhysicalControl
 {
+    [Tooltip("Audio source for the wheel")]
+    public AudioSource wheelAudio;
+
     [Header("Component Properties")]
     [Tooltip("The shaft for this wheel control")]
     public Transform shaft;
@@ -13,8 +16,6 @@ public class WheelControl : PhysicalControl
     public InputDevice left;
     [Tooltip("The right input device on the wheel")]
     public InputDevice right;
-    [Tooltip("Sound to play")]
-    public new AudioSource audio;
 
     [Header("Move Properties")]
     [Tooltip("Maximum angle wheel can be pushed forward")]
@@ -43,7 +44,19 @@ public class WheelControl : PhysicalControl
     private Quaternion goalShaftRotation;
     private Quaternion goalWheelRotation;
 
-    private Dictionary<int,bool> soundPlayed;
+    // Audio
+    private bool xLimit;
+    private bool xLimitPlayed;
+    private bool zLimit;
+    private bool zLimitPlayed;
+    private bool wheelLimit;
+    private bool wheelLimitPlayed;
+    private float wheelAudioThreshold = .001f;
+    private float wheelMoveReduction = 8;
+    private float wheelStopReduction = 128;
+    private float shaftAudioThreshold = .001f;
+    private float shaftMoveReduction = 4;
+    private float shaftStopReduction = 64;
 
     // Start is called before the first frame update
     void Start()
@@ -53,13 +66,12 @@ public class WheelControl : PhysicalControl
             defaultXAngle = 0;
         defaultYAngle = shaft.eulerAngles.y;
         defaultZAngle = 0;
-
-        soundPlayed = new Dictionary<int, bool>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
         // If wheel is grabbed
         if (left.interactable.isSelected || right.interactable.isSelected)
         {
@@ -95,15 +107,60 @@ public class WheelControl : PhysicalControl
                     mechController.StopTurn();
             }
 
-            PlaySound(0);
-            AllowSound(0);
-
             reset = true;
         }
 
         // Lerp to goal rotation
         shaft.rotation = Quaternion.Lerp(shaft.rotation, goalShaftRotation, moveSpeed * Time.deltaTime);
         wheel.rotation = Quaternion.Lerp(wheel.rotation, goalWheelRotation, moveSpeed * Time.deltaTime);
+
+        // Wheel audio
+        float wheelAngle = Quaternion.Angle(wheel.rotation, goalWheelRotation);
+        if (wheelLimit)
+        {
+            if (!wheelLimitPlayed)
+            {
+                PlayStopSound(wheelAngle / wheelStopReduction, wheelAudio);
+                wheelLimitPlayed = true;
+            }
+            wheelLimit = false;
+        }
+        else if (wheelAngle > wheelAudioThreshold)
+        {
+            PlayMoveSound(wheelAudio);
+            UpdateMoveSound(wheelAngle / wheelMoveReduction, wheelAudio);
+        }
+        else if (wheelAudio.clip == moveSound && wheelAudio.isPlaying)
+        {
+            StopMoveSound(wheelAudio);
+        }
+
+        // Shaft audio
+        float shaftAngle = Quaternion.Angle(shaft.rotation, goalShaftRotation);
+        if (xLimit || zLimit)
+        {
+            if (xLimit && !xLimitPlayed)
+            {
+                PlayStopSound(shaftAngle / shaftStopReduction);
+                xLimitPlayed = true;
+            }
+            else if (zLimit && !zLimitPlayed)
+            {
+                PlayStopSound(shaftAngle / shaftStopReduction);
+                zLimitPlayed = true;
+            }
+            xLimit = false;
+            zLimit = false;
+        }
+        else if (shaftAngle > shaftAudioThreshold)
+        {
+            PlayMoveSound();
+            UpdateMoveSound(shaftAngle / shaftMoveReduction);
+        }
+        else if (audio.clip == moveSound && audio.isPlaying)
+        {
+            StopMoveSound();
+        }
     }
 
     private void RotateShaft(Vector3 leftPos, Vector3 rightPos)
@@ -130,34 +187,32 @@ public class WheelControl : PhysicalControl
         if (angles.x > maxXAngle)
         {
             angles.x = maxXAngle;
-            PlaySound(1);
-        }
-        else
-            AllowSound(1);
-            
-        if (angles.x < minXAngle)
+            xLimit = true;
+        }        
+        else if (angles.x < minXAngle)
         {
             angles.x = minXAngle;
-            PlaySound(2);
+            xLimit = true;
         }
         else
-            AllowSound(2);
+        {
+            xLimitPlayed = false;
+        }
 
         if (angles.z > maxZAngle)
         {
             angles.z = maxZAngle;
-            PlaySound(3);
+            zLimit = true;
         }
-        else
-            AllowSound(3);
-
-        if (angles.z < minZAngle)
+        else if (angles.z < minZAngle)
         {
             angles.z = minZAngle;
-            PlaySound(4);
+            zLimit = true;
         }
         else
-            AllowSound(4);
+        {
+            zLimitPlayed = false;
+        }
 
         // Apply deadzones
         if ((angles.x > defaultXAngle && angles.x <= defaultXAngle + shaftDeadzone) || (angles.x < defaultXAngle && angles.x >= defaultXAngle - shaftDeadzone))
@@ -223,18 +278,17 @@ public class WheelControl : PhysicalControl
         if (angle > maxWheelAngle)
         {
             angle = maxWheelAngle;
-            PlaySound(5);
+            wheelLimit = true;
         }
-        else
-            AllowSound(5);
-
-        if (angle < minWheelAngle)
+        else if (angle < minWheelAngle)
         {
             angle = minWheelAngle;
-            PlaySound(6);
+            wheelLimit = true;
         }
         else
-            AllowSound(6);
+        {
+            wheelLimitPlayed = false;
+        }         
 
         // Apply deadzone
         if ((angle > 0 && angle <= wheelDeadzone) || (angle < 0 && angle >= -wheelDeadzone))
@@ -268,20 +322,5 @@ public class WheelControl : PhysicalControl
                 mechController.StopTurn();
             }
         }
-    }
-
-    private void PlaySound(int id)
-    {
-        if (!audio.isPlaying && soundPlayed[id] == false)
-        {
-            audio.pitch = Random.Range(0.75f, 1.2f);
-            audio.Play();
-            soundPlayed[id] = true;
-        }
-    }
-
-    private void AllowSound(int id)
-    {
-        soundPlayed[id] = false;
     }
 }

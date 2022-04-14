@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc1361b1921336340a522802af06ad88
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - mechController: {instanceID: 0}
+  - audio: {instanceID: 0}
+  - moveSound: {fileID: 8300000, guid: e6eee3ff97a63a64780d7813d284c5ae, type: 3}
+  - stopSound: {fileID: 8300000, guid: 138f08846eee69b49870c82acceb1e87, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

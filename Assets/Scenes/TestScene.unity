@@ -768,7 +768,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6408941757376172308, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
       propertyPath: m_Name
-      value: ArmControl Lefft
+      value: ArmControl Left
       objectReference: {fileID: 0}
     - target: {fileID: 6408941757376172310, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
       propertyPath: mechWrist
@@ -847,6 +847,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: WheelControl
       objectReference: {fileID: 0}
+    - target: {fileID: 8554962862545052214, guid: dad6633aaed62e94a845dfab208daaef, type: 3}
+      propertyPath: moveSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e6eee3ff97a63a64780d7813d284c5ae, type: 3}
+    - target: {fileID: 8554962862545052214, guid: dad6633aaed62e94a845dfab208daaef, type: 3}
+      propertyPath: stopSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 138f08846eee69b49870c82acceb1e87, type: 3}
     - target: {fileID: 8554962862545052214, guid: dad6633aaed62e94a845dfab208daaef, type: 3}
       propertyPath: mechController
       value: 
