@@ -939,7 +939,7 @@ MonoBehaviour:
   minXAngle: -30
   maxZAngle: 30
   minZAngle: -30
-  shaftDeadzone: 2
+  shaftDeadzone: 3
   maxWheelAngle: 30
   minWheelAngle: -30
   wheelDeadzone: 5

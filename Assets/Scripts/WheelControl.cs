@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WheelControl : MonoBehaviour
+public class WheelControl : PhysicalControl
 {
     [Header("Component Properties")]
-    [Tooltip("Mech to control with this wheel")]
-    public MechController mechController;
     [Tooltip("The shaft for this wheel control")]
     public Transform shaft;
     [Tooltip("The wheel object for this wheel control")]
@@ -35,9 +33,6 @@ public class WheelControl : MonoBehaviour
     public float minWheelAngle = -30;
     [Tooltip("Deadzone (in degrees) that must be moved for the wheel to move")]
     public float wheelDeadzone = 5;
-
-    [Header("Wheel Properties")]
-    public float moveSpeed = 8;
 
     // Default shaft angle
     private float defaultXAngle;

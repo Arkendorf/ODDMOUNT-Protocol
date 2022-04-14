@@ -4,21 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class ArmControl : MonoBehaviour
+public class ArmControl : PhysicalControl
 {
-    [Tooltip("Mech to control with this arm control")]
-    public MechController mechController;
+    [Header("Arm Properties")]
     [Tooltip("Mech wrist transform this control should manipulate")]
     public Transform mechWrist;
     [Tooltip("Input interactable")]
     public InputDevice input;
     [Tooltip("IK Controller")]
-    public DitzelGames.FastIK.FastIKFabric ik;
-    [Tooltip("IK Pole")]
-    public Transform pole;
-
-    [Tooltip("Arm Properties")]
-    public float moveSpeed = 8;
+    public TriangleIK ik;
 
     // Target for the IK
     private GameObject target;
@@ -50,7 +44,7 @@ public class ArmControl : MonoBehaviour
         goalRotation = ik.transform.rotation;
 
         // Set initial IK state
-        ik.Target = target.transform;
+        ik.target = target.transform;
 
         // Attach callbacks to events
         input.Selected += Selected;
@@ -115,9 +109,6 @@ public class ArmControl : MonoBehaviour
         Quaternion currentRotation = Quaternion.LookRotation(ik.transform.parent.forward, target.transform.up);
         // Lerp rotation
         target.transform.rotation = Quaternion.Lerp(currentRotation, goalRotation, moveSpeed * Time.deltaTime);
-
-        // Update IK pole
-        pole.position = new Vector3(pole.position.x, (transform.position.y + ik.transform.position.y) / 2, pole.position.z);
 
         // Update RigidbodyController targets
         Transform controlSegment = ik.transform;
