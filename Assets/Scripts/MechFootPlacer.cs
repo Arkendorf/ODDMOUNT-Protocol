@@ -20,6 +20,6 @@ public class MechFootPlacer : MonoBehaviour
     {
         transform.position = mechBase.position + mechBase.rotation * offset;
         transform.rotation = mechBase.rotation;
-        ik.normal = mechBase.right;
+        ik.axis = mechBase.right;
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 public class TriangleIK : MonoBehaviour
 {
     public Transform target;
-    public Vector3 normal = Vector3.up;
+    public Vector3 axis = Vector3.up;
+    public float angle = 0;
 
     private Transform elbow;
     private Transform root;
@@ -13,8 +14,8 @@ public class TriangleIK : MonoBehaviour
     private float lowerLength;
     private float upperLength;
 
-    private Vector3 rootLookVector;
     private Quaternion rootRotation;
+
 
 
     // Start is called before the first frame update
@@ -25,17 +26,14 @@ public class TriangleIK : MonoBehaviour
         lowerLength = (transform.position - elbow.position).magnitude;
         upperLength = (elbow.position - root.position).magnitude;
 
-        rootLookVector = elbow.position - root.position;
+        rootRotation = Quaternion.Inverse(Quaternion.LookRotation(elbow.position - root.position, axis)) * Quaternion.Euler(0, angle, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        rootRotation = Quaternion.Inverse(Quaternion.LookRotation(rootLookVector, normal));
-
-
         Vector3 delta = (target.position - root.position);
-        Quaternion pivot = Quaternion.LookRotation(delta, normal);
+        Quaternion pivot = Quaternion.LookRotation(delta, axis);
 
         float length = (target.position - root.position).magnitude;
 
@@ -48,15 +46,15 @@ public class TriangleIK : MonoBehaviour
 
         if (!float.IsNaN(C))
         {
-            root.rotation = pivot * rootRotation * Quaternion.AngleAxis((-B), normal);
-            elbow.localRotation = Quaternion.AngleAxis(180 - C, normal);
+            root.rotation = pivot * Quaternion.Euler(0, -B, 0) * rootRotation;
+            elbow.rotation = pivot * Quaternion.Euler(0, (180 - C - B), 0) * rootRotation;
         }
         else
         {
             root.rotation = pivot * rootRotation;
-            elbow.localRotation = Quaternion.identity;
+            elbow.rotation = pivot * rootRotation;
         }
-  
+
         transform.rotation = target.rotation;
     }
 }
