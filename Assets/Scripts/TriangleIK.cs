@@ -13,6 +13,9 @@ public class TriangleIK : MonoBehaviour
     private float lowerLength;
     private float upperLength;
 
+    private Vector3 rootLookVector;
+    private Quaternion rootRotation;
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +24,18 @@ public class TriangleIK : MonoBehaviour
         root = elbow.parent;
         lowerLength = (transform.position - elbow.position).magnitude;
         upperLength = (elbow.position - root.position).magnitude;
+
+        rootLookVector = elbow.position - root.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        rootRotation = Quaternion.Inverse(Quaternion.LookRotation(rootLookVector, normal));
+
+
         Vector3 delta = (target.position - root.position);
-        Quaternion pivot = Quaternion.LookRotation(delta);
+        Quaternion pivot = Quaternion.LookRotation(delta, normal);
 
         float length = (target.position - root.position).magnitude;
 
@@ -40,16 +48,15 @@ public class TriangleIK : MonoBehaviour
 
         if (!float.IsNaN(C))
         {
-            root.rotation = pivot * Quaternion.AngleAxis((-B), normal);
+            root.rotation = pivot * rootRotation * Quaternion.AngleAxis((-B), normal);
             elbow.localRotation = Quaternion.AngleAxis(180 - C, normal);
         }
         else
         {
-            root.rotation = pivot;
+            root.rotation = pivot * rootRotation;
             elbow.localRotation = Quaternion.identity;
         }
-
-   
+  
         transform.rotation = target.rotation;
     }
 }
