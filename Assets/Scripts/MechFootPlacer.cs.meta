@@ -3,7 +3,16 @@ guid: f711fe89881bd3f4582ddca64b56d3f5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - mech: {instanceID: 0}
+  - mechBase: {instanceID: 0}
+  - otherFoot: {instanceID: 0}
+  - ik: {instanceID: 0}
+  - burstSystem: {instanceID: 0}
+  - dragSystem: {instanceID: 0}
+  - audio: {instanceID: 0}
+  - footstepSound: {fileID: 8300000, guid: fd7812386827a9d49bbb8d15e78e977f, type: 3}
+  - scrapeSound: {fileID: 8300000, guid: 5403e527373dde144b66cfe254bf86ea, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

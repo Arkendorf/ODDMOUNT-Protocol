@@ -31,6 +31,13 @@ public class MechFootPlacer : MonoBehaviour
     public float liftHeight = .2f;
     [Tooltip("How fast the mech moves before sliding instead of walking")]
     public float velocityThreshold = 10;
+    [Header("Particle Properties")]
+    public ParticleSystem burstSystem;
+    public ParticleSystem[] dragSystems;
+    [Header("Audio Properties")]
+    public new AudioSource audio;
+    public AudioClip footstepSound;
+    public AudioClip scrapeSound;
 
     // Whether this foot is moving or not
     [HideInInspector] public bool moving;
@@ -47,6 +54,12 @@ public class MechFootPlacer : MonoBehaviour
 
     // Mech's rigidbody
     private new Rigidbody rigidbody;
+
+    // Visual effect info
+    private bool prevAirborne;
+    private bool dragging;
+
+    private float scrapeNoiseReduction = 12f;
 
 
     // Start is called before the first frame update
@@ -152,10 +165,14 @@ public class MechFootPlacer : MonoBehaviour
             // Increase lerp percent
             lerpPercent += lerpSpeed * Time.deltaTime;
 
-            if (lerpPercent >= 1)
+            if (lerpPercent > 1)
             {
                 lerpPercent = 1;
                 moving = false;
+
+                // Play impact effects when mech foot stops moving
+                if (walking && !mech.airborne)
+                    Impact();
             }
         }      
 
@@ -174,8 +191,35 @@ public class MechFootPlacer : MonoBehaviour
 
         // update height and rotation
         transform.position = newPosition;
-        transform.rotation = mechBase.rotation;
+        transform.rotation = mechBase.rotation;   
+
+        // Do drag effects
+        if (!walking && !mech.airborne && !dragging)
+            StartDrag();
+        else if ((walking || mech.airborne) && dragging)
+            StopDrag();
+
+        if (dragging && audio)
+        {
+            // If footstep occured while dragging, and it finished, restart dragging
+            if (audio.clip == footstepSound)
+            {
+                if (!audio.isPlaying)
+                    dragging = false;
+            }
+            else
+            {
+                audio.volume = (rigidbody.velocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
+            }             
+        }
+
+        Debug.Log(audio.volume);
         
+
+        // Play impact effects when mech lands
+        if (!mech.airborne && prevAirborne)
+            Impact();
+        prevAirborne = mech.airborne;
     }
 
     // Starts a step based on the given step size and velocity
@@ -195,5 +239,61 @@ public class MechFootPlacer : MonoBehaviour
             lerpPercent = 0;
             moving = true;
         }
+    }
+
+    private void Impact()
+    {
+        // Play particles
+        if (burstSystem)
+            burstSystem.Play();
+
+        // Play sound
+        if (audio)
+        {
+            audio.pitch = Random.Range(0.75f, 1.2f);
+            audio.volume = 1;
+            audio.time = 0;
+            audio.loop = false;
+            audio.clip = footstepSound;
+            audio.Play();
+        }
+
+    }
+
+    private void StartDrag()
+    {
+        if (dragSystems.Length > 0)
+        {
+            foreach (ParticleSystem system in dragSystems)
+                system.Play();
+        }
+
+        if (audio)
+        {
+            audio.pitch = 1;
+            audio.time = Random.Range(0, audio.clip.length);
+            audio.loop = true;
+            audio.clip = scrapeSound;
+            audio.Play();
+        }
+
+        dragging = true;
+    }
+
+    private void StopDrag()
+    {
+        if (dragSystems.Length > 0)
+        {
+            foreach (ParticleSystem system in dragSystems)
+                system.Stop();
+        }
+
+
+        if (audio && audio.clip == scrapeSound)
+        {
+            audio.Stop();
+        }
+
+        dragging = false;
     }
 }
