@@ -477,9 +477,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f711fe89881bd3f4582ddca64b56d3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mech: {fileID: 4312573021424740935}
   mechBase: {fileID: 557704046639440789}
-  offset: {x: -0.4, y: 0, z: 0}
+  otherFoot: {fileID: 5460608084676944627}
   ik: {fileID: 6670380968008726474}
+  defaultOffset: {x: -0.4, y: 0, z: 0}
+  threshold: 0.3
+  sidestepThreshold: 0.15
+  sidestepAngleThreshold: 60
+  velocityWeight: 0.15
+  lerpSpeed: 8
+  liftHeight: 0.4
+  moving: 0
 --- !u!1 &1627716923264180760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,9 +1217,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f711fe89881bd3f4582ddca64b56d3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mech: {fileID: 4312573021424740935}
   mechBase: {fileID: 557704046639440789}
-  offset: {x: 0.4, y: 0, z: 0}
+  otherFoot: {fileID: 8788330357398586981}
   ik: {fileID: 5593081166736747195}
+  defaultOffset: {x: 0.4, y: 0, z: 0}
+  threshold: 0.3
+  sidestepThreshold: 0.15
+  sidestepAngleThreshold: 60
+  velocityWeight: 0.15
+  lerpSpeed: 8
+  liftHeight: 0.4
+  moving: 0
 --- !u!1 &4304248257493914281
 GameObject:
   m_ObjectHideFlags: 0
