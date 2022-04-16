@@ -29,6 +29,8 @@ public class MechFootPlacer : MonoBehaviour
     public float lerpSpeed = 8;
     [Tooltip("How high to raise the foot when moving")]
     public float liftHeight = .2f;
+    [Tooltip("How fast the mech moves before sliding instead of walking")]
+    public float velocityThreshold = 10;
 
     // Whether this foot is moving or not
     [HideInInspector] public bool moving;
@@ -39,8 +41,13 @@ public class MechFootPlacer : MonoBehaviour
     private float lerpPercent;
     private float yOffset;
 
+    private Vector3 localStartPosition;
+    private Vector3 localGoalPosition;
+    private bool reset;
+
     // Mech's rigidbody
     private new Rigidbody rigidbody;
+
 
     // Start is called before the first frame update
     void Start()
@@ -62,10 +69,22 @@ public class MechFootPlacer : MonoBehaviour
         // Set IK axis
         ik.axis = mechBase.right;
 
-        if (!mech.boosting && !mech.airborne && (mech.moving || mech.turning))
+        // If mech isn't airborne, and velocity is below threshold, move feet (walk)
+        bool walking = rigidbody.velocity.sqrMagnitude < velocityThreshold * velocityThreshold && !mech.airborne;
+
+        if (walking)
         {
+            // Check if we just exited a slide
+            if (reset)
+            {
+                // Reset positions
+                startPosition = mechBase.position + localStartPosition;
+                goalPosition = mechBase.position + localGoalPosition;
+                // Allow future resets
+                reset = false;
+            }
             // Check if a foot needs to move
-            if (!moving && !otherFoot.moving)
+            else if (!moving && !otherFoot.moving)
             {
                 // Find distance between average foot and body
                 Vector3 avgPos = (transform.position + otherFoot.transform.position) / 2;
@@ -81,6 +100,7 @@ public class MechFootPlacer : MonoBehaviour
                 // Calculate step size. If not sidestepping, don't stunt steps
                 float stepSize = threshold;
 
+                // Get velocity
                 Vector3 velocity = rigidbody.velocity;
                 velocity.y = 0;
 
@@ -114,47 +134,64 @@ public class MechFootPlacer : MonoBehaviour
                         StartStep(stepSize, velocity);
                     }
                 }
-            }       
+            }
         }
-        else
+        else if (!reset)
         {
             // If mech is not moving (ie. sliding, airborne), just use default position
             StartStep(0, Vector3.zero);
+            localStartPosition = startPosition - mechBase.position;
+            localGoalPosition = goalPosition - mechBase.position;
+            // Don't allow more resets
+            reset = true;
         }
 
-        // Calculate y offset
-        yOffset = Mathf.Clamp((.25f - (lerpPercent - .5f) * (lerpPercent - .5f)) * 4 * liftHeight, 0, liftHeight);
-        // Lerp
+        // Update lerp percent
         if (lerpPercent < 1)
         {
             // Increase lerp percent
             lerpPercent += lerpSpeed * Time.deltaTime;
-            // Perform the lerp
-            transform.position = Vector3.Lerp(startPosition, goalPosition, lerpPercent);
 
             if (lerpPercent >= 1)
             {
                 lerpPercent = 1;
                 moving = false;
             }
-        }
+        }      
+
+        // Perform the lerp
+        Vector3 newPosition;
+        if (walking)
+            newPosition = Vector3.Lerp(startPosition, goalPosition, lerpPercent);
+        else
+            newPosition = mechBase.position + Vector3.Lerp(localStartPosition, localGoalPosition, lerpPercent);
+
+        // Calculate y offset (if walking)
+        yOffset = walking ? Mathf.Clamp((.25f - (lerpPercent - .5f) * (lerpPercent - .5f)) * 4 * liftHeight, 0, liftHeight) : 0;
+        
+        // Set y
+        newPosition.y = mechBase.position.y + yOffset;
 
         // update height and rotation
-        transform.position = new Vector3(transform.position.x, mechBase.position.y + yOffset, transform.position.z);
+        transform.position = newPosition;
         transform.rotation = mechBase.rotation;
+        
     }
 
     // Starts a step based on the given step size and velocity
     private void StartStep(float stepSize, Vector3 velocity)
     {
-        startPosition = transform.position;
-        startPosition.y = 0;
-        goalPosition = mechBase.position + mechBase.rotation * defaultOffset + velocity.normalized * stepSize + velocity * velocityWeight;
-        goalPosition.y = 0;
+        // Calculate new start and goal positions
+        Vector3 newStartPosition = transform.position;
+        newStartPosition.y = 0;
+        Vector3 newGoalPosition = mechBase.position + mechBase.rotation * defaultOffset + velocity.normalized * stepSize + velocity * velocityWeight;
+        newGoalPosition.y = 0;
 
         // TODO: This IF statement is a band-aid solution to stutter steps, should be replaced
-        if ((goalPosition - startPosition).sqrMagnitude > stepSize)
+        if ((newGoalPosition - newStartPosition).sqrMagnitude > stepSize)
         {
+            startPosition = newStartPosition;
+            goalPosition = newGoalPosition;
             lerpPercent = 0;
             moving = true;
         }
