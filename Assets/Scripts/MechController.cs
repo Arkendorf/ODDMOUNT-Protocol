@@ -14,7 +14,7 @@ public class MechController : MonoBehaviour
     [Tooltip("If velocity magnitude is over this number, walking won't increase speed")]
     public float maxMove = 3;
     [Tooltip("Amount of force to apply when not moving or airborne to reduce mech's velocity back to zero")]
-    public float dampingForce = 1000;
+    public float moveDamping = 1000;
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneMoveDamping = .5f;
@@ -102,12 +102,12 @@ public class MechController : MonoBehaviour
         else if (!airborne) // Apply damping
         {
             // Get damping force
-            Vector3 force = -mech.velocity.normalized * dampingForce;
+            Vector3 force = -mech.velocity.normalized * moveDamping;
 
             // If damping force exceeds remaining velocity, make it perfectly nullify remaining velocity
             Vector3 delta = force * Time.fixedDeltaTime / mech.mass;
             if (mech.velocity.sqrMagnitude < delta.sqrMagnitude)
-                force = (force / dampingForce) * mech.velocity.magnitude * mech.mass / Time.fixedDeltaTime;
+                force = (force / moveDamping) * mech.velocity.magnitude * mech.mass / Time.fixedDeltaTime;
 
             mech.AddForce(force);
         }
@@ -129,11 +129,11 @@ public class MechController : MonoBehaviour
             float currentMaxTurn = Mathf.Abs(turnInput.x) * maxTurn;
 
             // Cap torque if it would make angular velocity exceed maximum
-            Vector3 newVelocity = mech.angularVelocity + torque * Time.fixedDeltaTime / mech.mass;
+            Vector3 newVelocity = mech.angularVelocity + torque / mech.mass;
             if (newVelocity.sqrMagnitude > currentMaxTurn * currentMaxTurn)
-                torque = torque.normalized * Mathf.Max(0, currentMaxTurn - mech.angularVelocity.magnitude) * mech.mass / Time.fixedDeltaTime;
+                torque = torque.normalized * Mathf.Max(0, currentMaxTurn - mech.angularVelocity.magnitude) * mech.mass;
 
-            mech.AddTorque(torque);
+            mech.AddTorque(torque, ForceMode.Impulse);
         }
 
         // Boost the mech
