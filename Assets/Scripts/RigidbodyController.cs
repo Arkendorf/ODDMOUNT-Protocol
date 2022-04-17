@@ -59,23 +59,27 @@ public class RigidbodyController : MonoBehaviour
         // damping prevents overshooting the target position
         Vector3 force = -moveDamping * rigidbody.velocity;
 
-        Vector3 delta = target.position - transform.position;
+        Vector3 delta = Vector3.zero;
+        if (target)
+        {
+            delta = target.position - transform.position;
 
-        if (!alignX)
-        {
-            delta.x = 0;
-            force.x = 0; // Don't damp unaligned axes
-        }
-        if (!alignY)
-        {
-            delta.y = 0;
-            force.y = 0;
-        }        
-        if (!alignZ)
-        {
-            delta.z = 0;
-            force.z = 0;
-        }         
+            if (!alignX)
+            {
+                delta.x = 0;
+                force.x = 0; // Don't damp unaligned axes
+            }
+            if (!alignY)
+            {
+                delta.y = 0;
+                force.y = 0;
+            }
+            if (!alignZ)
+            {
+                delta.z = 0;
+                force.z = 0;
+            }
+        }          
 
         force += delta * moveSpeed;
 
@@ -100,12 +104,15 @@ public class RigidbodyController : MonoBehaviour
         Vector3 torque = -rotateDamping * rigidbody.angularVelocity;
 
         // Align directions
-        if (alignForward)
-            torque += AlignVectors(transform.forward, target.forward);
-        if (alignUp)
-            torque += AlignVectors(transform.up, target.up);
-        if (alignRight)
-            torque += AlignVectors(transform.right, target.right);
+        if (target)
+        {
+            if (alignForward)
+                torque += AlignVectors(transform.forward, target.forward);
+            if (alignUp)
+                torque += AlignVectors(transform.up, target.up);
+            if (alignRight)
+                torque += AlignVectors(transform.right, target.right);
+        }
 
         // Cap torque
         if (torque.sqrMagnitude > maxTorque * maxTorque)

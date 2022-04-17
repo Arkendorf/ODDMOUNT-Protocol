@@ -69,8 +69,10 @@ public class MechFootPlacer : MonoBehaviour
         rigidbody = mechBase.GetComponent<Rigidbody>();
 
         // Set foot initial position
-        transform.position = mechBase.position + mechBase.rotation * defaultOffset;
-        transform.rotation = mechBase.rotation;
+        startPosition = mechBase.position + mechBase.rotation * defaultOffset;
+        goalPosition = mechBase.position + mechBase.rotation * defaultOffset;
+        localStartPosition = startPosition - mechBase.position;
+        localGoalPosition = goalPosition - mechBase.position;
 
         // Don't lerp to start
         lerpPercent = 1;
@@ -211,10 +213,7 @@ public class MechFootPlacer : MonoBehaviour
             {
                 audio.volume = (rigidbody.velocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
             }             
-        }
-
-        Debug.Log(audio.volume);
-        
+        }        
 
         // Play impact effects when mech lands
         if (!mech.airborne && prevAirborne)
