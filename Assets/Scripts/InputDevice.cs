@@ -107,7 +107,6 @@ public class InputDevice : MonoBehaviour
             modelParent = controller.model.parent;
             modelLocalPosition = controller.model.localPosition;
             modelLocalRotation = controller.model.localRotation;
-            modelLocalScale = controller.model.localScale;
 
             // If the interactable has an attach transform, get the relevant data
             Vector3 attachPosition = interactable.transform.position;

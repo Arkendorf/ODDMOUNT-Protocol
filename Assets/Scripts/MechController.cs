@@ -12,6 +12,10 @@ public class MechController : MonoBehaviour
     [Header("Move")]
     [Tooltip("Force to apply to move the mech")]
     public float moveForce = 6000;
+    [Tooltip("If velocity magnitude is over this number, walking won't increase speed")]
+    public float maxMove = 8;
+    [Tooltip("Amount of force to apply when not moving or airborne to reduce mech's velocity back to zero")]
+    public float dampingForce = 1000;
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneMoveDamping = .5f;
@@ -87,6 +91,23 @@ public class MechController : MonoBehaviour
             Vector3 force = mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y) * moveForce;
             if (airborne)
                 force *= airborneMoveDamping;
+
+            // Cap force if it would make velocity exceed maximum
+            Vector3 newVelocity = mech.velocity + force * Time.fixedDeltaTime / mech.mass;
+            if (newVelocity.sqrMagnitude > maxMove * maxMove)
+                force = force.normalized * Mathf.Max(0, maxMove - mech.velocity.magnitude) * mech.mass / Time.fixedDeltaTime;
+
+            mech.AddForce(force);
+        }
+        else if (!airborne) // Apply damping
+        {
+            // Get damping force
+            Vector3 force = -mech.velocity.normalized * dampingForce;
+
+            // If damping force exceeds remaining velocity, make it perfectly nullify remaining velocity
+            Vector3 delta = force * Time.fixedDeltaTime / mech.mass;
+            if (mech.velocity.sqrMagnitude < delta.sqrMagnitude)
+                force = (force / dampingForce) * mech.velocity.magnitude * mech.mass / Time.fixedDeltaTime;
 
             mech.AddForce(force);
         }

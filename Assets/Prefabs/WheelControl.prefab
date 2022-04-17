@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9076192142077742681}
   - component: {fileID: 1973461643884502992}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ButtonAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4838523617259885056}
   - component: {fileID: 6498042149279370308}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ButtonAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -264,7 +264,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4581195213711642417}
   - component: {fileID: 7501345736289515098}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TriggerAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 8554962861849365726}
   - component: {fileID: 8554962861849365725}
   - component: {fileID: 8554962861849365724}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -648,7 +648,7 @@ GameObject:
   - component: {fileID: 8554962862524301441}
   - component: {fileID: 8554962862524301440}
   - component: {fileID: 8554962862524301447}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,7 +895,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8554962862545052215}
   - component: {fileID: 8554962862545052214}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: WheelControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +957,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8554962863153962576}
   - component: {fileID: 7908550074719692752}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1088,7 +1088,7 @@ GameObject:
   - component: {fileID: 8554962863354398346}
   - component: {fileID: 8554962863354398388}
   - component: {fileID: 8554962863354398347}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1169,7 +1169,7 @@ GameObject:
   - component: {fileID: 8554962863583746944}
   - component: {fileID: 8554962863583746946}
   - component: {fileID: 8554962863583746945}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1249,7 +1249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8554962863602286561}
   - component: {fileID: 6370719205181974361}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shaft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1378,7 +1378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 876274522502736100}
   - component: {fileID: 5221429249018096873}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TriggerAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}

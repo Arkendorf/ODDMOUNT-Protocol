@@ -95,8 +95,6 @@ public class WheelControl : PhysicalControl
             // Reset control
             // Reset shaft to neutral
             goalShaftRotation = Quaternion.Euler(defaultXAngle, defaultYAngle, defaultZAngle);
-            // Reset wheel to neutral
-            goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(transform.right, goalShaftRotation * Vector3.back), goalShaftRotation * Vector3.back);
 
             // Reset mech
             if (mechController)
@@ -109,13 +107,21 @@ public class WheelControl : PhysicalControl
 
             reset = true;
         }
+        else
+        {
+            // Keep resetting wheel rotation to neutral
+            goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(shaft.forward, transform.right), -shaft.forward);
+        }
 
         // Lerp to goal rotation
-        shaft.rotation = Quaternion.Lerp(shaft.rotation, goalShaftRotation, moveSpeed * Time.deltaTime);
-        wheel.rotation = Quaternion.Lerp(wheel.rotation, goalWheelRotation, moveSpeed * Time.deltaTime);
+        Quaternion currentShaftRotation = Quaternion.Inverse(transform.rotation) * shaft.rotation;
+        shaft.rotation = transform.rotation * Quaternion.Lerp(currentShaftRotation, goalShaftRotation, moveSpeed * Time.deltaTime);
+
+        Quaternion currentWheelRotation = wheel.rotation;
+        wheel.rotation = Quaternion.Lerp(currentWheelRotation, goalWheelRotation, moveSpeed * Time.deltaTime);
 
         // Wheel audio
-        float wheelAngle = Quaternion.Angle(wheel.rotation, goalWheelRotation);
+        float wheelAngle = Quaternion.Angle(currentWheelRotation, goalWheelRotation);
         if (wheelLimit)
         {
             if (!wheelLimitPlayed)
@@ -136,7 +142,7 @@ public class WheelControl : PhysicalControl
         }
 
         // Shaft audio
-        float shaftAngle = Quaternion.Angle(shaft.rotation, goalShaftRotation);
+        float shaftAngle = Quaternion.Angle(currentShaftRotation, goalShaftRotation);
         if (xLimit || zLimit)
         {
             if (xLimit && !xLimitPlayed)

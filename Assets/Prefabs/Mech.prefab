@@ -1585,7 +1585,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &2662231190519258203
@@ -1804,7 +1804,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6286607712535649117}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.75, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6286607713340587229}
@@ -1843,7 +1843,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!153 &6286607712535649115
@@ -1858,7 +1858,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 1.75, z: 0}
+  m_ConnectedAnchor: {x: 0, y: 2, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -1994,9 +1994,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 6286607712535649114}
   target: {fileID: 76401018520369292}
-  moveForce: 5000
+  moveForce: 4000
+  maxMove: 8
+  dampingForce: 1000
   airborneMoveDamping: 0.2
-  turnSpeed: 90
+  turnSpeed: 30
   maxTurn: 90
   airborneTurnDamping: 0.5
   jumpForce: {x: 0, y: 70000, z: 0}

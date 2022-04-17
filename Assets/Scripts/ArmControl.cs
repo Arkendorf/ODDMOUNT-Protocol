@@ -44,7 +44,7 @@ public class ArmControl : PhysicalControl
         // Set initial transform
         target.transform.position = ik.transform.position;
         target.transform.rotation = ik.transform.rotation;
-        goalPosition = ik.transform.position;
+        goalPosition = ik.transform.position - transform.position;
         goalRotation = ik.transform.rotation;
 
         // Set initial IK state
@@ -102,14 +102,15 @@ public class ArmControl : PhysicalControl
         // Update goal position and rotation
         if (input.interactable.isSelected)
         {
-            goalPosition = hand.position - goalRotation * offset;
-            up = hand.up;
+            goalPosition = Quaternion.Inverse(transform.rotation) * (hand.position - goalRotation * offset - transform.position);
+            up = Quaternion.Inverse(transform.rotation) * hand.up;
         }
 
         // Lerp position
-        target.transform.position = Vector3.Lerp(target.transform.position, goalPosition, moveSpeed * Time.deltaTime);
+        Vector3 currentPosition = Quaternion.Inverse(transform.rotation) * (target.transform.position - transform.position);
+        target.transform.position = transform.position + transform.rotation * Vector3.Lerp(currentPosition, goalPosition, moveSpeed * Time.deltaTime);
         // Get goal rotation
-        goalRotation = Quaternion.LookRotation(ik.transform.parent.forward, up);
+        goalRotation = Quaternion.LookRotation(ik.transform.parent.forward, transform.rotation * up);
         Quaternion currentRotation = Quaternion.LookRotation(ik.transform.parent.forward, target.transform.up);
         // Lerp rotation
         target.transform.rotation = Quaternion.Lerp(currentRotation, goalRotation, moveSpeed * Time.deltaTime);
@@ -118,13 +119,12 @@ public class ArmControl : PhysicalControl
         Transform controlSegment = ik.transform;
         for (int i = 0; i < rigidbodyTargets.Length; i++)
         {
-            rigidbodyTargets[i].transform.rotation = Quaternion.Inverse(transform.rotation) * mechController.mech.transform.rotation * controlSegment.rotation;
+            rigidbodyTargets[i].transform.rotation = Quaternion.Inverse(transform.rotation) * mechController.mech.rotation * controlSegment.rotation;
             controlSegment = controlSegment.parent;
         }
 
-
         // Audio
-        Vector3 delta = (goalPosition - target.transform.position);
+        Vector3 delta = (goalPosition - currentPosition);
         if (delta.sqrMagnitude >= audioThreshold * audioThreshold)
         {
             PlayMoveSound();
