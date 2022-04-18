@@ -8,21 +8,22 @@ public class MechController : MonoBehaviour
     [Header("Component Properties")]
     public Rigidbody mech;
     public RigidbodyController rigidbodyController;
+    public Transform rotationTarget;
     [Header("Move")]
     [Tooltip("Force to apply to move the mech")]
     public float moveForce = 4000;
     [Tooltip("If velocity magnitude is over this number, walking won't increase speed")]
     public float maxMove = 3;
-    [Tooltip("Amount of force to apply when not moving or airborne to reduce mech's velocity back to zero")]
+    [Tooltip("Amount of force to apply when not or airborne to reduce mech's velocity back to zero")]
     public float moveDamping = 1000;
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneMoveDamping = .5f;
     [Header("Turn Properties")]
     [Tooltip("How fast the mech should turn, in degrees per second (which may be limited by physics)")]
-    public float turnTorque = 6000;
-    [Tooltip("Maximum angular velocity")]
-    public float maxTurn = 1;
+    public float turnSpeed = 90;
+    [Tooltip("Maximum angle difference between desired mech angle and current mech angle")]
+    public float maxTurn = 90;
     [Tooltip("Percentage of normal turn speed while airborne")]
     [Range(0, 1)]
     public float airborneTurnDamping = .5f;
@@ -46,7 +47,6 @@ public class MechController : MonoBehaviour
     private Vector2 moveInput;
     // Whether the mech is turning
     [HideInInspector] public bool turning { get; private set; }
-    private Vector2 turnInput;
     // Whether the mech is boosting
     [HideInInspector] public bool boosting { get; private set; }
     private Vector3 directionalBoostForce;
@@ -99,7 +99,8 @@ public class MechController : MonoBehaviour
 
             mech.AddForce(force);
         }
-        else if (!airborne) // Apply damping
+        // Damp movement
+        if (!airborne)
         {
             // Get damping force
             Vector3 force = -mech.velocity.normalized * moveDamping;
@@ -110,30 +111,6 @@ public class MechController : MonoBehaviour
                 force = (force / moveDamping) * mech.velocity.magnitude * mech.mass / Time.fixedDeltaTime;
 
             mech.AddForce(force);
-        }
-
-        if (turning)
-        {
-            // Get rotation amount based on input
-            Vector3 torque = Vector3.zero;
-            if (turnInput.x > 0)
-                torque = new Vector3(0, turnTorque, 0);
-            else if (turnInput.x < 0)
-                torque = new Vector3(0, -turnTorque, 0);
-
-            // Damp torque if airborne
-            if (airborne)
-                torque *= airborneTurnDamping;
-
-            // Get max turn
-            float currentMaxTurn = Mathf.Abs(turnInput.x) * maxTurn;
-
-            // Cap torque if it would make angular velocity exceed maximum
-            Vector3 newVelocity = mech.angularVelocity + torque / mech.mass;
-            if (newVelocity.sqrMagnitude > currentMaxTurn * currentMaxTurn)
-                torque = torque.normalized * Mathf.Max(0, currentMaxTurn - mech.angularVelocity.magnitude) * mech.mass;
-
-            mech.AddTorque(torque, ForceMode.Impulse);
         }
 
         // Boost the mech
@@ -169,11 +146,31 @@ public class MechController : MonoBehaviour
     // Update desired mech angle
     public void Turn(Vector2 input)
     {
-        turnInput = input;
+        // Get rotation amount based on input
+        float angle = input.x * turnSpeed * Time.deltaTime;
+        if (airborne)
+            angle *= airborneTurnDamping;
+
+        // Rotate goal angle
+        rotationTarget.Rotate(Vector3.up, angle);
+
+        // Cap difference between mech and goal angle by maxTurn
+        float delta = Vector3.SignedAngle(mech.transform.forward, rotationTarget.forward, Vector3.up);
+        if (delta > maxTurn)
+        {
+            rotationTarget.Rotate(Vector3.up, maxTurn - delta);
+        }
+        else if (delta < -maxTurn)
+        {
+            rotationTarget.Rotate(Vector3.up, maxTurn - delta);
+        }
     }
 
     public void StopTurn()
     {
+        // Reset goal rotation when turn ends
+        rotationTarget.rotation = mech.transform.rotation;
+
         turning = false;
     }
 
