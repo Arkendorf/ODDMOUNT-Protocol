@@ -17,7 +17,7 @@ public class MechPlayerInput : MonoBehaviour
     public InputActionReference jump;
     public InputActionReference boost;
 
-    // Mech controller to attach callbacks to
+    // Mech controller
     private MechController mechController;
 
     // Action states

@@ -1967,7 +1967,7 @@ MonoBehaviour:
   rotationTarget: {fileID: 1506151069645284473}
   moveForce: 4000
   maxMove: 3
-  moveDamping: 1000
+  moveDamping: 2000
   airborneMoveDamping: 0.2
   turnSpeed: 30
   maxTurn: 90

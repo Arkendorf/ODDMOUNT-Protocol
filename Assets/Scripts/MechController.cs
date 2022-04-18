@@ -86,9 +86,10 @@ public class MechController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move the mech
+        Vector3 moveDir = mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y);
         if (moving)
         {
-            Vector3 force = mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y) * moveForce;
+            Vector3 force = moveDir * moveForce;
             if (airborne)
                 force *= airborneMoveDamping;
 
@@ -102,13 +103,20 @@ public class MechController : MonoBehaviour
         // Damp movement
         if (!airborne)
         {
+            // Get velocity to damp
+            Vector3 velocity;
+            if (moving)
+                velocity = Vector3.Project(mech.velocity, Vector3.Cross(moveDir, Vector3.up));
+            else
+                velocity = mech.velocity;
+
             // Get damping force
-            Vector3 force = -mech.velocity.normalized * moveDamping;
+            Vector3 force = -velocity.normalized * moveDamping;
 
             // If damping force exceeds remaining velocity, make it perfectly nullify remaining velocity
             Vector3 delta = force * Time.fixedDeltaTime / mech.mass;
-            if (mech.velocity.sqrMagnitude < delta.sqrMagnitude)
-                force = (force / moveDamping) * mech.velocity.magnitude * mech.mass / Time.fixedDeltaTime;
+            if (velocity.sqrMagnitude < delta.sqrMagnitude)
+                force = -velocity * mech.mass / Time.fixedDeltaTime;
 
             mech.AddForce(force);
         }
