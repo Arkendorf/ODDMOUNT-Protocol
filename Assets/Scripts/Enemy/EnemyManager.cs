@@ -23,6 +23,10 @@ public class EnemyManager : MonoBehaviour
     [Tooltip("Default enemy prefab")]
     public GameObject defaultPrefab;
 
+    public delegate void EnemyEvent(MechController enemy);
+    public EnemyEvent EnemyAdded;
+    public EnemyEvent EnemyRemoved;
+
     void Awake()
     {
         enemies = new List<MechController>();
@@ -45,6 +49,8 @@ public class EnemyManager : MonoBehaviour
                 mechInput.target = enemyTarget;
             // Add enemy to the list
             enemies.Add(mechController);
+            // invoke event
+            EnemyAdded?.Invoke(mechController);
             // Return the enemy
             return mechController;
         }
@@ -59,16 +65,7 @@ public class EnemyManager : MonoBehaviour
     {
         // Get it's mech controller
         MechController mechController = mech.GetComponent<MechController>();
-        // Remove it from the list
-        if (enemies.Contains(mechController))
-        {
-            enemies.Remove(mechController);
-        }
-        // Delete the mech if requested
-        if (destroy)
-        {
-            Destroy(mech);
-        }
+        RemoveEnemy(mechController, destroy);
     }
 
     public void RemoveEnemy(MechController mechController, bool destroy = true)
@@ -76,7 +73,10 @@ public class EnemyManager : MonoBehaviour
         // Remove it from the list
         if (enemies.Contains(mechController))
         {
+            // Remove from the list
             enemies.Remove(mechController);
+            // invoke event
+            EnemyRemoved?.Invoke(mechController);
         }
         // Delete the mech if requested
         if (destroy)
