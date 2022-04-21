@@ -21,8 +21,15 @@ public class RadarController : MonoBehaviour
     // List of sprite renderers rendering enemies on the radar
     private List<SpriteRenderer> enemyRenderers;
 
+    // Size of one grid tile in pixels on the grid
+    private float gridTileSize = 128;
+    // Grid tile size in world units
+    private float gridTileScale;
+
     private void OnEnable()
     {
+        gridTileScale = gridTileSize / grid.sprite.pixelsPerUnit;
+
         // Create list for enemy renderers
         enemyRenderers = new List<SpriteRenderer>();
 
@@ -44,8 +51,9 @@ public class RadarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // Update grid position and rotation
-        Vector3 position = - new Vector3((center.mech.position.x / range) % (1.33f), (center.mech.position.z / range) % (1.33f), 0);
+        Vector3 position = - new Vector3((center.mech.position.x / range) % gridTileScale, (center.mech.position.z / range) % gridTileScale, 0);
         grid.transform.localPosition = position;
         Quaternion rotation = Quaternion.Euler(0, 0, center.mech.transform.eulerAngles.y);
         grid.transform.parent.localRotation = rotation;
