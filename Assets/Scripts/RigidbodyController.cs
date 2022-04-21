@@ -59,7 +59,14 @@ public class RigidbodyController : MonoBehaviour
         Vector3 force = GetForce();
 
         // Add damping
-        force += -moveDamping * rigidbody.velocity; 
+        force += -moveDamping * rigidbody.velocity;
+        // Don't damp unaligned axes
+        if (!alignX)
+            force.x = 0;
+        if (!alignY)
+            force.y = 0;
+        if (!alignZ)
+            force.z = 0;
 
         // Correct against gravity
         if (rigidbody.useGravity)
@@ -84,22 +91,13 @@ public class RigidbodyController : MonoBehaviour
         if (target)
         {
             delta = target.position - transform.position;
-
+            // Don't add force for unaligned axes
             if (!alignX)
-            {
                 delta.x = 0;
-                force.x = 0; // Don't damp unaligned axes
-            }
             if (!alignY)
-            {
                 delta.y = 0;
-                force.y = 0;
-            }
             if (!alignZ)
-            {
                 delta.z = 0;
-                force.z = 0;
-            }
         }
 
         force += delta * moveSpeed;
@@ -111,8 +109,9 @@ public class RigidbodyController : MonoBehaviour
     {
         Vector3 torque = GetTorque();
 
-        // Add damping
-        torque += -rotateDamping * rigidbody.angularVelocity;
+        // Add damping if at least one axis is aligned
+        if (alignForward || alignUp || alignRight)
+            torque += -rotateDamping * rigidbody.angularVelocity;
 
         // Cap torque
         if (torque.sqrMagnitude > maxTorque * maxTorque)
@@ -127,6 +126,12 @@ public class RigidbodyController : MonoBehaviour
     protected virtual Vector3 GetTorque()
     {
         Vector3 torque = Vector3.zero;
+
+#if UNITY_EDITOR
+        // Debug stuff
+        Debug.DrawLine(transform.position, transform.position + transform.forward, Color.blue);
+        Debug.DrawLine(transform.position, transform.position + target.forward, Color.red);
+#endif
 
         // Align directions
         if (target)

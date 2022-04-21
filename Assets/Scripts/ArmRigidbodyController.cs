@@ -22,44 +22,47 @@ public class ArmRigidbodyController : RigidbodyController
             Quaternion targetRotation = target.rotation;
             Quaternion currentRotation = transform.rotation;
 
-            bool reverse = false;
+            Vector3 anchorVector = this.anchorVector;
 
+            // Rotate anchor vector by parent if it exists
             if (anchorParent)
             {
-                Vector3 anchorVector = anchorParent.rotation * this.anchorVector;
-
-                // Cap target rotation to outside the anchor vector forbidden zone
-                if (Vector3.Angle(targetRotation * Vector3.forward, anchorVector) <= anchorRange)
-                {
-                    targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(anchorRange, Vector3.Cross(anchorVector, targetRotation * Vector3.forward)) * anchorVector);
-                }
-
-                // Debug stuff
-                Debug.DrawLine(transform.position, transform.position + currentRotation * Vector3.forward * 2, Color.blue);
-                Debug.DrawLine(transform.position, transform.position + targetRotation * Vector3.forward * 2, Color.red);
-                Debug.DrawLine(transform.position, transform.position + anchorVector * 2, Color.black);
-
-                // Get angle between current and target
-                float deltaAngle = Vector3.Angle(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
-
-                // Get offset
-                Vector3 axis = Vector3.Cross(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
-                Vector3 right = Vector3.Cross(anchorVector, axis);
-                Vector3 unclampedAnchorVector = Vector3.Cross(axis, Vector3.Cross(anchorVector, axis));
-
-                // Clamp offset to range
-                float offsetAngle = Vector3.SignedAngle(anchorVector, unclampedAnchorVector, right);
-                offsetAngle = Mathf.Clamp(offsetAngle, -anchorRange, anchorRange);
-
-                // Adjust anchor vector by offset
-                Vector3 offsetAnchorVector = Quaternion.AngleAxis(offsetAngle, right) * anchorVector;
-
-                // Angle between current and target, crossing through clamped anchor vector
-                float crossAngle = Vector3.Angle(currentRotation * Vector3.forward, offsetAnchorVector) + Vector3.Angle(offsetAnchorVector, targetRotation * Vector3.forward);
-
-                // Check if angle is crossing through forbidden anchor vector zone
-                reverse = crossAngle - delta <= deltaAngle;
+                anchorVector = anchorParent.rotation * anchorVector;
             }
+
+            // Cap target rotation to outside the anchor vector forbidden zone
+            if (Vector3.Angle(targetRotation * Vector3.forward, anchorVector) <= anchorRange)
+            {
+                targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(anchorRange, Vector3.Cross(anchorVector, targetRotation * Vector3.forward)) * anchorVector);
+            }
+
+#if UNITY_EDITOR
+            // Debug stuff
+            Debug.DrawLine(transform.position, transform.position + currentRotation * Vector3.forward, Color.blue);
+            Debug.DrawLine(transform.position, transform.position + targetRotation * Vector3.forward, Color.red);
+            Debug.DrawLine(transform.position, transform.position + anchorVector, Color.black);
+#endif
+
+            // Get angle between current and target
+            float deltaAngle = Vector3.Angle(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
+
+            // Get offset
+            Vector3 axis = Vector3.Cross(currentRotation * Vector3.forward, targetRotation * Vector3.forward);
+            Vector3 right = Vector3.Cross(anchorVector, axis);
+            Vector3 unclampedAnchorVector = Vector3.Cross(axis, Vector3.Cross(anchorVector, axis));
+
+            // Clamp offset to range
+            float offsetAngle = Vector3.SignedAngle(anchorVector, unclampedAnchorVector, right);
+            offsetAngle = Mathf.Clamp(offsetAngle, -anchorRange, anchorRange);
+
+            // Adjust anchor vector by offset
+            Vector3 offsetAnchorVector = Quaternion.AngleAxis(offsetAngle, right) * anchorVector;
+
+            // Angle between current and target, crossing through clamped anchor vector
+            float crossAngle = Vector3.Angle(currentRotation * Vector3.forward, offsetAnchorVector) + Vector3.Angle(offsetAnchorVector, targetRotation * Vector3.forward);
+
+            // Check if angle is crossing through forbidden anchor vector zone
+            bool reverse = crossAngle - delta <= deltaAngle;
 
             // Calculate torque (only one alignment should reverse at a time)
             if (alignForward)
@@ -75,6 +78,8 @@ public class ArmRigidbodyController : RigidbodyController
             else if (alignRight)
                 torque += AlignVectors(currentRotation * Vector3.right, targetRotation * Vector3.right);
         }
+
+        // Return the calculated torque
         return torque;
     }
 }

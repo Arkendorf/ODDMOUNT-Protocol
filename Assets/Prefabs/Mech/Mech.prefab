@@ -1143,7 +1143,7 @@ GameObject:
   - component: {fileID: 6486137645741168120}
   - component: {fileID: 3024580400090470357}
   - component: {fileID: 5639817613888263979}
-  - component: {fileID: 6803213853999118035}
+  - component: {fileID: 5677297990901598768}
   m_Layer: 0
   m_Name: LeftShoulder
   m_TagString: Untagged
@@ -1293,7 +1293,7 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &6803213853999118035
+--- !u!114 &5677297990901598768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1302,7 +1302,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2832668436786833133}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3054af5a8ff0d42988a49786ac7014, type: 3}
+  m_Script: {fileID: 11500000, guid: 48660c17d248bae458dd90dc79d52af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
@@ -1320,6 +1320,9 @@ MonoBehaviour:
   maxTorque: Infinity
   maxAngularVelocity: 7
   gravityResistance: 1
+  anchorParent: {fileID: 6286607712535649116}
+  anchorVector: {x: 1, y: 0, z: 0}
+  anchorRange: 80
 --- !u!1 &2900121646197633261
 GameObject:
   m_ObjectHideFlags: 0
@@ -2423,7 +2426,7 @@ GameObject:
   - component: {fileID: 8879112573019426806}
   - component: {fileID: 1222269858463775415}
   - component: {fileID: 7056189013108966897}
-  - component: {fileID: 645192018299543251}
+  - component: {fileID: 749832283450573228}
   m_Layer: 0
   m_Name: RightShoulder
   m_TagString: Untagged
@@ -2573,7 +2576,7 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &645192018299543251
+--- !u!114 &749832283450573228
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2582,7 +2585,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7320107369999062672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3054af5a8ff0d42988a49786ac7014, type: 3}
+  m_Script: {fileID: 11500000, guid: 48660c17d248bae458dd90dc79d52af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
@@ -2600,6 +2603,9 @@ MonoBehaviour:
   maxTorque: Infinity
   maxAngularVelocity: 7
   gravityResistance: 1
+  anchorParent: {fileID: 6286607712535649116}
+  anchorVector: {x: -1, y: 0, z: 0}
+  anchorRange: 80
 --- !u!1 &7651380423273611389
 GameObject:
   m_ObjectHideFlags: 0
