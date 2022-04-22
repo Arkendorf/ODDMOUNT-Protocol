@@ -59,6 +59,7 @@ public class MechFootPlacer : MonoBehaviour
     private bool prevAirborne;
     private bool dragging;
 
+    // Audio effect info
     private float scrapeNoiseReduction = 12f;
 
 

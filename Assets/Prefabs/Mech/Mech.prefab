@@ -1205,7 +1205,7 @@ MonoBehaviour:
   - {fileID: 3293474956845401686}
   audio: {fileID: 5836751522174801582}
   punchSound: {fileID: 8300000, guid: f9163bebd3de2d3409a6a879c3565d8e, type: 3}
-  scrapeSound: {fileID: 0}
+  scrapeSound: {fileID: 8300000, guid: d7450ec6452d1734382b9b23e9aa3c39, type: 3}
 --- !u!1 &2791003074695136747
 GameObject:
   m_ObjectHideFlags: 0
@@ -3274,7 +3274,7 @@ MonoBehaviour:
   - {fileID: 6932830300692857405}
   audio: {fileID: 440752811981175830}
   punchSound: {fileID: 8300000, guid: f9163bebd3de2d3409a6a879c3565d8e, type: 3}
-  scrapeSound: {fileID: 0}
+  scrapeSound: {fileID: 8300000, guid: d7450ec6452d1734382b9b23e9aa3c39, type: 3}
 --- !u!1001 &657633092682944216
 PrefabInstance:
   m_ObjectHideFlags: 0

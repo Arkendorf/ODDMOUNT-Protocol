@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4b5039005453c8440ae81a8656667129
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - burstSystem: {instanceID: 0}
+  - audio: {instanceID: 0}
+  - punchSound: {fileID: 8300000, guid: f9163bebd3de2d3409a6a879c3565d8e, type: 3}
+  - scrapeSound: {fileID: 8300000, guid: d7450ec6452d1734382b9b23e9aa3c39, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
