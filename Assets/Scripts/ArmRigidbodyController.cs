@@ -11,15 +11,31 @@ public class ArmRigidbodyController : RigidbodyController
 
     private float delta = .1f;
 
+    protected override Quaternion GetTargetRotation()
+    {
+        Quaternion targetRotation = target.rotation;
+        Vector3 anchorVector = this.anchorVector;
+        // Rotate anchor vector by parent if it exists
+        if (anchorParent)
+        {
+            anchorVector = anchorParent.rotation * anchorVector;
+        }
+        // Cap target rotation to outside the anchor vector forbidden zone
+        if (Vector3.Angle(targetRotation * Vector3.forward, anchorVector) <= anchorRange)
+        {
+            targetRotation = Quaternion.LookRotation(Quaternion.AngleAxis(anchorRange, Vector3.Cross(anchorVector, targetRotation * Vector3.forward)) * anchorVector);
+        }
+        return targetRotation;
+    }
+
     // Update is called once per frame
-    protected override Vector3 GetTorque()
+    protected override Vector3 GetTorque(Quaternion targetRotation)
     {
         Vector3 torque = Vector3.zero;
 
         if (target)
         {
             // Get current rotation, and goal rotation
-            Quaternion targetRotation = target.rotation;
             Quaternion currentRotation = transform.rotation;
 
             Vector3 anchorVector = this.anchorVector;
