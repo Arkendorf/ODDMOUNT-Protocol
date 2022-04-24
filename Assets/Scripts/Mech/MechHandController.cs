@@ -6,6 +6,8 @@ public class MechHandController : MonoBehaviour
 {
     [Tooltip("How fast the hand moves for collision effects to occur")]
     public float velocityThreshold = 1;
+    [Tooltip("Scale of hand's velocity to apply to colliding rigidbody on punch")]
+    public float punchTransference = 1;
     [Header("Particle Properties")]
     public ParticleSystem burstSystem;
     public ParticleSystem[] dragSystems;
@@ -16,6 +18,9 @@ public class MechHandController : MonoBehaviour
     public AudioClip scrapeSound;
 
     private new Rigidbody rigidbody;
+
+    private Vector3 prevVelocity;
+    private Vector3 prevPrevVelocity;
 
     // Audio effect info
     private float punchNoiseReduction = 2f;
@@ -50,9 +55,22 @@ public class MechHandController : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        prevPrevVelocity = prevVelocity;
+        prevVelocity = rigidbody.velocity;
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         collisions++;
+
+        // If we've hit another rigidbody, add velocity to it to dramatize the punch
+        if (collision.rigidbody && !collision.rigidbody.tag.Equals("Player"))
+        {
+            // Use pre-collision-solved velocity
+            collision.rigidbody.AddForce(prevPrevVelocity * punchTransference, ForceMode.VelocityChange);
+        }
 
         // Get contact point
         ContactPoint point = collision.GetContact(0);

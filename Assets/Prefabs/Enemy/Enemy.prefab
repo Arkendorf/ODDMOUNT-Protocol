@@ -1037,7 +1037,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7709113076687067828}
   serializedVersion: 2
-  m_Mass: 200
+  m_Mass: 75
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1058,6 +1058,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 4394125378704241137}
+  resetParent: 0
+  ignoreCollision: 1
   alignX: 0
   alignY: 0
   alignZ: 0
@@ -1067,8 +1069,8 @@ MonoBehaviour:
   alignForward: 1
   alignUp: 0
   alignRight: 0
-  rotateSpeed: 1000
-  rotateDamping: 1000
+  rotateSpeed: 400
+  rotateDamping: 400
   maxTorque: Infinity
   maxAngularVelocity: 7
   gravityResistance: 0
@@ -1287,15 +1289,15 @@ MonoBehaviour:
   mech: {fileID: 9161299944883277522}
   rigidbodyController: {fileID: 4854172190703598601}
   rotationTarget: {fileID: 4394125378704241137}
-  moveForce: 4000
+  moveForce: 1500
   maxMove: 3
-  moveDamping: 2000
+  moveDamping: 750
   airborneMoveDamping: 0.2
   turnSpeed: 60
   maxTurn: 90
   airborneTurnDamping: 0.5
-  jumpForce: {x: 0, y: 80000, z: 0}
-  boostForce: {x: 0, y: 1000, z: 3000}
+  jumpForce: {x: 0, y: 30000, z: 0}
+  boostForce: {x: 0, y: 400, z: 1000}
   maxFuel: 100
   boostCost: 0.1
   gravityResistance: 0.6
@@ -1337,7 +1339,7 @@ MonoBehaviour:
   targetMoveThreshold: 0.3
   moveThreshold: 0.1
   angleThreshold: 1
-  stopDistance: 1
+  stopDistance: 2.5
 --- !u!1 &9161299943541746006
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,7 +1480,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9161299944883277525}
   serializedVersion: 2
-  m_Mass: 200
+  m_Mass: 75
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1

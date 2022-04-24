@@ -74,6 +74,10 @@ public class MechNavMeshInput : MonoBehaviour
             else // If mech is close enough, face the target
             {
                 UpdateRotation(target.position - mechController.mech.transform.position);
+
+                // Don't move if in the right spot
+                if (mechController.moving)
+                    mechController.StopMove();
             }
         }
      
