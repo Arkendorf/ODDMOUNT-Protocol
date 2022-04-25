@@ -9,7 +9,10 @@ public class MechController : MonoBehaviour
     public Rigidbody mech;
     public RigidbodyController rigidbodyController;
     public Transform rotationTarget;
-    [Header("Move")]
+    [Header("Combat Properties")]
+    [Tooltip("This mech's max health")]
+    public float maxHealth = 100;
+    [Header("Move Properties")]
     [Tooltip("Force to apply to move the mech")]
     public float moveForce = 4000;
     [Tooltip("If velocity magnitude is over this number, walking won't increase speed")]
@@ -56,6 +59,12 @@ public class MechController : MonoBehaviour
     // Mech's current amount of fuel
     [HideInInspector] public float fuel { get; private set; }
 
+    // Mech's current health
+    [HideInInspector] public float health { get; private set; }
+
+    public delegate void MechEvent();
+    public MechEvent OnDeath;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,6 +72,7 @@ public class MechController : MonoBehaviour
             mech = GetComponent<Rigidbody>();
 
         fuel = maxFuel;
+        health = maxHealth;
     }
 
     private void OnEnable()
@@ -249,5 +259,17 @@ public class MechController : MonoBehaviour
     public void AddFuel(float amount)
     {
         fuel = Mathf.Min(maxFuel, fuel + amount);
+    }
+
+    public void AddDamage(float damage)
+    {
+        // Do damage to mech
+        health -= damage;
+
+        // Invoke death event if damage killed mech
+        if (health <= 0)
+        {
+            OnDeath?.Invoke();
+        }
     }
 }

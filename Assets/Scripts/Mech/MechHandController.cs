@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class MechHandController : MonoBehaviour
 {
+    public MechController mechController;
     [Tooltip("How fast the hand moves for collision effects to occur")]
-    public float velocityThreshold = 1;
+    public float velocityThreshold = .5f;
     [Tooltip("Scale of hand's velocity to apply to colliding rigidbody on punch")]
-    public float punchTransference = 1;
+    public float punchMagnitude = 1;
+    [Tooltip("Scale of punch magnitude to apply to enemies as damage")]
+    public float punchDamage = 10;
     [Header("Particle Properties")]
     public ParticleSystem burstSystem;
     public ParticleSystem[] dragSystems;
-    private int collisions;
+    private List<Collider> collisions;
     [Header("Audio Properties")]
     public new AudioSource audio;
     public AudioClip punchSound;
@@ -32,7 +35,7 @@ public class MechHandController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        collisions = 0;
+        collisions = new List<Collider>();
 
         rigidbody = GetComponent<Rigidbody>();
     }
@@ -53,6 +56,17 @@ public class MechHandController : MonoBehaviour
             audio.volume = goalScrapeVolume;
             audio.pitch = 1 + audio.volume * scrapePitchScale;
         }
+
+        // Check for colliders on objects that were deleted
+        for (int i = collisions.Count - 1; i >= 0; i--)
+        {
+            Collider collider = collisions[i];
+            if (collider == null || collider.gameObject == null)
+            {
+                collisions.RemoveAt(i);
+                OnCollisionExit(null);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -63,7 +77,7 @@ public class MechHandController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        collisions++;
+        collisions.Add(collision.collider);
 
         // Get contact point
         ContactPoint point = collision.GetContact(0);
@@ -77,18 +91,34 @@ public class MechHandController : MonoBehaviour
             }
         }
 
-        if (rigidbody.velocity.sqrMagnitude > velocityThreshold * velocityThreshold)
+        if (prevPrevVelocity.sqrMagnitude > velocityThreshold * velocityThreshold)
         {
-            // If we've hit another rigidbody, add velocity to it to dramatize the punch
-            if (collision.rigidbody && !collision.rigidbody.tag.Equals("Player"))
+            // Get punch velocity magnitude
+            float magnitude = prevPrevVelocity.magnitude;
+
+            if (collision.rigidbody)
             {
-                // Get force to apply - combination of hand velocity and direction away from player
-                Vector3 lookDir = (collision.rigidbody.position - rigidbody.position).normalized;
-                float magnitude = prevPrevVelocity.magnitude;
-                Vector3 force = Vector3.Lerp(prevPrevVelocity / magnitude, lookDir, .5f) * magnitude * punchTransference;
-                // Apply velocity
-                collision.rigidbody.AddForce(force);
-            }
+                // Do damage if we've hit an enemy
+                if (collision.rigidbody.CompareTag("Enemy"))
+                {
+                    MechController enemyController = collision.rigidbody.GetComponentInParent<MechController>();
+                    // If enemy found, add punch damage
+                    if (enemyController)
+                    {
+                        enemyController.AddDamage(magnitude * punchDamage);
+                    }
+                }
+
+                // If we've hit another rigidbody, add velocity to it to dramatize the punch
+                if (!collision.rigidbody.CompareTag("Player"))
+                {
+                    // Get force to apply - combination of hand velocity and direction away from player
+                    Vector3 lookDir = (collision.rigidbody.position - mechController.mech.position).normalized;
+                    Vector3 force = Vector3.Lerp(prevPrevVelocity / magnitude, lookDir, .5f) * magnitude * punchMagnitude;
+                    // Apply velocity
+                    collision.rigidbody.AddForce(force);
+                }
+            }      
 
             // Do burst
             if (burstSystem)
@@ -103,7 +133,7 @@ public class MechHandController : MonoBehaviour
             if (audio)
             {
                 audio.pitch = Random.Range(0.75f, 1.2f);
-                audio.volume = (rigidbody.velocity.magnitude - velocityThreshold) / punchNoiseReduction;
+                audio.volume = (magnitude - velocityThreshold) / punchNoiseReduction;
                 audio.time = 0;
                 audio.loop = false;
                 audio.clip = punchSound;
@@ -134,14 +164,16 @@ public class MechHandController : MonoBehaviour
         }
         if (audio.clip == scrapeSound)
         {
-            goalScrapeVolume = Mathf.Max(0, rigidbody.velocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
+            goalScrapeVolume = Mathf.Max(0, prevPrevVelocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
         }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        collisions--;
-        if (collisions <= 0)
+        if (collision != null && collisions.Contains(collision.collider))
+            collisions.Remove(collision.collider);
+
+        if (collisions.Count <= 0)
         {
             foreach (ParticleSystem system in dragSystems)
             {

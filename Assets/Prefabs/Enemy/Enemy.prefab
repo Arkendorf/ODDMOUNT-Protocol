@@ -997,7 +997,7 @@ GameObject:
   - component: {fileID: 4854172190703598601}
   m_Layer: 0
   m_Name: Base
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1248,6 +1248,7 @@ GameObject:
   - component: {fileID: 1424452475163623375}
   - component: {fileID: 108414278442476669}
   - component: {fileID: 5486233077386384948}
+  - component: {fileID: 1516890604589067666}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -1289,6 +1290,7 @@ MonoBehaviour:
   mech: {fileID: 9161299944883277522}
   rigidbodyController: {fileID: 4854172190703598601}
   rotationTarget: {fileID: 4394125378704241137}
+  maxHealth: 100
   moveForce: 1500
   maxMove: 3
   moveDamping: 750
@@ -1340,6 +1342,18 @@ MonoBehaviour:
   moveThreshold: 0.1
   angleThreshold: 1
   stopDistance: 2.5
+--- !u!114 &1516890604589067666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161299943410933602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c017123b7057a4ab798112b3c60406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9161299943541746006
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,7 +1449,7 @@ GameObject:
   - component: {fileID: 9161299944883277523}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -201,6 +201,10 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: 0.75000024
       objectReference: {fileID: 0}
+    - target: {fileID: 6243014053700890377, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
+      propertyPath: velocityThreshold
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6286607712535649115, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
       propertyPath: m_ConnectedAnchor.y
       value: 2
