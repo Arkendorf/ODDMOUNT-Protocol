@@ -65,13 +65,6 @@ public class MechHandController : MonoBehaviour
     {
         collisions++;
 
-        // If we've hit another rigidbody, add velocity to it to dramatize the punch
-        if (collision.rigidbody && !collision.rigidbody.tag.Equals("Player"))
-        {
-            // Use pre-collision-solved velocity
-            collision.rigidbody.AddForce(prevPrevVelocity * punchTransference, ForceMode.VelocityChange);
-        }
-
         // Get contact point
         ContactPoint point = collision.GetContact(0);
         // Play drag particles
@@ -86,6 +79,17 @@ public class MechHandController : MonoBehaviour
 
         if (rigidbody.velocity.sqrMagnitude > velocityThreshold * velocityThreshold)
         {
+            // If we've hit another rigidbody, add velocity to it to dramatize the punch
+            if (collision.rigidbody && !collision.rigidbody.tag.Equals("Player"))
+            {
+                // Get force to apply - combination of hand velocity and direction away from player
+                Vector3 lookDir = (collision.rigidbody.position - rigidbody.position).normalized;
+                float magnitude = prevPrevVelocity.magnitude;
+                Vector3 force = Vector3.Lerp(prevPrevVelocity / magnitude, lookDir, .5f) * magnitude * punchTransference;
+                // Apply velocity
+                collision.rigidbody.AddForce(force);
+            }
+
             // Do burst
             if (burstSystem)
             {

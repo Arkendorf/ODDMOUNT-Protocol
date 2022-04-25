@@ -1199,7 +1199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityThreshold: 0.3
-  punchTransference: 4
+  punchTransference: 10000
   burstSystem: {fileID: 4105304903488676438}
   dragSystems:
   - {fileID: 5216514751989098003}
@@ -3269,7 +3269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityThreshold: 0.3
-  punchTransference: 4
+  punchTransference: 10000
   burstSystem: {fileID: 972647452406586199}
   dragSystems:
   - {fileID: 5768471857957899802}
