@@ -12,6 +12,8 @@ public class MechController : MonoBehaviour
     [Header("Combat Properties")]
     [Tooltip("This mech's max health")]
     public float maxHealth = 100;
+    [Tooltip("This mech's weapons (two max for player mechs)")]
+    public List<Weapon> weapons;
     [Header("Move Properties")]
     [Tooltip("Force to apply to move the mech")]
     public float moveForce = 4000;

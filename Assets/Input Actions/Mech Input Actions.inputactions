@@ -98,7 +98,7 @@
             ]
         },
         {
-            "name": "Mech LeftHand Weapon",
+            "name": "Mech LeftHand Left Weapon",
             "id": "fe6cb080-e1b7-4b29-a25d-b1db11ddd7a3",
             "actions": [
                 {
@@ -126,7 +126,7 @@
             ]
         },
         {
-            "name": "Mech RightHand Weapon",
+            "name": "Mech RightHand Left Weapon",
             "id": "d7d8da52-2f4a-4821-ad16-e3e9323cad50",
             "actions": [
                 {
@@ -143,6 +143,62 @@
                 {
                     "name": "",
                     "id": "cdb8b483-ded6-4074-9ef4-eaf28a850e05",
+                    "path": "<XRController>{RightHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Mech LeftHand Right Weapon",
+            "id": "d0ea2547-f5f5-40d3-b6b4-6d968f386b6c",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "0e870dcd-69b7-457d-96a2-8823e92d789b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f6168be7-9cb7-4363-be90-861fd9fc6fd5",
+                    "path": "<XRController>{LeftHand}/triggerPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Mech RightHand Right Weapon",
+            "id": "cc038ce1-13a2-4514-80dd-f080b6ebd83d",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "347ef20b-ae96-4b4d-8f4e-fd148018e223",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4ba2697f-65dc-4169-ae7c-f04f04c07e97",
                     "path": "<XRController>{RightHand}/triggerPressed",
                     "interactions": "",
                     "processors": "",

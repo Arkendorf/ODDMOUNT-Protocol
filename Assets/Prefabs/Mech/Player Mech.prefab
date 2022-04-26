@@ -144,6 +144,14 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6408941758606604942, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
+      propertyPath: leftActionMap
+      value: Mech LeftHand Right Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408941758606604942, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
+      propertyPath: rightActionMap
+      value: Mech RightHand Right Weapon
+      objectReference: {fileID: 0}
     - target: {fileID: 6408941759056157719, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 45
@@ -553,6 +561,14 @@ PrefabInstance:
     - target: {fileID: 6408941758606604929, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
       propertyPath: m_InteractionManager
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408941758606604942, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
+      propertyPath: leftActionMap
+      value: Mech LeftHand Left Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6408941758606604942, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
+      propertyPath: rightActionMap
+      value: Mech RightHand Left Weapon
       objectReference: {fileID: 0}
     - target: {fileID: 6408941759056157719, guid: a8a914c9467cd554ea71291fa82b5c94, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y

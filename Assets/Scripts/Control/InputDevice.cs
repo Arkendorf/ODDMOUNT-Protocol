@@ -184,7 +184,7 @@ public class InputDevice : MonoBehaviour
         int i = 0;
         foreach (InputAction action in map.actions)
         {
-            if (action.type == InputActionType.Button)
+            if (action.type == InputActionType.Button && i < buttonAudio.Count)
             {
                 int button = i;
                 action.performed += context => PlayAudio(button, pressClip);
@@ -199,7 +199,7 @@ public class InputDevice : MonoBehaviour
         int i = 0;
         foreach (InputAction action in map.actions)
         {
-            if (action.type == InputActionType.Button)
+            if (action.type == InputActionType.Button && i < buttonAudio.Count)
             {
                 int button = i;
                 action.performed -= context => PlayAudio(button, pressClip);

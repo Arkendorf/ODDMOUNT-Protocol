@@ -16,6 +16,9 @@ public class MechPlayerInput : MonoBehaviour
     [Header("Locomotion")]
     public InputActionReference jump;
     public InputActionReference boost;
+    [Header("Combat")]
+    public InputActionReference leftWeaponTrigger;
+    public InputActionReference rightWeaponTrigger;
 
     // Mech controller
     private MechController mechController;
@@ -24,6 +27,8 @@ public class MechPlayerInput : MonoBehaviour
     private bool movePerformed;
     private bool turnPerformed;
     private bool boostPerformed;
+    private bool leftWeaponPerformed;
+    private bool rightWeaponPerformed;
 
     private void Update()
     {
@@ -37,6 +42,12 @@ public class MechPlayerInput : MonoBehaviour
 
         if (boostPerformed)
             mechController.Boost();
+
+        if (leftWeaponPerformed)
+            mechController.weapons[0]?.Fire();
+
+        if (rightWeaponPerformed)
+            mechController.weapons[1]?.Fire();
     }
 
     private void OnEnable()
@@ -54,6 +65,14 @@ public class MechPlayerInput : MonoBehaviour
         jump.action.performed += context => { mechController.Jump(); };
         boost.action.performed += context => { mechController.StartBoost(); boostPerformed = true; };
         boost.action.canceled += context => { mechController.StopBoost(); boostPerformed = false; };
+
+        // Combat
+        // Left weapon
+        leftWeaponTrigger.action.performed += context => { mechController.weapons[0]?.StartFire(); leftWeaponPerformed = true; };
+        leftWeaponTrigger.action.canceled += context => { mechController.weapons[0]?.EndFire(); leftWeaponPerformed = false; };
+        // Right weapon
+        rightWeaponTrigger.action.performed += context => { mechController.weapons[1]?.StartFire(); rightWeaponPerformed = true; };
+        rightWeaponTrigger.action.canceled += context => { mechController.weapons[1]?.EndFire(); rightWeaponPerformed = false; };
     }
     private void OnDisable()
     {
@@ -67,5 +86,13 @@ public class MechPlayerInput : MonoBehaviour
         jump.action.performed -= context => { mechController.Jump(); };
         boost.action.performed -= context => { mechController.StartBoost(); boostPerformed = true; };
         boost.action.canceled -= context => { mechController.StopBoost(); boostPerformed = false; };
+
+        // Combat
+        // Left weapon
+        leftWeaponTrigger.action.performed -= context => { mechController.weapons[0]?.StartFire(); leftWeaponPerformed = true; };
+        leftWeaponTrigger.action.canceled -= context => { mechController.weapons[0]?.EndFire(); leftWeaponPerformed = false; };
+        // Right weapon
+        rightWeaponTrigger.action.performed -= context => { mechController.weapons[1]?.StartFire(); rightWeaponPerformed = true; };
+        rightWeaponTrigger.action.canceled -= context => { mechController.weapons[1]?.EndFire(); rightWeaponPerformed = false; };
     }
 }
