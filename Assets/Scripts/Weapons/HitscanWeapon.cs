@@ -32,6 +32,7 @@ public class HitscanWeapon : Weapon
     public float maxSpray;
     [Header("Particle Properties")]
     public ParticleSystem shotSystem;
+    public ParticleSystem muzzleFlash;
     [Header("Sound Properties")]
     public AudioManager audioManager;
     public AudioClip shotSound;
@@ -70,11 +71,14 @@ public class HitscanWeapon : Weapon
     {
         base.StartFire();
 
-        if (shotSystem)
-            shotSystem.Play();       
-
         delay = spoolTime;
         burst = 0;
+
+        // Play particles
+        if (shotSystem)
+            shotSystem.Play();
+        if (muzzleFlash)
+            muzzleFlash.Play();
     }
 
     public override void Fire()
@@ -103,8 +107,11 @@ public class HitscanWeapon : Weapon
     {
         base.EndFire();
 
+        // Stop particles
         if (shotSystem)
             shotSystem.Stop();
+        if (muzzleFlash)
+            muzzleFlash.Stop();
     }
 
     protected virtual void FireShot()
@@ -163,9 +170,16 @@ public class HitscanWeapon : Weapon
             shotSystem.Emit(emitParams, 1);
         }
 
+        if (muzzleFlash)
+        {
+            // Play the particle
+            muzzleFlash.Emit(1);
+        }
+
+        // Play audio
         if (audioManager)
         {
-            audioManager.Play(shotSound, false, .5f, Random.Range(0.75f, 1.2f));
+            audioManager.Play(shotSound, false, .3f, Random.Range(0.75f, 1.2f));
         }
     }
 }
