@@ -32,6 +32,9 @@ public class HitscanWeapon : Weapon
     public float maxSpray;
     [Header("Particle Properties")]
     public ParticleSystem shotSystem;
+    [Header("Sound Properties")]
+    public AudioManager audioManager;
+    public AudioClip shotSound;
 
     // Current delay before the next shot
     private float delay;
@@ -46,6 +49,12 @@ public class HitscanWeapon : Weapon
         if (!rigidbody)
         {
             rigidbody = GetComponentInParent<Rigidbody>();
+        }
+
+        if (shotSystem)
+        {
+            ParticleSystemRenderer renderer = shotSystem.GetComponent<ParticleSystemRenderer>();
+            renderer.maxParticleSize = range;
         }
     }
 
@@ -152,6 +161,11 @@ public class HitscanWeapon : Weapon
 
             // Play the particle
             shotSystem.Emit(emitParams, 1);
+        }
+
+        if (audioManager)
+        {
+            audioManager.Play(shotSound, false, .5f, Random.Range(0.75f, 1.2f));
         }
     }
 }
