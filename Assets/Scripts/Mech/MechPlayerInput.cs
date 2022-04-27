@@ -69,10 +69,10 @@ public class MechPlayerInput : MonoBehaviour
         // Combat
         // Left weapon
         leftWeaponTrigger.action.performed += context => { mechController.weapons[0]?.StartFire(); leftWeaponPerformed = true; };
-        leftWeaponTrigger.action.canceled += context => { mechController.weapons[0]?.EndFire(); leftWeaponPerformed = false; };
+        leftWeaponTrigger.action.canceled += context => { mechController.weapons[0]?.StopFire(); leftWeaponPerformed = false; };
         // Right weapon
         rightWeaponTrigger.action.performed += context => { mechController.weapons[1]?.StartFire(); rightWeaponPerformed = true; };
-        rightWeaponTrigger.action.canceled += context => { mechController.weapons[1]?.EndFire(); rightWeaponPerformed = false; };
+        rightWeaponTrigger.action.canceled += context => { mechController.weapons[1]?.StopFire(); rightWeaponPerformed = false; };
     }
     private void OnDisable()
     {
@@ -90,9 +90,9 @@ public class MechPlayerInput : MonoBehaviour
         // Combat
         // Left weapon
         leftWeaponTrigger.action.performed -= context => { mechController.weapons[0]?.StartFire(); leftWeaponPerformed = true; };
-        leftWeaponTrigger.action.canceled -= context => { mechController.weapons[0]?.EndFire(); leftWeaponPerformed = false; };
+        leftWeaponTrigger.action.canceled -= context => { mechController.weapons[0]?.StopFire(); leftWeaponPerformed = false; };
         // Right weapon
         rightWeaponTrigger.action.performed -= context => { mechController.weapons[1]?.StartFire(); rightWeaponPerformed = true; };
-        rightWeaponTrigger.action.canceled -= context => { mechController.weapons[1]?.EndFire(); rightWeaponPerformed = false; };
+        rightWeaponTrigger.action.canceled -= context => { mechController.weapons[1]?.StopFire(); rightWeaponPerformed = false; };
     }
 }

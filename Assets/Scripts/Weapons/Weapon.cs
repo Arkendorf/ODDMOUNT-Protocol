@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [Tooltip("The weapon's origin. Direction of aim for the weapon / origin for projectiles instantiated by this weapon")]
+    public Transform origin;
+    [Tooltip("Maximum ammo in a clip for this weapon")]
     public int maxAmmo;
-    protected int ammo;
+    [Tooltip("Maximum range of a hitscan shot")]
+    public float range;
+
+    [HideInInspector] public int ammo { get; protected set; }
+    [HideInInspector] public bool firing { get; private set; }
 
     protected virtual void Start()
     {
@@ -14,13 +21,15 @@ public class Weapon : MonoBehaviour
 
     public virtual void StartFire()
     {
+        firing = true;
     }
 
     public virtual void Fire()
     {
     }
 
-    public virtual void EndFire()
+    public virtual void StopFire()
     {
+        firing = false;
     }
 }

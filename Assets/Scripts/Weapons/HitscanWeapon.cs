@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class HitscanWeapon : Weapon
 {
-    [Header("Component Paramters")]
     [Tooltip("Rigidbody holding this weapon")]
     public new Rigidbody rigidbody;
-    [Tooltip("Origin and direction of shots")]
-    public Transform origin;
     [Header("Shot Parameters")]
     [Tooltip("Amount of damage dealt by one shot from this weapon")]
     public float damage;
-    [Tooltip("Maximum range of a hitscan shot")]
-    public float range;
     [Tooltip("Magnitude of force to apply to target hit by shots from this weapon")]
     public float hitForce;
     [Tooltip("Magnitude of recoil to apply to the firer of this weapon")]
@@ -103,9 +98,9 @@ public class HitscanWeapon : Weapon
         }
     }
 
-    public override void EndFire()
+    public override void StopFire()
     {
-        base.EndFire();
+        base.StopFire();
 
         // Stop particles
         if (shotSystem)

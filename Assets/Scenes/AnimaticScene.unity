@@ -106,7 +106,7 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.5
+    agentRadius: 1
     agentHeight: 2
     agentSlope: 0
     agentClimb: 0
@@ -114,7 +114,7 @@ NavMeshSettings:
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.16666667
+    cellSize: 0.33333334
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 42643280}
   - component: {fileID: 42643279}
   - component: {fileID: 42643278}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +230,7 @@ GameObject:
   - component: {fileID: 72425891}
   - component: {fileID: 72425890}
   - component: {fileID: 72425889}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: 1170926972}
   - component: {fileID: 1170926971}
   - component: {fileID: 1170926970}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 1465702582}
   - component: {fileID: 1465702581}
   - component: {fileID: 1465702580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -707,7 +707,7 @@ GameObject:
   - component: {fileID: 1640819081}
   - component: {fileID: 1640819080}
   - component: {fileID: 1640819079}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -802,7 +802,7 @@ GameObject:
   - component: {fileID: 1653853678}
   - component: {fileID: 1653853677}
   - component: {fileID: 1653853676}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -897,7 +897,7 @@ GameObject:
   - component: {fileID: 1807658842}
   - component: {fileID: 1807658841}
   - component: {fileID: 1807658840}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1073,17 +1073,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &1867411082 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 694170984610172134, guid: 42491b346e295a145a5437282717430d, type: 3}
-  m_PrefabInstance: {fileID: 694170985168691820}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83e4e6cca11330d4088d729ab4fc9d9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1907410232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,7 +1085,7 @@ GameObject:
   - component: {fileID: 1907410235}
   - component: {fileID: 1907410234}
   - component: {fileID: 1907410233}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1243,57 +1232,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2307615495182435694, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
-    - target: {fileID: 2307615495858293043, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
-    - target: {fileID: 2307615496035485377, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
-    - target: {fileID: 2307615496067343384, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
-    - target: {fileID: 2307615496383753311, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
+    - target: {fileID: 5367270546623696896, guid: fff1da919090acf42851383f84db6186, type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.7500005
+      objectReference: {fileID: 0}
     - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_RootOrder
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1311,10 +1256,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mech
       objectReference: {fileID: 0}
-    - target: {fileID: 8716557115557862309, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_InteractionManager
-      value: 
-      objectReference: {fileID: 1867411082}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fff1da919090acf42851383f84db6186, type: 3}
 --- !u!4 &2307615496578167016 stripped

@@ -19,11 +19,11 @@ public class AudioManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (AudioSource audio in audios)
+        for (int i = audios.Count - 1; i >= 0; i--)
         {
-            if (!audio.isPlaying)
+            if (!audios[i].isPlaying)
             {
-                Stop(audio);
+                Stop(audios[i]);
             }
         }
     }

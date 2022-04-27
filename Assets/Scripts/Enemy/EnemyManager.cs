@@ -73,10 +73,10 @@ public class EnemyManager : MonoBehaviour
         // Remove it from the list
         if (enemies.Contains(mechController))
         {
-            // Remove from the list
-            enemies.Remove(mechController);
             // invoke event
             EnemyRemoved?.Invoke(mechController);
+            // Remove from the list
+            enemies.Remove(mechController);        
         }
         // Delete the mech if requested
         if (destroy)

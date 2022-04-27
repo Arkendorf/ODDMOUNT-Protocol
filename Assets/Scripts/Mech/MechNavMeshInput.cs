@@ -9,6 +9,8 @@ public class MechNavMeshInput : MonoBehaviour
 {
     [Tooltip("Target transform")]
     public Transform target;
+    [Tooltip("Tag on rigidbodies this mech should shoot")]
+    public string hostileTag = "Player";
     [Tooltip("How far target can move before a repath")]
     public float targetMoveThreshold = .3f;
     [Tooltip("Desired velocity magnitude must exceed this number before the mech starts moving")]
@@ -25,6 +27,10 @@ public class MechNavMeshInput : MonoBehaviour
 
     // Previous position of the target
     private Vector3 oldPosition;
+
+    private float weaponAngle;
+    private float weaponDistance;
+    private float weaponDir;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +54,22 @@ public class MechNavMeshInput : MonoBehaviour
             agent.SetDestination(target.position);
             oldPosition = target.position;
         }
+
+        if (mechController.weapons[0])
+        {
+            // Get offset between weapon and mech, ignoring y
+            Vector3 weaponOffset = mechController.weapons[0].origin.position - mechController.mech.position;
+            weaponOffset.y = 0;
+            // Save magnitude
+            weaponDistance = weaponOffset.magnitude;
+            // Get forward vector of weapon, ignoring y
+            Vector3 weaponForward = mechController.weapons[0].origin.forward;
+            weaponForward.y = 0;
+            // Get angle between weapon offset and it's forward vector
+            weaponAngle = 180 - Mathf.Abs(Vector3.Angle(weaponForward, weaponOffset));
+            // Save which side weapon is on
+            weaponDir = (Quaternion.Inverse(mechController.mech.rotation) * (mechController.weapons[0].origin.position - mechController.mech.position)).x > 0 ? 1 : -1;
+        }
     }
 
     // Update is called once per frame
@@ -55,29 +77,35 @@ public class MechNavMeshInput : MonoBehaviour
     {
         if (target)
         {
-            // Check if mech has reached destination
-            if ((target.position - mechController.mech.transform.position).sqrMagnitude > stopDistance * stopDistance)
+            // Set the destination to the target if the target has moved
+            if ((target.position - oldPosition).sqrMagnitude > targetMoveThreshold * targetMoveThreshold)
             {
-                // Set the destination to the target if the target has moved
-                if ((target.position - oldPosition).sqrMagnitude > targetMoveThreshold * targetMoveThreshold)
-                {
-                    agent.SetDestination(target.position);
-                    oldPosition = target.position;
-                }
-
-                // Update position
-                UpdatePosition();
-
-                // Update rotation
-                UpdateRotation(agent.desiredVelocity);
+                agent.SetDestination(target.position);
+                oldPosition = target.position;
             }
-            else // If mech is close enough, face the target
-            {
-                UpdateRotation(target.position - mechController.mech.transform.position);
 
-                // Don't move if in the right spot
-                if (mechController.moving)
-                    mechController.StopMove();
+            // Update position
+            UpdatePosition();
+
+            // Update rotation
+            UpdateRotation();
+
+            // Iterate through weapons. If they are facing a player, fire
+            foreach(Weapon weapon in mechController.weapons)
+            {
+                RaycastHit hit;
+                bool raycast = Physics.Raycast(weapon.origin.position, weapon.origin.forward, out hit, weapon.range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                if (raycast && hit.rigidbody && hit.rigidbody.CompareTag(hostileTag ))
+                {
+                    if (!weapon.firing)
+                        weapon.StartFire();
+                    else
+                        weapon.Fire();
+                }
+                else if (weapon.firing)
+                {
+                    weapon.StopFire();
+                }
             }
         }
      
@@ -110,19 +138,32 @@ public class MechNavMeshInput : MonoBehaviour
         }
     }
 
-    private void UpdateRotation(Vector3 lookVector)
+    private void UpdateRotation()
     {
-        // Goal rotation (in direction of velocity if moving, or towards target)
-        Quaternion goalRotation;
-        if (lookVector.sqrMagnitude > 0)
-            goalRotation = Quaternion.LookRotation(lookVector);
-        else
-            goalRotation = Quaternion.LookRotation(target.position - mechController.mech.transform.position);
+        // Get mech's offset from target
+        Vector3 targetOffset = (target.position - mechController.mech.position);
+        targetOffset.y = 0;
+
+        // Goal rotation
+        float goalAngle = Quaternion.LookRotation(targetOffset).eulerAngles.y;
+        // If mech has a primary weapon, aim it at the target
+        if (mechController.weapons[0])
+        {
+            float l = weaponDistance;
+            float M = weaponAngle;
+
+            float m = targetOffset.magnitude;
+
+            float offsetAngle = Mathf.Asin(l * Mathf.Sin(M * Mathf.Deg2Rad) / m) * Mathf.Rad2Deg;
+
+            goalAngle += weaponDir * offsetAngle;
+        }                 
+        
         // Get current rotation
-        Quaternion currentRotation = mechController.mech.transform.rotation;
+        float currentAngle = mechController.mech.transform.eulerAngles.y;
         // Get rotation options
-        float rightAngle = LoopAngle(goalRotation.eulerAngles.y - currentRotation.eulerAngles.y);
-        float leftAngle = LoopAngle(goalRotation.eulerAngles.y - currentRotation.eulerAngles.y - 360);
+        float rightAngle = LoopAngle(goalAngle - currentAngle);
+        float leftAngle = LoopAngle(goalAngle - currentAngle - 360);
         // Get best rotation
         float angle = Mathf.Abs(leftAngle) < Mathf.Abs(rightAngle) ? leftAngle : rightAngle;
 
@@ -143,6 +184,21 @@ public class MechNavMeshInput : MonoBehaviour
         else if (mechController.turning) // Stop turn if necessary
         {
             mechController.StopTurn();
+        }
+    }
+
+    public void Stop()
+    {
+        if (mechController.turning)
+            mechController.StopTurn();
+
+        if (mechController.moving)
+            mechController.StopMove();
+
+        foreach (Weapon weapon in mechController.weapons)
+        {
+            if (weapon.firing)
+                weapon.StopFire();
         }
     }
 
