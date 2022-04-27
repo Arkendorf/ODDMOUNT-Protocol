@@ -21,8 +21,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnDeath()
     {
-        // Delete input
-        Destroy(GetComponent<MechPlayerInput>());
+        // Disable input
+        GetComponent<MechPlayerInput>().enabled = false;
+
+        // Format weapons 
+        foreach (Weapon weapon in GetComponentsInChildren<Weapon>())
+        {
+            weapon.enabled = false;
+        }
+
+        // Format controls 
+        foreach (PhysicalControl control in GetComponentsInChildren<PhysicalControl>())
+        {
+            control.enabled = false;
+        }
 
         // Disable mech controller
         playerMech.enabled = false;

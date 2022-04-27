@@ -3544,6 +3544,10 @@ PrefabInstance:
       propertyPath: rigidbody
       value: 
       objectReference: {fileID: 3249099794008878665}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 4312573021424740935}
     - target: {fileID: 4096347565358804743, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -4229,6 +4233,10 @@ PrefabInstance:
       propertyPath: rigidbody
       value: 
       objectReference: {fileID: 353570679188255519}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 4312573021424740935}
     - target: {fileID: 4096347565358804743, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [Tooltip("The mech using this weapon")]
+    public MechController mechController;
     [Tooltip("The weapon's origin. Direction of aim for the weapon / origin for projectiles instantiated by this weapon")]
     public Transform origin;
     [Tooltip("Maximum ammo in a clip for this weapon")]

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [Range(0, 256)]
+    public int priority = 128;
     [Range(-1, 1)]
     public float stereoPan;
     [Range(0, 1)]
@@ -34,6 +36,7 @@ public class AudioManager : MonoBehaviour
         audio.playOnAwake = false;
         audio.volume = volume;
         audio.pitch = pitch;
+        audio.priority = priority;
         audio.panStereo = stereoPan;
         audio.spatialBlend = 0;
         audio.loop = loop;

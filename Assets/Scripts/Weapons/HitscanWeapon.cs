@@ -131,11 +131,11 @@ public class HitscanWeapon : Weapon
                 // If we hit a mech, do damage
                 if (hit.rigidbody.CompareTag("Enemy") || hit.rigidbody.CompareTag("Player"))
                 {
-                    MechController mechController = hit.rigidbody.GetComponentInParent<MechController>();
+                    MechController hostileMech = hit.rigidbody.GetComponentInParent<MechController>();
                     // If enemy found, add shot damage
-                    if (mechController)
+                    if (hostileMech)
                     {
-                        mechController.AddDamage(damage);
+                        mechController.DealDamage(hostileMech, damage);
                     }
                 }
                 

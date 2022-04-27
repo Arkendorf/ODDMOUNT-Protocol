@@ -6,6 +6,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(MechController))]
 public class EnemyController : MonoBehaviour
 {
+    [Header("Ragdoll Properties")]
     [Tooltip("The base rigidbody of this mech")]
     public Rigidbody baseRigidbody;
     [Tooltip("Max distance between body and base when they ragdoll")]
@@ -17,16 +18,6 @@ public class EnemyController : MonoBehaviour
 
     // Local mech controller
     private MechController mechController;
-
-    public bool kill;
-
-    private void Update()
-    {
-        if (kill & mechController.health > 0)
-        {
-            mechController.AddDamage(mechController.health);
-        }
-    }
 
     private void OnEnable()
     {

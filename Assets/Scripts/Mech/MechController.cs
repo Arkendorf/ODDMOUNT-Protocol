@@ -68,6 +68,8 @@ public class MechController : MonoBehaviour
 
     public delegate void MechEvent();
     public MechEvent OnDeath;
+    public MechEvent OnTakeDamage;
+    public MechEvent OnDealDamage;
 
     // Start is called before the first frame update
     void Start()
@@ -265,10 +267,12 @@ public class MechController : MonoBehaviour
         fuel = Mathf.Min(maxFuel, fuel + amount);
     }
 
-    public void AddDamage(float damage)
+    public void TakeDamage(float damage)
     {
         // Do damage to mech
         health -= damage;
+
+        OnTakeDamage?.Invoke();
 
         // Invoke death event if damage killed mech
         if (!dead && health <= 0)
@@ -276,5 +280,12 @@ public class MechController : MonoBehaviour
             dead = true;
             OnDeath?.Invoke();
         }
+    }
+    
+    public void DealDamage(MechController enemy, float damage)
+    {
+        enemy.TakeDamage(damage);
+
+        OnDealDamage?.Invoke();
     }
 }

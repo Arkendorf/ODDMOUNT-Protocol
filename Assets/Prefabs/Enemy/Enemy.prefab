@@ -1469,8 +1469,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseRigidbody: {fileID: 149200565251720866}
+  ragdollSprawl: 2
+  ragdollHeaviness: 500
   ragdollLayer: 9
-  kill: 0
 --- !u!1 &9161299943541746006
 GameObject:
   m_ObjectHideFlags: 0
@@ -2328,6 +2329,10 @@ PrefabInstance:
       propertyPath: rigidbody
       value: 
       objectReference: {fileID: 8441894667239471853}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 1424452475163623375}
     - target: {fileID: 4096347565358804743, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
       propertyPath: m_RootOrder
       value: 1

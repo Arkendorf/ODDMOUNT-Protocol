@@ -101,11 +101,11 @@ public class MechHandController : MonoBehaviour
                 // Do damage if we've hit an enemy
                 if (collision.rigidbody.CompareTag("Enemy"))
                 {
-                    MechController enemyController = collision.rigidbody.GetComponentInParent<MechController>();
+                    MechController hostileMech = collision.rigidbody.GetComponentInParent<MechController>();
                     // If enemy found, add punch damage
-                    if (enemyController)
+                    if (hostileMech)
                     {
-                        enemyController.AddDamage(magnitude * punchDamage);
+                        mechController.DealDamage(hostileMech, magnitude * punchDamage);
                     }
                 }
 
