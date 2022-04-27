@@ -28,19 +28,13 @@ public class EnemyWeaponController : MonoBehaviour
 
     void Update()
     {
-        // Get mech's offset
-        Vector3 targetOffset = (input.target.position - mechController.mech.position);
-
         // Get height offset
-        float height = targetOffset.y;
-
-        // Shift offset to just the the x-y plane
-        targetOffset.y = 0;
+        float height = input.target.position.y - mechController.mech.position.y;
 
         // Get distance
-        float length = targetOffset.magnitude;
+        float length = input.distance;
 
-        // Get goal angle;
+        // Get goal angle
         float goalAngle = -Mathf.Atan2(height, length) * Mathf.Rad2Deg;
 
         // Get rotation options

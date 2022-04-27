@@ -64,6 +64,8 @@ public class MechController : MonoBehaviour
     // Mech's current health
     [HideInInspector] public float health { get; private set; }
 
+    [HideInInspector] public bool dead { get; private set; }
+
     public delegate void MechEvent();
     public MechEvent OnDeath;
 
@@ -269,8 +271,9 @@ public class MechController : MonoBehaviour
         health -= damage;
 
         // Invoke death event if damage killed mech
-        if (health <= 0)
+        if (!dead && health <= 0)
         {
+            dead = true;
             OnDeath?.Invoke();
         }
     }

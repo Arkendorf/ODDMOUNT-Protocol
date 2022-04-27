@@ -20,6 +20,9 @@ public class MechNavMeshInput : MonoBehaviour
     [Tooltip("Distance between target and current transform when slowing should start")]
     public float stopDistance = .5f;
 
+    // Distance from target on xz plane
+    public float distance { get; private set; }
+
     // Mech controller
     private MechController mechController;
     // Nav mesh agent
@@ -28,6 +31,7 @@ public class MechNavMeshInput : MonoBehaviour
     // Previous position of the target
     private Vector3 oldPosition;
 
+    // Weapon info
     private float weaponAngle;
     private float weaponDistance;
     private float weaponDir;
@@ -77,6 +81,12 @@ public class MechNavMeshInput : MonoBehaviour
     {
         if (target)
         {
+            // Get mech's offset from target
+            Vector3 delta = (target.position - mechController.mech.position);
+            delta.y = 0;
+
+            distance = delta.magnitude;
+
             // Set the destination to the target if the target has moved
             if ((target.position - oldPosition).sqrMagnitude > targetMoveThreshold * targetMoveThreshold)
             {
@@ -141,20 +151,20 @@ public class MechNavMeshInput : MonoBehaviour
     private void UpdateRotation()
     {
         // Get mech's offset from target
-        Vector3 targetOffset = (target.position - mechController.mech.position);
-        targetOffset.y = 0;
+        Vector3 delta = (target.position - mechController.mech.position);
+        delta.y = 0;
 
         // Goal rotation
-        float goalAngle = Quaternion.LookRotation(targetOffset).eulerAngles.y;
+        float goalAngle = Quaternion.LookRotation(delta).eulerAngles.y;
         // If mech has a primary weapon, aim it at the target
         if (mechController.weapons[0])
         {
             float l = weaponDistance;
             float M = weaponAngle;
 
-            float m = targetOffset.magnitude;
+            float m = distance;
 
-            float offsetAngle = Mathf.Asin(l * Mathf.Sin(M * Mathf.Deg2Rad) / m) * Mathf.Rad2Deg;
+            float offsetAngle = -Mathf.Asin(l * Mathf.Sin(M * Mathf.Deg2Rad) / m) * Mathf.Rad2Deg;
 
             goalAngle += weaponDir * offsetAngle;
         }                 

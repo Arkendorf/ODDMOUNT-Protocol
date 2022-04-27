@@ -51,19 +51,25 @@ public class EnemyController : MonoBehaviour
         // Recursively change things necessary for ragdoll 
         SetLayerRecursive(gameObject, ragdollLayer);
 
+        // Format all weapon controllers
+        foreach (EnemyWeaponController weaponController in GetComponentsInChildren<EnemyWeaponController>())
+        {
+            Destroy(weaponController);
+        }
+
         // Format rigidbody controllers
         foreach (RigidbodyController rigidbodyController in GetComponentsInChildren<RigidbodyController>())
         {
-            rigidbodyController.enabled = false;
+            Destroy(rigidbodyController);
         }
 
         // Format rigidbodies
         foreach (Rigidbody rigidbody in GetComponentsInChildren<Rigidbody>())
         {
-            rigidbody.constraints = RigidbodyConstraints.None;
+            if (rigidbody != baseRigidbody)
+                rigidbody.constraints = RigidbodyConstraints.None;
         }
         // Configure base rigidbody
-        baseRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
         baseRigidbody.mass = ragdollHeaviness;
 
         // Adjust waist joint to add in funky movement
@@ -87,13 +93,13 @@ public class EnemyController : MonoBehaviour
         // Allow collision with base
         joint.enableCollision = true;
 
-        // Disable nav agent
-        GetComponent<NavMeshAgent>().enabled = false;
-
         // Disable mech input
         MechNavMeshInput input = GetComponent<MechNavMeshInput>();
         input.Stop();
-        input.enabled = false;
+        Destroy(input);
+
+        // Disable nav agent
+        Destroy(GetComponent<NavMeshAgent>());
 
         // Disable mech controller
         mechController.enabled = false;

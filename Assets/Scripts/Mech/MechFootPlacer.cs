@@ -85,8 +85,8 @@ public class MechFootPlacer : MonoBehaviour
         // Set IK axis
         ik.axis = mechBase.right;
 
-        // If mech isn't airborne, and velocity is below threshold, move feet (walk)
-        bool walking = rigidbody.velocity.sqrMagnitude < velocityThreshold * velocityThreshold && !mech.airborne;
+        // If mech is alive and isn't airborne, and velocity is below threshold, move feet (walk)
+        bool walking = !mech.dead && !mech.airborne && rigidbody.velocity.sqrMagnitude < velocityThreshold * velocityThreshold;
 
         if (walking)
         {
@@ -271,9 +271,9 @@ public class MechFootPlacer : MonoBehaviour
         if (audio)
         {
             audio.pitch = 1;
-            audio.time = Random.Range(0, audio.clip.length);
             audio.loop = true;
             audio.clip = scrapeSound;
+            audio.time = Random.Range(0, audio.clip.length);
             audio.Play();
         }
 
