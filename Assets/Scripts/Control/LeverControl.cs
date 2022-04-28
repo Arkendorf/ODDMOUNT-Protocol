@@ -38,8 +38,10 @@ public class LeverControl : PhysicalControl
     public LeverEvent OnPulled;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (!lever)
             lever = transform;
 
@@ -95,7 +97,7 @@ public class LeverControl : PhysicalControl
             else
             {
                 currentAngle = goalAngle;
-                currentSpeed = offset / (speed * Time.deltaTime);
+                currentSpeed = (offset / Time.deltaTime) / maxSpeed;
             }
 
             if (currentAngle == offsetAngle + maxAngle)
@@ -103,6 +105,7 @@ public class LeverControl : PhysicalControl
                 // Trigger event
                 OnPulled?.Invoke();
                 currentSpeed = speed / maxSpeed;
+                PlayStopSound(0);
             }
         }
         else if (offset < 0)
@@ -115,17 +118,23 @@ public class LeverControl : PhysicalControl
             else
             {
                 currentAngle = goalAngle;
-                currentSpeed = -offset / (speed * Time.deltaTime);
+                currentSpeed = -(offset / Time.deltaTime) / maxSpeed;
             }
             if (currentAngle == offsetAngle + minAngle)
             {
                 resetting = false;
                 currentSpeed = speed / maxSpeed;
+                PlayStopSound(0);
             }
         }
         else
         {
             currentSpeed = 0;
+        }
+
+        if (currentAngle > offsetAngle + minAngle && currentAngle < offsetAngle + maxAngle)
+        {
+            AllowStopSound(0);
         }
 
         // Set lever rotation

@@ -6,6 +6,9 @@ public class Weapon : MonoBehaviour
 {
     [Tooltip("The mech using this weapon")]
     public MechController mechController;
+    [Tooltip("The weapon's audio manager")]
+    public AudioManager audioManager;
+    public AudioClip reloadSound;
     [Tooltip("The weapon's origin. Direction of aim for the weapon / origin for projectiles instantiated by this weapon")]
     public Transform origin;
     [Tooltip("The lever to reload this weapon")]
@@ -60,6 +63,7 @@ public class Weapon : MonoBehaviour
     public virtual void ReloadImmediate()
     {
         ammo = maxAmmo;
+        audioManager.Play(reloadSound, false, .25f, Random.Range(0.75f, 1.2f));
     }
 
     public void Reload()

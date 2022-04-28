@@ -4897,9 +4897,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mechController: {fileID: 0}
+  audioManager: {fileID: 2804671852860923483}
+  reloadSound: {fileID: 8300000, guid: 2d9e62a250c43314bb46a0ad98f02bf7, type: 3}
   origin: {fileID: 4096347565358804743}
   lever: {fileID: 0}
   maxAmmo: 100
+  reloadTime: 2
   range: 500
   rigidbody: {fileID: 0}
   damage: 1
@@ -4913,7 +4916,6 @@ MonoBehaviour:
   maxSpray: 5
   shotSystem: {fileID: 4096347564381887228}
   muzzleFlash: {fileID: 4590333076112223900}
-  audioManager: {fileID: 2804671852860923483}
   shotSound: {fileID: 8300000, guid: 2c18d22b4b745ff42a17e90c0d688ca2, type: 3}
 --- !u!1001 &3868832309005344195
 PrefabInstance:

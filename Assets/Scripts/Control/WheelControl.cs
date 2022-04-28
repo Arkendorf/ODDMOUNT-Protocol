@@ -6,7 +6,6 @@ public class WheelControl : PhysicalControl
 {
     [Space]
     [Tooltip("Audio source for the wheel")]
-    public AudioSource wheelAudio;
     public AudioManager wheelAudioManager;
 
     [Header("Component Properties")]
@@ -46,26 +45,16 @@ public class WheelControl : PhysicalControl
     private Quaternion goalShaftRotation;
     private Quaternion goalWheelRotation;
 
-    // Audio
-    private bool xLimit;
-    private bool xLimitPlayed;
-    private bool zLimit;
-    private bool zLimitPlayed;
-    private bool wheelLimit;
-    private bool wheelLimitPlayed;
-    private float wheelAudioThreshold = .001f;
-    private float wheelMoveReduction = 8;
-    private float wheelStopReduction = 128;
-    private float shaftAudioThreshold = .001f;
-    private float shaftMoveReduction = 4;
-    private float shaftStopReduction = 64;
+    private Quaternion prevShaftRotation;
+    private Quaternion prevWheelRotation;
 
-    private float wheelCurrentSpeed;
-    private float wheelPrevSpeed;
+    private AudioSource wheelMoveSource;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         defaultXAngle = shaft.eulerAngles.x;
         if (defaultXAngle < 0)
             defaultXAngle = 0;
@@ -91,8 +80,8 @@ public class WheelControl : PhysicalControl
             if (right.interactable.isSelected)
                 rightPos = right.controller.transform.position;
 
-            currentSpeed = RotateShaft(leftPos, rightPos);
-            wheelCurrentSpeed = RotateWheel(leftPos, rightPos);
+            RotateShaft(leftPos, rightPos);
+            RotateWheel(leftPos, rightPos);
 
             reset = false;
         }
@@ -117,9 +106,6 @@ public class WheelControl : PhysicalControl
         {
             // Keep resetting wheel rotation to neutral
             goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(shaft.forward, transform.right), -shaft.forward);
-
-            currentSpeed = 0;
-            wheelCurrentSpeed = 0;
         }
 
         // Lerp to goal rotation
@@ -128,59 +114,24 @@ public class WheelControl : PhysicalControl
 
         Quaternion currentWheelRotation = wheel.rotation;
         wheel.rotation = Quaternion.Lerp(currentWheelRotation, goalWheelRotation, moveSpeed * Time.deltaTime);
-        
-        // Update wheel audio
-        wheelPrevSpeed = UpdateAudioManager(wheelAudioManager, wheelCurrentSpeed, wheelPrevSpeed);
-        // Wheel audio
-        //float wheelAngle = Quaternion.Angle(currentWheelRotation, goalWheelRotation);
-        //if (wheelLimit)
-        //{
-        //    if (!wheelLimitPlayed)
-        //    {
-        //        PlayStopSound(wheelAngle / wheelStopReduction, wheelAudio);
-        //        wheelLimitPlayed = true;
-        //    }
-        //    wheelLimit = false;
-        //}
-        //else if (wheelAngle > wheelAudioThreshold)
-        //{
-        //    PlayMoveSound(wheelAudio);
-        //    UpdateMoveSound(wheelAngle / wheelMoveReduction, wheelAudio);
-        //}
-        //else if (wheelAudio.clip == moveSound && wheelAudio.isPlaying)
-        //{
-        //    StopMoveSound(wheelAudio);
-        //}
 
-        //// Shaft audio
-        //float shaftAngle = Quaternion.Angle(currentShaftRotation, goalShaftRotation);
-        //if (xLimit || zLimit)
-        //{
-        //    if (xLimit && !xLimitPlayed)
-        //    {
-        //        PlayStopSound(shaftAngle / shaftStopReduction);
-        //        xLimitPlayed = true;
-        //    }
-        //    else if (zLimit && !zLimitPlayed)
-        //    {
-        //        PlayStopSound(shaftAngle / shaftStopReduction);
-        //        zLimitPlayed = true;
-        //    }
-        //    xLimit = false;
-        //    zLimit = false;
-        //}
-        //else if (shaftAngle > shaftAudioThreshold)
-        //{
-        //    PlayMoveSound();
-        //    UpdateMoveSound(shaftAngle / shaftMoveReduction);
-        //}
-        //else if (audio.clip == moveSound && audio.isPlaying)
-        //{
-        //    StopMoveSound();
-        //}
+        // Update audio
+        if (prevShaftRotation != currentShaftRotation)
+            currentSpeed = Quaternion.Angle(prevShaftRotation, currentShaftRotation);
+        else
+            currentSpeed = 0;
+
+        if (prevWheelRotation != currentWheelRotation)
+            wheelMoveSource = UpdateMoveAudio(wheelAudioManager, Quaternion.Angle(prevWheelRotation, currentWheelRotation), ref wheelMoveSource);
+        else
+            wheelMoveSource = UpdateMoveAudio(wheelAudioManager, 0, ref wheelMoveSource);
+
+        // Save previous rotations
+        prevShaftRotation = currentShaftRotation;
+        prevWheelRotation = currentWheelRotation;
     }
 
-    private float RotateShaft(Vector3 leftPos, Vector3 rightPos)
+    private void RotateShaft(Vector3 leftPos, Vector3 rightPos)
     {
         // Get Euler angles
         Vector3 angles;
@@ -204,32 +155,33 @@ public class WheelControl : PhysicalControl
         if (angles.x > maxXAngle)
         {
             angles.x = maxXAngle;
-            xLimit = true;
+            PlayStopSound(0);
         }        
         else if (angles.x < minXAngle)
         {
             angles.x = minXAngle;
-            xLimit = true;
+            PlayStopSound(0);
         }
         else
         {
-            xLimitPlayed = false;
+            AllowStopSound(0);
         }
 
         if (angles.z > maxZAngle)
         {
             angles.z = maxZAngle;
-            zLimit = true;
+            PlayStopSound(1);
         }
         else if (angles.z < minZAngle)
         {
             angles.z = minZAngle;
-            zLimit = true;
+            PlayStopSound(1);
         }
         else
         {
-            zLimitPlayed = false;
+            AllowStopSound(1);
         }
+        
 
         // Apply deadzones
         if ((angles.x > defaultXAngle && angles.x <= defaultXAngle + shaftDeadzone) || (angles.x < defaultXAngle && angles.x >= defaultXAngle - shaftDeadzone))
@@ -266,12 +218,6 @@ public class WheelControl : PhysicalControl
                 mechController.StopMove();
             }         
         }
-
-        // Save shaft speed
-        if (angles.x != defaultXAngle || angles.z != defaultZAngle)
-            return new Vector3(angles.x - defaultXAngle, 0, angles.z - defaultZAngle).magnitude;
-        else
-            return 0;
     }
 
     private Vector3 GetGoalAngles(Vector3 hand, Vector3 control)
@@ -290,7 +236,7 @@ public class WheelControl : PhysicalControl
         return new Vector3(xAngle, defaultYAngle, zAngle);
     }
 
-    private float RotateWheel(Vector3 leftPos, Vector3 rightPos)
+    private void RotateWheel(Vector3 leftPos, Vector3 rightPos)
     {
         // Control wheel rotation
         // Project controller positions to plane of wheel, and get the difference between the resulting positions 
@@ -301,17 +247,17 @@ public class WheelControl : PhysicalControl
         if (angle > maxWheelAngle)
         {
             angle = maxWheelAngle;
-            wheelLimit = true;
+            PlayStopSound(2);
         }
         else if (angle < minWheelAngle)
         {
             angle = minWheelAngle;
-            wheelLimit = true;
+            PlayStopSound(2);
         }
         else
         {
-            wheelLimitPlayed = false;
-        }         
+            AllowStopSound(2);
+        }
 
         // Apply deadzone
         if ((angle > 0 && angle <= wheelDeadzone) || (angle < 0 && angle >= -wheelDeadzone))
@@ -345,8 +291,5 @@ public class WheelControl : PhysicalControl
                 mechController.StopTurn();
             }
         }
-
-        // Save wheel speed
-        return angle;
     }
 }

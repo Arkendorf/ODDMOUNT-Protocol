@@ -15,32 +15,43 @@ public class PhysicalControl : MonoBehaviour
     [Space()]
     [Tooltip("Sound to play while this control is moving, or null for no sound")]
     public AudioClip moveSound;
+    public float speedThreshold = .01f;
     public float moveVolumeScale = 1;
     public float movePitchScale = 1;
+    public float moveBaseVolume = 0;
     [Space()]
     [Tooltip("Sound to play when the control stops moving, or null for no sound")]
     public AudioClip stopSound;
+    public float stopBaseVolume = .5f;
     public float stopVolumeScale = 1;
+
 
     // Current move speed of this control
     protected float currentSpeed;
-    // Previous move speed of the control
-    private float prevSpeed;
+    // If stop sound is allowed
+    protected bool stopAllowed = true;
     // Audio source playing the move sound
     private AudioSource moveSource;
+    // Stop sound ids
+    private Dictionary<int, bool> idPlayed;
+
+    protected virtual void Start()
+    {
+        idPlayed = new Dictionary<int, bool>();
+    }
 
     protected virtual void Update()
     {
-        prevSpeed = UpdateAudioManager(audioManager, currentSpeed, prevSpeed);
+        UpdateMoveAudio(audioManager, currentSpeed, ref moveSource);
     }
 
-    protected float UpdateAudioManager(AudioManager audioManager, float currentSpeed, float prevSpeed)
+    protected AudioSource UpdateMoveAudio(AudioManager audioManager, float currentSpeed, ref AudioSource moveSource)
     {
         // Control audio
         if (audioManager)
         {
             // Check if control is moving
-            if (currentSpeed > 0)
+            if (currentSpeed > speedThreshold)
             {
                 if (moveSound)
                 {
@@ -49,79 +60,38 @@ public class PhysicalControl : MonoBehaviour
                         moveSource = audioManager.Play(moveSound, true);
 
                     // Set move sound's pitch and speed
-                    moveSource.volume = currentSpeed * moveVolumeScale;
-                    moveSource.pitch = currentSpeed * movePitchScale;
+                    moveSource.volume = moveBaseVolume + (currentSpeed - speedThreshold) * moveVolumeScale;
+                    moveSource.pitch = (currentSpeed - speedThreshold) * movePitchScale;
                 }
             }
-            else if (prevSpeed > 0) // If control just stopped moving
+            else if (moveSource) // If control just stopped moving
             {
-                // Stop the move sound
-                if (moveSource)
-                    audioManager.Stop(moveSource);
-
-                // Play the stop sound
-                if (stopSound)
-                    audioManager.Play(stopSound, false, prevSpeed * stopVolumeScale, Random.Range(0.75f, 1.2f));
+                audioManager.Stop(moveSource);
+                return null;
             }
         }
 
-        return currentSpeed;
+        return moveSource;
     }
 
-    //protected void PlayStopSound(float volume, AudioSource audio = null)
-    //{
-    //    if (!audio)
-    //        audio = this.audio;
+    protected void PlayStopSound(int id)
+    {
+        PlayStopSound(id, currentSpeed);
+    }
 
-    //    audio.pitch = Random.Range(0.75f, 1.2f);
-    //    audio.volume = Mathf.Min(volume, 1);
-    //    audio.loop = false;
-    //    audio.time = 0;
-    //    audio.clip = stopSound;
-    //    audio.Play();
-    //}
+    protected void PlayStopSound(int id, float currentSpeed)
+    {
+        if (stopSound && (!idPlayed.ContainsKey(id) || !idPlayed[id]))
+        {
+            audioManager.Play(stopSound, false, stopBaseVolume + currentSpeed * stopVolumeScale, Random.Range(0.75f, 1.2f));
+            idPlayed[id] = true;
+        }
+    }
 
-    //protected void PlayMoveSound(AudioSource audio = null)
-    //{
-    //    if (!audio)
-    //        audio = this.audio;
-
-    //    if (audio.clip != moveSound || !audio.isPlaying)
-    //    {
-    //        audio.loop = true;
-    //        audio.pitch = 1;
-    //        audio.volume = 1;
-    //        audio.time = 0;
-    //        audio.clip = moveSound;
-    //        audio.Play();
-    //    }
-    //}
-
-    //protected void UpdateMoveSound(float moveAmount, AudioSource audio = null)
-    //{
-    //    if (!audio)
-    //        audio = this.audio;
-
-    //    if (audio.clip == moveSound && audio.isPlaying)
-    //    { 
-    //        audio.pitch = moveAmount;
-    //        audio.volume = moveAmount;
-    //    }
-    //}
-
-    //protected void StopMoveSound(AudioSource audio = null)
-    //{
-    //    if (!audio)
-    //        audio = this.audio;
-
-    //    if (audio.clip == moveSound && audio.isPlaying)
-    //    {
-    //        audio.Stop();
-    //        audio.pitch = 1;
-    //        audio.volume = 1;
-    //        audio.loop = false;
-    //    }
-    //}
+    protected void AllowStopSound(int id)
+    {
+        idPlayed[id] = false;
+    }
 }
 
 

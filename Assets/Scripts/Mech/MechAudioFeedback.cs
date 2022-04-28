@@ -27,11 +27,11 @@ public class MechAudioFeedback : MonoBehaviour
 
     private void OnDealDamage()
     {
-        audioManager.Play(dealDamageClip, false);
+        audioManager.Play(dealDamageClip, false, .5f);
     }
 
     private void OnTakeDamage()
     {
-        audioManager.Play(takeDamageClip, false, .75f, Random.Range(0.75f, 1.2f));
+        audioManager.Play(takeDamageClip, false, .25f, Random.Range(0.75f, 1.2f));
     }
 }

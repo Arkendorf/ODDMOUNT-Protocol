@@ -47,13 +47,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mechController: {fileID: 0}
   moveSpeed: 90
-  audio: {fileID: 0}
   audioManager: {fileID: 3230403698124275117}
   moveSound: {fileID: 8300000, guid: e6eee3ff97a63a64780d7813d284c5ae, type: 3}
+  speedThreshold: 0
   moveVolumeScale: 1
   movePitchScale: 1
+  moveBaseVolume: 0.25
   stopSound: {fileID: 8300000, guid: 138f08846eee69b49870c82acceb1e87, type: 3}
-  stopVolumeScale: 1
+  stopBaseVolume: 0.1
+  stopVolumeScale: 0.3
   input: {fileID: 366043471906394610}
   lever: {fileID: 398421552733061049}
   minAngle: -45

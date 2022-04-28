@@ -34,8 +34,10 @@ public class ArmControl : PhysicalControl
     private float audioThreshold = .001f;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         // Create the target
         target = new GameObject("IKTarget");
         target.transform.parent = transform;

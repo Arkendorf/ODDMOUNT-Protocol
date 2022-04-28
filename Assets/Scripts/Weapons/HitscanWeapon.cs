@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HitscanWeapon : Weapon
 {
+    [Space()]
     [Tooltip("Rigidbody holding this weapon")]
     public new Rigidbody rigidbody;
     [Header("Shot Parameters")]
@@ -29,7 +30,6 @@ public class HitscanWeapon : Weapon
     public ParticleSystem shotSystem;
     public ParticleSystem muzzleFlash;
     [Header("Sound Properties")]
-    public AudioManager audioManager;
     public AudioClip shotSound;
 
     // Current delay before the next shot

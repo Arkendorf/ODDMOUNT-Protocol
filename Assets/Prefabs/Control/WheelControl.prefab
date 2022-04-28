@@ -1024,14 +1024,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mechController: {fileID: 0}
   moveSpeed: 12
-  audio: {fileID: 6370719205181974361}
   audioManager: {fileID: 3721691781638935404}
   moveSound: {fileID: 8300000, guid: e6eee3ff97a63a64780d7813d284c5ae, type: 3}
-  moveVolumeScale: 1
-  movePitchScale: 1
+  speedThreshold: 0
+  moveVolumeScale: 0.5
+  movePitchScale: 0.5
+  moveBaseVolume: 0
   stopSound: {fileID: 8300000, guid: 138f08846eee69b49870c82acceb1e87, type: 3}
-  stopVolumeScale: 1
-  wheelAudio: {fileID: 7908550074719692752}
+  stopBaseVolume: 0.1
+  stopVolumeScale: 0.2
   wheelAudioManager: {fileID: 152030377187206271}
   shaft: {fileID: 8554962863602286561}
   wheel: {fileID: 8554962863153962576}
