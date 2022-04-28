@@ -44,8 +44,11 @@ public class InputDevice : MonoBehaviour
     private void Start()
     {
         // Start actions as disabled
-        actionAsset.FindActionMap(leftActionMap).Disable();
-        actionAsset.FindActionMap(rightActionMap).Disable();
+        if (actionAsset)
+        {
+            actionAsset.FindActionMap(leftActionMap)?.Disable();
+            actionAsset.FindActionMap(rightActionMap)?.Disable();
+        }     
 
         parent = transform.parent;
         localPosition = transform.localPosition;
@@ -126,17 +129,23 @@ public class InputDevice : MonoBehaviour
 
 
         // Activate proper action map depending on which hand is grabbing
-        InputActionMap map;
-        if (interactor.CompareTag("Left Hand"))
+        if (actionAsset)
         {
-            map = actionAsset.FindActionMap(leftActionMap);    
+            InputActionMap map;
+            if (interactor.CompareTag("Left Hand"))
+            {
+                map = actionAsset.FindActionMap(leftActionMap);
+            }
+            else
+            {
+                map = actionAsset.FindActionMap(rightActionMap);
+            }
+            if (map != null)
+            {
+                map.Enable();
+                AttachAudio(map);
+            }
         }
-        else
-        {
-            map = actionAsset.FindActionMap(rightActionMap);
-        }
-        if (map != null) { map.Enable(); }
-        AttachAudio(map);
 
         // Once setup is done, call event
         Selected?.Invoke();
@@ -149,17 +158,23 @@ public class InputDevice : MonoBehaviour
     private void SelectExited()
     {
         // Deactivate proper action map depending on which hand is grabbing
-        InputActionMap map;
-        if (interactor.CompareTag("Left Hand"))
+        if (actionAsset)
         {
-            map = actionAsset.FindActionMap(leftActionMap);
+            InputActionMap map;
+            if (interactor.CompareTag("Left Hand"))
+            {
+                map = actionAsset.FindActionMap(leftActionMap);
+            }
+            else
+            {
+                map = actionAsset.FindActionMap(rightActionMap);
+            }
+            if (map != null)
+            {
+                DetachAudio(map);
+                map.Disable();
+            }
         }
-        else
-        {
-            map = actionAsset.FindActionMap(rightActionMap);
-        }
-        DetachAudio(map);
-        map.Disable();
 
         if (controller.model)
         {

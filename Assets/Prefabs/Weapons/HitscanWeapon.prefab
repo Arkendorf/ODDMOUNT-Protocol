@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ed3b15f9beaf8449fa73117e079fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  priority: 128
   stereoPan: 0
   spatialBlend: 1
 --- !u!1 &4096347564381887225
@@ -4895,11 +4896,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f18926866ebcb504b9ecce181cd1b56b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAmmo: 500
-  rigidbody: {fileID: 0}
+  mechController: {fileID: 0}
   origin: {fileID: 4096347565358804743}
-  damage: 1
+  lever: {fileID: 0}
+  maxAmmo: 100
   range: 500
+  rigidbody: {fileID: 0}
+  damage: 1
   hitForce: 3500
   recoil: 1250
   spoolTime: 0

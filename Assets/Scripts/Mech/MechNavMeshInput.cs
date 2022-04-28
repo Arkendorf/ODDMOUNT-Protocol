@@ -100,22 +100,30 @@ public class MechNavMeshInput : MonoBehaviour
             // Update rotation
             UpdateRotation();
 
-            // Iterate through weapons. If they are facing a player, fire
+            // Iterate through weapons
             foreach(Weapon weapon in mechController.weapons)
             {
-                RaycastHit hit;
-                bool raycast = Physics.Raycast(weapon.origin.position, weapon.origin.forward, out hit, weapon.range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-                if (raycast && hit.rigidbody && hit.rigidbody.CompareTag(hostileTag ))
+                // Reload weapon if it's out of ammo
+                if (weapon.ammo <= 0)
                 {
-                    if (!weapon.firing)
-                        weapon.StartFire();
-                    else
-                        weapon.Fire();
+                    weapon.Reload();
                 }
-                else if (weapon.firing)
+                else // If weapon has ammo and is facing a player, fire
                 {
-                    weapon.StopFire();
-                }
+                    RaycastHit hit;
+                    bool raycast = Physics.Raycast(weapon.origin.position, weapon.origin.forward, out hit, weapon.range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                    if (raycast && hit.rigidbody && hit.rigidbody.CompareTag(hostileTag))
+                    {
+                        if (!weapon.firing)
+                            weapon.StartFire();
+                        else
+                            weapon.Fire();
+                    }
+                    else if (weapon.firing)
+                    {
+                        weapon.StopFire();
+                    }
+                }               
             }
         }
      

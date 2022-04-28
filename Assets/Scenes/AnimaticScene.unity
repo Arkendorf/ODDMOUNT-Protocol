@@ -1245,11 +1245,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1586672460447327830, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.00000023841858
+      value: -2.842171e-14
       objectReference: {fileID: 0}
     - target: {fileID: 5367270546623696896, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.00000023841858
+      value: 2.842171e-14
       objectReference: {fileID: 0}
     - target: {fileID: 5367270546623696896, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_ConnectedAnchor.z
@@ -1257,19 +1257,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5629436825535162327, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0.00000011920929
+      value: -1.4210855e-14
       objectReference: {fileID: 0}
     - target: {fileID: 8122151706934553850, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -0.00000011920929
+      value: 1.4210855e-14
       objectReference: {fileID: 0}
     - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -44.4
       objectReference: {fileID: 0}
     - target: {fileID: 8590836712033951144, guid: fff1da919090acf42851383f84db6186, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

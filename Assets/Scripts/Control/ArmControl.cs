@@ -32,7 +32,6 @@ public class ArmControl : PhysicalControl
 
     // Audio variables
     private float audioThreshold = .001f;
-    private float moveScale = 8;
 
     // Start is called before the first frame update
     void Start()
@@ -97,8 +96,10 @@ public class ArmControl : PhysicalControl
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         // Update goal position and rotation
         if (input.interactable.isSelected)
         {
@@ -127,12 +128,11 @@ public class ArmControl : PhysicalControl
         Vector3 delta = (goalPosition - currentPosition);
         if (delta.sqrMagnitude >= audioThreshold * audioThreshold)
         {
-            PlayMoveSound();
-            UpdateMoveSound(delta.magnitude * moveScale);
+            currentSpeed = (delta.magnitude - audioThreshold);
         }
         else
         {
-            StopMoveSound();
+            currentSpeed = 0;
         }
     }    
 }

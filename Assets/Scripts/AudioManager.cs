@@ -38,7 +38,7 @@ public class AudioManager : MonoBehaviour
         audio.pitch = pitch;
         audio.priority = priority;
         audio.panStereo = stereoPan;
-        audio.spatialBlend = 0;
+        audio.spatialBlend = spatialBlend;
         audio.loop = loop;
 
         audio.clip = clip;
