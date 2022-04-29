@@ -4899,6 +4899,7 @@ MonoBehaviour:
   mechController: {fileID: 0}
   audioManager: {fileID: 2804671852860923483}
   reloadSound: {fileID: 8300000, guid: 2d9e62a250c43314bb46a0ad98f02bf7, type: 3}
+  emptySound: {fileID: 8300000, guid: 81e0503a5f8e1084caad3565f57b7337, type: 3}
   origin: {fileID: 4096347565358804743}
   lever: {fileID: 0}
   maxAmmo: 100
@@ -4910,7 +4911,7 @@ MonoBehaviour:
   recoil: 1250
   spoolTime: 0
   fireRate: 0.1
-  burstCount: 50
+  burstCount: 20
   burstDelay: 0.5
   minSpray: 1
   maxSpray: 5

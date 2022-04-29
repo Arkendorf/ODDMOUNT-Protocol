@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour
     private List<AudioSource> audios;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         audios = new List<AudioSource>();
     }

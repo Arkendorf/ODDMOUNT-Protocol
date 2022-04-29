@@ -54,8 +54,10 @@ public class HitscanWeapon : Weapon
         }
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
+
         if (delay > 0)
         {
             delay -= Time.deltaTime;
@@ -76,26 +78,29 @@ public class HitscanWeapon : Weapon
             muzzleFlash.Play();
     }
 
-    public override void Fire()
+    public override bool Fire()
     {
-        base.StartFire();
-
-        // Fire a hitscan if at least one ammo and delay is up
-        if (ammo > 0 && delay <= 0)
+        if (base.Fire())
         {
-            FireShot();
-            ammo--;
-            burst++;
-            if (burst >= burstCount)
+            // Fire a hitscan and delay is up
+            if (delay <= 0)
             {
-                burst = 0;
-                delay = burstDelay;
+                FireShot();
+                ammo--;
+                burst++;
+                if (burst >= burstCount)
+                {
+                    burst = 0;
+                    delay = burstDelay;
+                }
+                else
+                {
+                    delay = fireRate;
+                }
             }
-            else
-            {
-                delay = fireRate;
-            }
+            return true;
         }
+        return false;
     }
 
     public override void StopFire()
