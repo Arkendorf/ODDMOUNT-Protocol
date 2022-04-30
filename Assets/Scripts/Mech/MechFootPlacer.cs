@@ -22,6 +22,8 @@ public class MechFootPlacer : MonoBehaviour
     public float sidestepThreshold = .25f;
     [Tooltip("Angle at which sidesteps become valid")]
     public float sidestepAngleThreshold = 60;
+    [Tooltip("How much the mech must rotate before a step is instantiated due to rotation")]
+    public float rotationThreshold = 45;
     [Tooltip("How much velocity contributes to foot positioning")]
     public float velocityWeight = .5f;
     [Header("Animation Properties")]
@@ -47,6 +49,9 @@ public class MechFootPlacer : MonoBehaviour
     private Vector3 goalPosition;
     private float lerpPercent;
     private float yOffset;
+
+    // Rotation at time of last step
+    private Quaternion oldRotation;
 
     private Vector3 localStartPosition;
     private Vector3 localGoalPosition;
@@ -74,6 +79,8 @@ public class MechFootPlacer : MonoBehaviour
         goalPosition = mechBase.position + mechBase.rotation * defaultOffset;
         localStartPosition = startPosition - mechBase.position;
         localGoalPosition = goalPosition - mechBase.position;
+
+        oldRotation = mechBase.rotation;
 
         // Don't lerp to start
         lerpPercent = 1;
@@ -149,6 +156,12 @@ public class MechFootPlacer : MonoBehaviour
                     {
                         StartStep(stepSize, velocity);
                     }
+                }
+
+                // Check if rotation warrants a step
+                if (!moving && Quaternion.Angle(mechBase.rotation, oldRotation) > rotationThreshold)
+                {
+                    StartStep(stepSize, velocity);
                 }
             }
         }
@@ -236,6 +249,7 @@ public class MechFootPlacer : MonoBehaviour
         {
             startPosition = newStartPosition;
             goalPosition = newGoalPosition;
+            oldRotation = mechBase.rotation;
             lerpPercent = 0;
             moving = true;
         }

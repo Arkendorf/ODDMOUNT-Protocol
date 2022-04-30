@@ -214,8 +214,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3841051795839650737}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.12, y: 0.6012522, z: 0.31824943}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children:
   - {fileID: 3841051794643421503}
   - {fileID: 7704577329801178273}
@@ -239,7 +239,7 @@ MonoBehaviour:
   value: 0
   indicator: {fileID: 7931984835511885289}
   offEmissionColor: {r: 0, g: 0, b: 0, a: 0}
-  onEmissionColor: {r: 1, g: 0, b: 0.15686275, a: 1}
+  onEmissionColor: {r: 1, g: 0, b: 0.19607843, a: 1}
   blinkThreshold: 20
   minBlinkSpeed: 1
 --- !u!1 &3841051795977692981
