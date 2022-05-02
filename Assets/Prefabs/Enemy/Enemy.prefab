@@ -539,6 +539,7 @@ MonoBehaviour:
   threshold: 0.3
   sidestepThreshold: 0.15
   sidestepAngleThreshold: 60
+  rotationThreshold: 45
   velocityWeight: 0.15
   lerpSpeed: 8
   liftHeight: 0.4
@@ -796,6 +797,7 @@ MonoBehaviour:
   threshold: 0.3
   sidestepThreshold: 0.15
   sidestepAngleThreshold: 60
+  rotationThreshold: 45
   velocityWeight: 0.15
   lerpSpeed: 8
   liftHeight: 0.4
@@ -1401,7 +1403,7 @@ MonoBehaviour:
   mech: {fileID: 9161299944883277522}
   rigidbodyController: {fileID: 4854172190703598601}
   rotationTarget: {fileID: 4394125378704241137}
-  maxHealth: 100
+  maxHealth: 50
   weapons:
   - {fileID: 4985814116941492449}
   moveForce: 1500
@@ -1455,7 +1457,8 @@ MonoBehaviour:
   targetMoveThreshold: 0.3
   moveThreshold: 0.1
   angleThreshold: 1
-  stopDistance: 2.5
+  followRange: 50
+  stopDistance: 10
 --- !u!114 &1516890604589067666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2326,9 +2329,29 @@ PrefabInstance:
       value: HitscanWeapon
       objectReference: {fileID: 0}
     - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: maxAmmo
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: fireRate
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: minSpray
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
       propertyPath: rigidbody
       value: 
       objectReference: {fileID: 8441894667239471853}
+    - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
+      propertyPath: burstCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4096347565358804742, guid: 6dba2aff6cdee23499345d6c33bcc56f, type: 3}
       propertyPath: mechController
       value: 

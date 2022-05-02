@@ -17,6 +17,8 @@ public class MechNavMeshInput : MonoBehaviour
     public float moveThreshold = .1f;
     [Tooltip("Angle difference must exceed this number before the mech starts moving, in degrees")]
     public float angleThreshold = 1;
+    [Tooltip("Range in which this mech will move towards target")]
+    public float followRange = 10;
     [Tooltip("Distance between target and current transform when slowing should start")]
     public float stopDistance = .5f;
 
@@ -59,6 +61,9 @@ public class MechNavMeshInput : MonoBehaviour
             oldPosition = target.position;
         }
 
+        // Disable agent
+        agent.enabled = false;
+
         if (mechController.weapons[0])
         {
             // Get offset between weapon and mech, ignoring y
@@ -85,56 +90,72 @@ public class MechNavMeshInput : MonoBehaviour
             Vector3 delta = (target.position - mechController.mech.position);
             delta.y = 0;
 
-            distance = delta.magnitude;
-
-            // Set the destination to the target if the target has moved
-            if ((target.position - oldPosition).sqrMagnitude > targetMoveThreshold * targetMoveThreshold)
+            // Check if target is in follow range
+            bool active = delta.sqrMagnitude <= followRange * followRange;
+            if (active)
             {
-                agent.SetDestination(target.position);
-                oldPosition = target.position;
+                // Enable nav agent
+                if (!agent.enabled)
+                    agent.enabled = true;
+
+                // Get distance from target
+                distance = delta.magnitude;
+
+                // Set the destination to the target if the target has moved
+                if ((target.position - oldPosition).sqrMagnitude > targetMoveThreshold * targetMoveThreshold)
+                {
+                    agent.SetDestination(target.position);
+                    oldPosition = target.position;
+                }
+
+                // Iterate through weapons
+                foreach (Weapon weapon in mechController.weapons)
+                {
+                    // Reload weapon if it's out of ammo
+                    if (weapon.ammo <= 0)
+                    {
+                        weapon.Reload();
+                    }
+                    else // If weapon has ammo and is facing a player, fire
+                    {
+                        RaycastHit hit;
+                        bool raycast = Physics.Raycast(weapon.origin.position, weapon.origin.forward, out hit, weapon.range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+                        if (raycast && hit.rigidbody && hit.rigidbody.CompareTag(hostileTag))
+                        {
+                            if (!weapon.firing)
+                                weapon.StartFire();
+                            else
+                                weapon.Fire();
+                        }
+                        else if (weapon.firing)
+                        {
+                            weapon.StopFire();
+                        }
+                    }
+                }
+            }
+            else if (agent.enabled)
+            {
+                agent.enabled = false;
             }
 
             // Update position
-            UpdatePosition();
+            UpdatePosition(active);
 
             // Update rotation
-            UpdateRotation();
-
-            // Iterate through weapons
-            foreach(Weapon weapon in mechController.weapons)
-            {
-                // Reload weapon if it's out of ammo
-                if (weapon.ammo <= 0)
-                {
-                    weapon.Reload();
-                }
-                else // If weapon has ammo and is facing a player, fire
-                {
-                    RaycastHit hit;
-                    bool raycast = Physics.Raycast(weapon.origin.position, weapon.origin.forward, out hit, weapon.range, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
-                    if (raycast && hit.rigidbody && hit.rigidbody.CompareTag(hostileTag))
-                    {
-                        if (!weapon.firing)
-                            weapon.StartFire();
-                        else
-                            weapon.Fire();
-                    }
-                    else if (weapon.firing)
-                    {
-                        weapon.StopFire();
-                    }
-                }               
-            }
+            UpdateRotation(active);
         }
+
+            
      
         // Update agent's conception of where it is in space
         agent.nextPosition = mechController.mech.transform.position;
     }
 
-    private void UpdatePosition()
+    private void UpdatePosition(bool active)
     {
         // Check if mech needs to move
-        if (agent.desiredVelocity.sqrMagnitude > moveThreshold * moveThreshold)
+        if (active && agent.desiredVelocity.sqrMagnitude > moveThreshold * moveThreshold)
         {
             // If not yet moving, start moving
             if (!mechController.moving)
@@ -156,50 +177,57 @@ public class MechNavMeshInput : MonoBehaviour
         }
     }
 
-    private void UpdateRotation()
+    private void UpdateRotation(bool active)
     {
-        // Get mech's offset from target
-        Vector3 delta = (target.position - mechController.mech.position);
-        delta.y = 0;
-
-        // Goal rotation
-        float goalAngle = Quaternion.LookRotation(delta).eulerAngles.y;
-        // If mech has a primary weapon, aim it at the target
-        if (mechController.weapons[0])
+        if (active)
         {
-            float l = weaponDistance;
-            float M = weaponAngle;
+            // Get mech's offset from target
+            Vector3 delta = (target.position - mechController.mech.position);
+            delta.y = 0;
 
-            float m = distance;
+            // Goal rotation
+            float goalAngle = Quaternion.LookRotation(delta).eulerAngles.y;
+            // If mech has a primary weapon, aim it at the target
+            if (mechController.weapons[0])
+            {
+                float l = weaponDistance;
+                float M = weaponAngle;
 
-            float offsetAngle = -Mathf.Asin(l * Mathf.Sin(M * Mathf.Deg2Rad) / m) * Mathf.Rad2Deg;
+                float m = distance;
 
-            goalAngle += weaponDir * offsetAngle;
-        }                 
-        
-        // Get current rotation
-        float currentAngle = mechController.mech.transform.eulerAngles.y;
-        // Get rotation options
-        float rightAngle = LoopAngle(goalAngle - currentAngle);
-        float leftAngle = LoopAngle(goalAngle - currentAngle - 360);
-        // Get best rotation
-        float angle = Mathf.Abs(leftAngle) < Mathf.Abs(rightAngle) ? leftAngle : rightAngle;
+                float offsetAngle = -Mathf.Asin(l * Mathf.Sin(M * Mathf.Deg2Rad) / m) * Mathf.Rad2Deg;
 
-        // If angle difference is great enough, rotate the mech
-        if (Mathf.Abs(angle) > angleThreshold)
-        {
-            // If not yet turning, start moving
-            if (!mechController.turning)
-                mechController.StartTurn();
+                goalAngle += weaponDir * offsetAngle;
+            }
 
-            // Create input
-            float inputX = Mathf.Clamp(angle / (mechController.turnSpeed * Time.deltaTime), -1, 1);
-            Vector2 input = new Vector2(inputX, 0);
+            // Get current rotation
+            float currentAngle = mechController.mech.transform.eulerAngles.y;
+            // Get rotation options
+            float rightAngle = LoopAngle(goalAngle - currentAngle);
+            float leftAngle = LoopAngle(goalAngle - currentAngle - 360);
+            // Get best rotation
+            float angle = Mathf.Abs(leftAngle) < Mathf.Abs(rightAngle) ? leftAngle : rightAngle;
 
-            // Update turn
-            mechController.Turn(input);
-        }
-        else if (mechController.turning) // Stop turn if necessary
+            // If angle difference is great enough, rotate the mech
+            if (Mathf.Abs(angle) > angleThreshold)
+            {
+                // If not yet turning, start moving
+                if (!mechController.turning)
+                    mechController.StartTurn();
+
+                // Create input
+                float inputX = Mathf.Clamp(angle / (mechController.turnSpeed * Time.deltaTime), -1, 1);
+                Vector2 input = new Vector2(inputX, 0);
+
+                // Update turn
+                mechController.Turn(input);
+            }
+            else if (mechController.turning) // Stop turn if necessary
+            {
+                mechController.StopTurn();
+            }
+        }    
+        else if (mechController.turning) // Stop if not active
         {
             mechController.StopTurn();
         }

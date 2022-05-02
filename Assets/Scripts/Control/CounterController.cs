@@ -51,7 +51,6 @@ public class CounterController : MonoBehaviour
                 {
                     // Toggle indicator
                     indicatorIsOn = !indicatorIsOn;
-                    Debug.Log("Toggling, " + indicatorIsOn);
 
                     SetIndicatorEmission();
                     // Set new delay
