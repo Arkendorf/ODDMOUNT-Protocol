@@ -9,6 +9,8 @@ public class WheelControl : PhysicalControl
     public AudioManager wheelAudioManager;
 
     [Header("Component Properties")]
+    [Tooltip("Nonessential transform for visuals")]
+    public Transform axis;
     [Tooltip("The shaft for this wheel control")]
     public Transform shaft;
     [Tooltip("The wheel object for this wheel control")]
@@ -105,8 +107,9 @@ public class WheelControl : PhysicalControl
         else
         {
             // Keep resetting wheel rotation to neutral
-            goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(shaft.forward, transform.right), -shaft.forward);
+            goalWheelRotation = Quaternion.LookRotation(shaft.forward, shaft.up);
         }
+
 
         // Lerp to goal rotation
         Quaternion currentShaftRotation = Quaternion.Inverse(transform.rotation) * shaft.rotation;
@@ -114,6 +117,14 @@ public class WheelControl : PhysicalControl
 
         Quaternion currentWheelRotation = wheel.rotation;
         wheel.rotation = Quaternion.Lerp(currentWheelRotation, goalWheelRotation, moveSpeed * Time.deltaTime);
+
+        // Just for visuals
+        if (axis)
+        {
+            Vector3 forward = Vector3.Cross(Vector3.up, shaft.right);
+            axis.rotation = Quaternion.LookRotation(forward, Vector3.Cross(shaft.right, forward));
+        }
+
 
         // Update audio
         if (prevShaftRotation != currentShaftRotation)
@@ -240,8 +251,8 @@ public class WheelControl : PhysicalControl
     {
         // Control wheel rotation
         // Project controller positions to plane of wheel, and get the difference between the resulting positions 
-        Vector3 delta = Vector3.ProjectOnPlane(rightPos, wheel.up) - Vector3.ProjectOnPlane(leftPos, wheel.up);
-        float angle = Vector3.SignedAngle(transform.right, delta, wheel.up);
+        Vector3 delta = Vector3.ProjectOnPlane(rightPos, wheel.forward) - Vector3.ProjectOnPlane(leftPos, wheel.forward);
+        float angle = Vector3.SignedAngle(transform.right, delta, wheel.forward);
 
         // Cap angle
         if (angle > maxWheelAngle)
@@ -264,10 +275,7 @@ public class WheelControl : PhysicalControl
             angle = 0;
 
         // Rotate wheel
-        goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(shaft.forward, transform.right), -shaft.forward) * Quaternion.Euler(0, angle, 0);
-
-        // Unrestrained wheel rotation
-        //goalWheelRotation = Quaternion.LookRotation(Vector3.Cross(delta, wheel.up), wheel.up);
+        goalWheelRotation = Quaternion.LookRotation(shaft.forward, shaft.up) * Quaternion.Euler(0, 0, angle);
 
         // Move mech
         if (mechController)
@@ -275,9 +283,9 @@ public class WheelControl : PhysicalControl
             // Create input
             Vector2 input = new Vector2();
             if (angle > 0)
-                input.x = (angle - wheelDeadzone) / (maxWheelAngle - wheelDeadzone);
+                input.x = -(angle - wheelDeadzone) / (maxWheelAngle - wheelDeadzone);
             else if (angle < 0)
-                input.x = -(angle + wheelDeadzone) / (minWheelAngle + wheelDeadzone);
+                input.x = (angle + wheelDeadzone) / (minWheelAngle + wheelDeadzone);
 
             // Turn the mech         
             if (input.x != 0 || input.y != 0)
