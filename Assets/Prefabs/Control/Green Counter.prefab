@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3841051794352083424, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_Size.x
-      value: 5
+      value: 4.3
       objectReference: {fileID: 0}
     - target: {fileID: 3841051794352083424, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_Color.b
@@ -77,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3841051795977692980, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 480
+      value: 380
       objectReference: {fileID: 0}
     - target: {fileID: 3841051795977692983, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_Material
@@ -85,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1f62fae706b34b74bb0d32d1096c12ba, type: 2}
     - target: {fileID: 3841051796066838612, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 480
+      value: 380
       objectReference: {fileID: 0}
     - target: {fileID: 3841051796066838615, guid: 7c629c0cd84947646bb48593d2a5c96f, type: 3}
       propertyPath: m_Material

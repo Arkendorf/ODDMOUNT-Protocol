@@ -384,6 +384,14 @@ PrefabInstance:
       propertyPath: mechController
       value: 
       objectReference: {fileID: 2008352825615465734}
+    - target: {fileID: 9094237439753771548, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechWrist
+      value: 
+      objectReference: {fileID: 6999285533927818588}
+    - target: {fileID: 9094237439753771548, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
 --- !u!114 &397059427682645285 stripped

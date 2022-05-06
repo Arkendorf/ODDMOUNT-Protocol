@@ -1073,10 +1073,10 @@ MonoBehaviour:
   wheel: {fileID: 2866498436522538607}
   left: {fileID: 3758268673524788564}
   right: {fileID: 5337242648795811196}
-  maxXAngle: 20
-  minXAngle: -20
-  maxZAngle: 15
-  minZAngle: -15
+  maxXAngle: 22.5
+  minXAngle: -22.5
+  maxZAngle: 22.5
+  minZAngle: -22.5
   shaftDeadzone: 5
   maxWheelAngle: 30
   minWheelAngle: -30
