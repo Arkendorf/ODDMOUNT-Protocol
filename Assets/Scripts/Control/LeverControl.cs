@@ -49,8 +49,8 @@ public class LeverControl : PhysicalControl
 
         maxSpeed = Mathf.Max(resetSpeed, moveSpeed);
 
-        currentAngle = offsetAngle + minAngle;
-        goalAngle = offsetAngle + minAngle;
+        currentAngle = minAngle;
+        goalAngle = minAngle;
     }
 
     // Update is called once per frame
@@ -68,16 +68,16 @@ public class LeverControl : PhysicalControl
                 Vector3 dir = Vector3.Cross(Vector3.Cross(transform.right, delta), transform.right);
 
                 // Get new goal angle
-                goalAngle = Vector3.SignedAngle(Vector3.up, dir, transform.right);
+                goalAngle = LoopAngle(Vector3.SignedAngle(Vector3.up, dir, transform.right) - offsetAngle);
 
                 // Cap goal angle
-                if (goalAngle > offsetAngle + maxAngle)
-                    goalAngle = offsetAngle + maxAngle;
+                if (goalAngle > maxAngle)
+                    goalAngle = maxAngle;
 
-                if (goalAngle < offsetAngle + minAngle)
-                    goalAngle = offsetAngle + minAngle;
+                if (goalAngle < minAngle)
+                    goalAngle = minAngle;
             }
-            else if (!allowIntermediateAngle && goalAngle != offsetAngle + minAngle && (resetOnEventTrigger || goalAngle != offsetAngle + maxAngle))
+            else if (!allowIntermediateAngle && goalAngle != minAngle && (resetOnEventTrigger || goalAngle != maxAngle))
             {
                 ResetLever();
             }
@@ -100,7 +100,7 @@ public class LeverControl : PhysicalControl
                 currentSpeed = (offset / Time.deltaTime) / maxSpeed;
             }
 
-            if (currentAngle % 360 == (offsetAngle + maxAngle) % 360)
+            if (currentAngle == maxAngle)
             {
                 // Trigger event
                 OnPulled?.Invoke();
@@ -120,7 +120,7 @@ public class LeverControl : PhysicalControl
                 currentAngle = goalAngle;
                 currentSpeed = -(offset / Time.deltaTime) / maxSpeed;
             }
-            if (currentAngle == offsetAngle + minAngle)
+            if (currentAngle == minAngle)
             {
                 resetting = false;
                 currentSpeed = speed / maxSpeed;
@@ -132,19 +132,28 @@ public class LeverControl : PhysicalControl
             currentSpeed = 0;
         }
 
-        if (currentAngle > offsetAngle + minAngle && currentAngle < offsetAngle + maxAngle)
+        if (currentAngle > minAngle && currentAngle < maxAngle)
         {
             AllowStopSound(0);
         }
 
         // Set lever rotation
-        lever.localRotation = Quaternion.Euler(currentAngle - offsetAngle, 0, 0);
+        lever.localRotation = Quaternion.Euler(currentAngle, 0, 0);
     }
 
     // Reset lever to min position
     public void ResetLever()
     {
         resetting = true;
-        goalAngle = offsetAngle + minAngle;
+        goalAngle = minAngle;
+    }
+
+    private float LoopAngle(float angle)
+    {
+        if (angle > 180)
+            return angle - 360;
+        else if (angle < -180)
+            return angle + 360;
+        return angle;
     }
 }

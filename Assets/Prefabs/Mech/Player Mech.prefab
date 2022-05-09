@@ -83,7 +83,7 @@ PrefabInstance:
     - target: {fileID: 2345722740898589682, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
       propertyPath: lever
       value: 
-      objectReference: {fileID: 2284570270484903076}
+      objectReference: {fileID: 8622040814268163210}
     - target: {fileID: 2345722740898589682, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
       propertyPath: counter
       value: 
@@ -107,7 +107,7 @@ PrefabInstance:
     - target: {fileID: 4897333128178527955, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
       propertyPath: lever
       value: 
-      objectReference: {fileID: 397059427682645285}
+      objectReference: {fileID: 3373679386987478235}
     - target: {fileID: 4897333128178527955, guid: 15d460a84ee8d094494aa3e28e3e199f, type: 3}
       propertyPath: counter
       value: 
@@ -288,6 +288,18 @@ PrefabInstance:
       propertyPath: mechController
       value: 
       objectReference: {fileID: 2008352825615465734}
+    - target: {fileID: 1260993823114724609, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
+    - target: {fileID: 1644110249978983333, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechWrist
+      value: 
+      objectReference: {fileID: 5314659574898771628}
+    - target: {fileID: 1644110249978983333, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
     - target: {fileID: 3440350133713394695, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
       propertyPath: center
       value: 
@@ -305,6 +317,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6999285533927818588}
     - target: {fileID: 4175894004527974677, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
+    - target: {fileID: 4373873757710700107, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
+    - target: {fileID: 4589317288332717336, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechWrist
+      value: 
+      objectReference: {fileID: 6999285533927818588}
+    - target: {fileID: 4589317288332717336, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
       propertyPath: mechController
       value: 
       objectReference: {fileID: 2008352825615465734}
@@ -372,6 +396,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cockpit
       objectReference: {fileID: 0}
+    - target: {fileID: 7333281814759495194, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+      propertyPath: mechController
+      value: 
+      objectReference: {fileID: 2008352825615465734}
     - target: {fileID: 7715501116664955204, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
       propertyPath: mechController
       value: 
@@ -394,28 +422,6 @@ PrefabInstance:
       objectReference: {fileID: 2008352825615465734}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
---- !u!114 &397059427682645285 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5662739970756845540, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
-  m_PrefabInstance: {fileID: 5410155151247829697}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d80e619ccfee0d4fac1420af6e4e5e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2284570270484903076 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6098111375698812517, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
-  m_PrefabInstance: {fileID: 5410155151247829697}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d80e619ccfee0d4fac1420af6e4e5e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2922800067257455411 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7177440789520071154, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
@@ -458,6 +464,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d30a986f58cd2e4fb5d2837982d8a8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3373679386987478235 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7333281814759495194, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+  m_PrefabInstance: {fileID: 5410155151247829697}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d80e619ccfee0d4fac1420af6e4e5e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8622040814268163210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4373873757710700107, guid: 52ca2ab7bd856224daaa63547ee9c154, type: 3}
+  m_PrefabInstance: {fileID: 5410155151247829697}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d80e619ccfee0d4fac1420af6e4e5e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &7185259257019558896

@@ -13,6 +13,8 @@ public class ArmControl : PhysicalControl
     public InputDevice input;
     [Tooltip("IK Controller")]
     public TriangleIK ik;
+    [Tooltip("Minimum distance between shoulder and target")]
+    public float minDistance = .2f;
 
     // Target for the IK
     private GameObject target;
@@ -32,6 +34,7 @@ public class ArmControl : PhysicalControl
 
     // Audio variables
     private float audioThreshold = .001f;
+
 
     // Start is called before the first frame update
     protected override void Start()
@@ -90,7 +93,7 @@ public class ArmControl : PhysicalControl
         // Get offset between controller and end of arm
         hand = input.controller.transform;
         Transform model = input.controller.model;
-        offset = Quaternion.Inverse(model.rotation) * (model.position - ik.transform.position);
+        offset = Quaternion.Inverse(ik.transform.rotation) * (model.position - ik.transform.position);
     }
 
     private void Deselected()
@@ -105,7 +108,13 @@ public class ArmControl : PhysicalControl
         // Update goal position and rotation
         if (input.interactable.isSelected)
         {
-            goalPosition = Quaternion.Inverse(transform.rotation) * (hand.position - goalRotation * offset - transform.position);
+            goalPosition = Quaternion.Inverse(transform.rotation) * (hand.position - ik.transform.rotation * offset - transform.position);
+
+            if (goalPosition.sqrMagnitude < minDistance * minDistance)
+            {
+                goalPosition = goalPosition.normalized * minDistance;
+            }
+
             up = Quaternion.Inverse(transform.rotation) * hand.up;
         }
 

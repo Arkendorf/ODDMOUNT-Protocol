@@ -153,13 +153,13 @@ public class WheelControl : PhysicalControl
         }
         else if (right.interactable.isSelected)
         {
-            // Position right hand on right control
-            angles = GetGoalAngles(rightPos, right.transform.position);
+            // Position right hand on right control (offset by hand model offset from control)
+            angles = GetGoalAngles(rightPos + (right.transform.position - right.controller.model.position), right.transform.position);
         }
         else
         {
-            // Position left hand on left control
-            angles = GetGoalAngles(leftPos, left.transform.position);
+            // Position left hand on left control (offset by hand model offset from control)
+            angles = GetGoalAngles(leftPos + (left.transform.position - left.controller.model.position), left.transform.position);
         }
 
         // Cap angles
