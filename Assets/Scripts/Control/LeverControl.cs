@@ -100,7 +100,7 @@ public class LeverControl : PhysicalControl
                 currentSpeed = (offset / Time.deltaTime) / maxSpeed;
             }
 
-            if (currentAngle == offsetAngle + maxAngle)
+            if (currentAngle % 360 == (offsetAngle + maxAngle) % 360)
             {
                 // Trigger event
                 OnPulled?.Invoke();
