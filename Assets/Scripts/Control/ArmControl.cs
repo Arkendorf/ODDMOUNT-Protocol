@@ -20,8 +20,6 @@ public class ArmControl : PhysicalControl
     private GameObject target;
     // Transform of the controller
     private Transform hand;
-    // Offset between controller
-    private Vector3 offset;
 
     // Up vector
     private Vector3 up;
@@ -46,10 +44,13 @@ public class ArmControl : PhysicalControl
         target.transform.parent = transform;
 
         // Set initial transform
-        target.transform.position = ik.transform.position;
+        if (ik.attachTransform)
+            target.transform.position = ik.attachTransform.position;
+        else
+            target.transform.position = ik.transform.position;
         target.transform.rotation = ik.transform.rotation;
-        goalPosition = ik.transform.position - transform.position;
-        goalRotation = ik.transform.rotation;
+        goalPosition = target.transform.position - transform.position;
+        goalRotation = target.transform.rotation;
 
         // Set initial IK state
         ik.target = target.transform;
@@ -92,8 +93,6 @@ public class ArmControl : PhysicalControl
     {
         // Get offset between controller and end of arm
         hand = input.controller.transform;
-        Transform model = input.controller.model;
-        offset = Quaternion.Inverse(ik.transform.rotation) * (model.position - ik.transform.position);
     }
 
     private void Deselected()
@@ -108,12 +107,11 @@ public class ArmControl : PhysicalControl
         // Update goal position and rotation
         if (input.interactable.isSelected)
         {
-            goalPosition = Quaternion.Inverse(transform.rotation) * (hand.position - ik.transform.rotation * offset - transform.position);
+            goalPosition = Quaternion.Inverse(transform.rotation) * (hand.position - transform.position);
 
+            // Don't allow goal to be too close to the IK root, or weird stuff will happen
             if (goalPosition.sqrMagnitude < minDistance * minDistance)
-            {
                 goalPosition = goalPosition.normalized * minDistance;
-            }
 
             up = Quaternion.Inverse(transform.rotation) * hand.up;
         }
