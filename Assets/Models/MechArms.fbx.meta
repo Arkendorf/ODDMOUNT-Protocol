@@ -3,7 +3,22 @@ guid: d24f3369d614cbe44a31eaa8ebf1e52e
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Armor
+    second: {fileID: 2100000, guid: 03b2f59b79cf83a438d6cd149cf67100, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: DarkSteel
+    second: {fileID: 2100000, guid: ed6e42b99bcc98f46b4feb8a8b823fe6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LightSteel
+    second: {fileID: 2100000, guid: 1cdc8a83d0e40404591806e0ce1c97d1, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
