@@ -44,6 +44,9 @@ public class MechFootPlacer : MonoBehaviour
     // Whether this foot is moving or not
     [HideInInspector] public bool moving;
 
+    private Transform foot;
+    private float footMoveThreshold = .1f;
+
     // Lerp info
     private Vector3 startPosition;
     private Vector3 goalPosition;
@@ -84,13 +87,18 @@ public class MechFootPlacer : MonoBehaviour
 
         // Don't lerp to start
         lerpPercent = 1;
+
+        if (ik.attachTransform)
+            foot = ik.attachTransform;
+        else
+            foot = ik.transform;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Set IK axis
-        ik.axis = mechBase.right;
+        ik.axis = -mechBase.right;
 
         // If mech is alive and isn't airborne, and velocity is below threshold, move feet (walk)
         bool walking = !mech.dead && !mech.airborne && rigidbody.velocity.sqrMagnitude < velocityThreshold * velocityThreshold;
@@ -130,22 +138,22 @@ public class MechFootPlacer : MonoBehaviour
                 // Get the angle between forward direction of the mech, and the mech's velocity, to see if the mech is moving more forward, or more to the side
                 float angle = Vector3.Angle(mechBase.forward, velocity);
 
-                // Check if sidesteps are valid
-                if (velocity.sqrMagnitude > .001f && angle > sidestepAngleThreshold)
-                {
-                    // If body is outside of sidestep threshold from avg foot position
-                    if (delta.sqrMagnitude > sidestepThreshold * sidestepThreshold && Vector3.Dot(thisDelta, velocity) < 0)
-                    {
-                        // If this is the closer foot, move it
-                        if (thisDelta.sqrMagnitude <= otherDelta.sqrMagnitude)
-                        {
-                            StartStep(stepSize, velocity);
-                        }
-                    }
+                //// Check if sidesteps are valid
+                //if (velocity.sqrMagnitude > .001f && angle > sidestepAngleThreshold)
+                //{
+                //    // If body is outside of sidestep threshold from avg foot position
+                //    if (delta.sqrMagnitude > sidestepThreshold * sidestepThreshold && Vector3.Dot(thisDelta, velocity) < 0)
+                //    {
+                //        // If this is the closer foot, move it
+                //        if (thisDelta.sqrMagnitude <= otherDelta.sqrMagnitude)
+                //        {
+                //            StartStep(stepSize, velocity);
+                //        }
+                //    }
 
-                    // If sidestepping stunt the normal steps
-                    stepSize = sidestepThreshold;
-                }
+                //    // If sidestepping stunt the normal steps
+                //    stepSize = sidestepThreshold;
+                //}
 
                 // Normal steps are always valid
                 // If body is outside of threshold from average foot position
@@ -160,6 +168,12 @@ public class MechFootPlacer : MonoBehaviour
 
                 // Check if rotation warrants a step
                 if (!moving && Quaternion.Angle(mechBase.rotation, oldRotation) > rotationThreshold)
+                {
+                    StartStep(stepSize, velocity);
+                }
+
+                // Check if difference between foot and target warrants a step
+                if (!moving && (foot.position - transform.position).sqrMagnitude > footMoveThreshold * footMoveThreshold)
                 {
                     StartStep(stepSize, velocity);
                 }
