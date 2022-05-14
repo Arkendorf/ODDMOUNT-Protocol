@@ -9,6 +9,8 @@ public class MechFootPlacer : MonoBehaviour
     public MechController mech;
     [Tooltip("Base of mech to base this foot's positioning on, and whose velocity to use for calculation")]
     public Transform mechBase;
+    [Tooltip("The waist for this mech")]
+    public Transform hips;
     [Tooltip("The other foot (besides this one) of the mech")]
     public MechFootPlacer otherFoot;
     [Tooltip("The IK component controlling the leg attached to this foot")]
@@ -47,6 +49,8 @@ public class MechFootPlacer : MonoBehaviour
     private Transform foot;
     private float footMoveThreshold = .1f;
 
+    private Vector3 defaultAxis;
+
     // Lerp info
     private Vector3 startPosition;
     private Vector3 goalPosition;
@@ -78,12 +82,12 @@ public class MechFootPlacer : MonoBehaviour
         rigidbody = mechBase.GetComponent<Rigidbody>();
 
         // Set foot initial position
-        startPosition = mechBase.position + mechBase.rotation * defaultOffset;
-        goalPosition = mechBase.position + mechBase.rotation * defaultOffset;
+        startPosition = mechBase.position + hips.rotation * defaultOffset;
+        goalPosition = mechBase.position + hips.rotation * defaultOffset;
         localStartPosition = startPosition - mechBase.position;
         localGoalPosition = goalPosition - mechBase.position;
 
-        oldRotation = mechBase.rotation;
+        oldRotation = hips.rotation;
 
         // Don't lerp to start
         lerpPercent = 1;
@@ -92,13 +96,15 @@ public class MechFootPlacer : MonoBehaviour
             foot = ik.attachTransform;
         else
             foot = ik.transform;
+
+        defaultAxis = ik.axis;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Set IK axis
-        ik.axis = -mechBase.right;
+        ik.axis = hips.rotation * defaultAxis;
 
         // If mech is alive and isn't airborne, and velocity is below threshold, move feet (walk)
         bool walking = !mech.dead && !mech.airborne && rigidbody.velocity.sqrMagnitude < velocityThreshold * velocityThreshold;
@@ -167,7 +173,7 @@ public class MechFootPlacer : MonoBehaviour
                 }
 
                 // Check if rotation warrants a step
-                if (!moving && Quaternion.Angle(mechBase.rotation, oldRotation) > rotationThreshold)
+                if (!moving && Quaternion.Angle(hips.rotation, oldRotation) > rotationThreshold)
                 {
                     StartStep(stepSize, velocity);
                 }
@@ -221,7 +227,7 @@ public class MechFootPlacer : MonoBehaviour
 
         // update height and rotation
         transform.position = newPosition;
-        transform.rotation = mechBase.rotation;   
+        transform.rotation = hips.rotation;   
 
         // Do drag effects
         if (!walking && !mech.airborne && !dragging)
@@ -255,7 +261,7 @@ public class MechFootPlacer : MonoBehaviour
         // Calculate new start and goal positions
         Vector3 newStartPosition = transform.position;
         newStartPosition.y = 0;
-        Vector3 newGoalPosition = mechBase.position + mechBase.rotation * defaultOffset + velocity.normalized * stepSize + velocity * velocityWeight;
+        Vector3 newGoalPosition = mechBase.position + hips.rotation * defaultOffset + velocity.normalized * stepSize + velocity * velocityWeight;
         newGoalPosition.y = 0;
 
         // TODO: This IF statement is a band-aid solution to stutter steps, should be replaced
@@ -263,7 +269,7 @@ public class MechFootPlacer : MonoBehaviour
         {
             startPosition = newStartPosition;
             goalPosition = newGoalPosition;
-            oldRotation = mechBase.rotation;
+            oldRotation = hips.rotation;
             lerpPercent = 0;
             moving = true;
         }

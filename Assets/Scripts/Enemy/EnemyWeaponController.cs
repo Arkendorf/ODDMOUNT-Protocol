@@ -5,8 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(RigidbodyController))]
 public class EnemyWeaponController : MonoBehaviour
 {
-    [Tooltip("The mech this belongs to")]
-    public MechController mechController;
     [Tooltip("The input with the target for this weapon")]
     public MechNavMeshInput input;
     [Tooltip("How fast the weapon rotates")]
@@ -28,8 +26,8 @@ public class EnemyWeaponController : MonoBehaviour
 
     void Update()
     {
-        // Get height offset
-        float height = input.target.position.y - mechController.mech.position.y;
+        // Get height offset between weapon and target
+        float height = input.target.position.y - transform.position.y;
 
         // Get distance
         float length = input.distance;

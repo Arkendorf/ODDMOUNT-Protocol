@@ -583,6 +583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 2008352825615465734}
   mechBase: {fileID: 2862900616844260564}
+  hips: {fileID: 8590836712977550365}
   otherFoot: {fileID: 6480723795698258212}
   ik: {fileID: 1580774203109803858}
   defaultOffset: {x: 1, y: 0, z: 0}
@@ -1529,6 +1530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 2008352825615465734}
   mechBase: {fileID: 2862900616844260564}
+  hips: {fileID: 8590836712977550365}
   otherFoot: {fileID: 7764687405609252274}
   ik: {fileID: 477967867929470164}
   defaultOffset: {x: -1, y: 0, z: 0}
@@ -2046,8 +2048,8 @@ MonoBehaviour:
   target: {fileID: 6352183216332707280}
   attachTransform: {fileID: 769050567114740642}
   lockWrist: 0
-  axis: {x: 0, y: -1, z: 0}
-  angle: 90
+  axis: {x: -1, y: 0, z: 0}
+  angle: 0
 --- !u!1 &5740813023669287448
 GameObject:
   m_ObjectHideFlags: 0
@@ -2190,8 +2192,8 @@ MonoBehaviour:
   target: {fileID: 9036807555596048817}
   attachTransform: {fileID: 6203039553034741486}
   lockWrist: 0
-  axis: {x: 0, y: -1, z: 0}
-  angle: 90
+  axis: {x: -1, y: 0, z: 0}
+  angle: 0
 --- !u!1 &7126934058302167165
 GameObject:
   m_ObjectHideFlags: 0

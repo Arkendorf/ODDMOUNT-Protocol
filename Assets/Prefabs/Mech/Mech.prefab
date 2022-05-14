@@ -578,12 +578,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 4312573021424740935}
   mechBase: {fileID: 557704046639440789}
+  waist: {fileID: 6286607712535649116}
   otherFoot: {fileID: 5460608084676944627}
   ik: {fileID: 6670380968008726474}
   defaultOffset: {x: -0.4, y: 0, z: 0}
   threshold: 0.3
   sidestepThreshold: 0.15
   sidestepAngleThreshold: 60
+  rotationThreshold: 45
   velocityWeight: 0.15
   lerpSpeed: 8
   liftHeight: 0.4
@@ -726,6 +728,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 8656253747581141649}
+  attachTransform: {fileID: 0}
+  lockWrist: 0
   axis: {x: 0, y: 1, z: 0}
   angle: -90
 --- !u!82 &1178560941540953356
@@ -954,6 +958,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 6732736886355005168}
+  attachTransform: {fileID: 0}
+  lockWrist: 0
   axis: {x: 0, y: 1, z: 0}
   angle: -90
 --- !u!82 &1903798252485948984
@@ -1689,12 +1695,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mech: {fileID: 4312573021424740935}
   mechBase: {fileID: 557704046639440789}
+  waist: {fileID: 6286607712535649116}
   otherFoot: {fileID: 8788330357398586981}
   ik: {fileID: 5593081166736747195}
   defaultOffset: {x: 0.4, y: 0, z: 0}
   threshold: 0.3
   sidestepThreshold: 0.15
   sidestepAngleThreshold: 60
+  rotationThreshold: 45
   velocityWeight: 0.15
   lerpSpeed: 8
   liftHeight: 0.4
@@ -2322,6 +2330,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cebadb1543c0a9e4b86a34a9f2a28332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthCounter: {fileID: 0}
+  boostCounter: {fileID: 0}
 --- !u!1 &6286607713340587230
 GameObject:
   m_ObjectHideFlags: 0

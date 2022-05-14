@@ -4897,11 +4897,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mechController: {fileID: 0}
+  lever: {fileID: 0}
+  counter: {fileID: 0}
+  percent: 0
   audioManager: {fileID: 2804671852860923483}
   reloadSound: {fileID: 8300000, guid: 2d9e62a250c43314bb46a0ad98f02bf7, type: 3}
   emptySound: {fileID: 8300000, guid: 81e0503a5f8e1084caad3565f57b7337, type: 3}
   origin: {fileID: 4096347565358804743}
-  lever: {fileID: 0}
   maxAmmo: 100
   reloadTime: 2
   range: 500
@@ -4931,34 +4933,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
       propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
-      propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 721976580816270174, guid: c294a4ff9fef29049b8e58a17a4aeb97, type: 3}
