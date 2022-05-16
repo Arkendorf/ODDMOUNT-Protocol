@@ -18,9 +18,9 @@ public class MechHipsController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        if (mechController.mech.velocity.sqrMagnitude > velocityThreshold * velocityThreshold)
+        if (!mechController.dead && mechController.mech.velocity.sqrMagnitude > velocityThreshold * velocityThreshold)
         {
             forward = mechController.mech.velocity;
             transform.rotation = Quaternion.LookRotation(forward);

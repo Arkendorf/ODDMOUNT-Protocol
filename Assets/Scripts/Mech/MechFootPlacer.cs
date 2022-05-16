@@ -81,6 +81,9 @@ public class MechFootPlacer : MonoBehaviour
         // Get the mech's rigidbody
         rigidbody = mechBase.GetComponent<Rigidbody>();
 
+        if (!hips)
+            hips = mechBase;
+
         // Set foot initial position
         startPosition = mechBase.position + hips.rotation * defaultOffset;
         goalPosition = mechBase.position + hips.rotation * defaultOffset;
