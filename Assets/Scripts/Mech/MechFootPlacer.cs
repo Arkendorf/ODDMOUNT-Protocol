@@ -230,7 +230,8 @@ public class MechFootPlacer : MonoBehaviour
 
         // update height and rotation
         transform.position = newPosition;
-        transform.rotation = hips.rotation;   
+        if (!mech.dead)
+            transform.rotation = hips.rotation;   
 
         // Do drag effects
         if (!walking && !mech.airborne && !dragging)
