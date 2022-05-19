@@ -6,12 +6,18 @@ using UnityEngine;
 #if UNITY_EDITOR
 public class BuildingCreator : MonoBehaviour
 {
+    public List<Material> materialOptions;
+    public List<Material> trimOptions;
+    public Material placeholderTrimMaterial;
+    [Space()]
     public List<GameObject> doorOptions;
+    public float doorHeight = 1;
     [Space()]
     public List<GameObject> windowOptions;
     public float minWindowHeight = 1;
-    public float windowHeight = 1;
-    public float windowWidth = 1;
+    public float maxWindowHeight = 1;
+    public float minWindowWidth = 1;
+    public float maxWindowWidth = 1;
     [Space()]
     public GameObject roofPrefab;
     public float roofHeight = 1;
@@ -26,6 +32,9 @@ public class BuildingCreator : MonoBehaviour
     private int windowStyle;
     private float height;
     private int storyCount;
+    private float windowWidth;
+    private float windowHeight;
+    private int trimStyle;
 
     // Start is called before the first frame update
     public void Create()
@@ -35,12 +44,17 @@ public class BuildingCreator : MonoBehaviour
             DestroyImmediate(this.transform.GetChild(0).gameObject);
 
         // Get styles
-        doorStyle = Random.Range(0, doorOptions.Count - 1);
-        windowStyle = Random.Range(0, windowOptions.Count - 1);
+        doorStyle = Random.Range(0, doorOptions.Count);
+        windowStyle = Random.Range(0, windowOptions.Count);
+        trimStyle = Random.Range(0, trimOptions.Count);
+
+        // Calculate other parameters
+        windowWidth = Random.Range(minWindowWidth, maxWindowWidth);
+        windowHeight = Random.Range(minWindowHeight, maxWindowHeight);
 
         // Calculate building height and story count
         height = transform.position.y + transform.localScale.y / 2;        
-        storyCount = Mathf.Max(0, (int)((height - minWindowHeight) / windowHeight));
+        storyCount = Mathf.Max(0, (int)((height - doorHeight) / windowHeight));
 
         // Decorate walls
         if (front)
@@ -60,6 +74,10 @@ public class BuildingCreator : MonoBehaviour
         roof.transform.position = new Vector3(transform.position.x, height + roofHeight / 2, transform.position.z);
         roof.transform.localScale = new Vector3(1 + roofOverhang * 2 / transform.localScale.x, roofHeight / transform.localScale.y, 1 + roofOverhang * 2 / transform.localScale.z);
         roof.isStatic = true;
+        roof.GetComponent<Renderer>().material = trimOptions[trimStyle];
+
+        // Set material
+        GetComponent<Renderer>().material = materialOptions[Random.Range(0, materialOptions.Count)];
     }
 
     private void DecorateWall(string name, Vector3 forward, float offset, float width)
@@ -67,15 +85,16 @@ public class BuildingCreator : MonoBehaviour
         Vector3 scale = new Vector3(1 / width, 1 / transform.localScale.y, 1 / (offset * 2));
         Vector3 basePosition = new Vector3(transform.position.x, 0, transform.position.z);
 
-        if (height >= minWindowHeight)
+        if (height >= doorHeight)
         {
             GameObject door = Instantiate(doorOptions[doorStyle]);
             door.name = name + " Door";
             door.transform.parent = transform;
             door.transform.rotation = Quaternion.LookRotation(forward);
-            door.transform.position = basePosition + forward * offset;
+            door.transform.position = basePosition + door.transform.rotation * new Vector3(Random.Range(-width / 3, width / 3), 0, offset);
             door.transform.localScale = scale;
             door.isStatic = true;
+            SetTrim(door.transform);
         }
 
         int windowCount = (int)(width / windowWidth);
@@ -88,10 +107,29 @@ public class BuildingCreator : MonoBehaviour
                 window.name = name + " Window (" + x + ", " + y + ")"; 
                 window.transform.parent = transform;
                 window.transform.rotation = Quaternion.LookRotation(forward);
-                window.transform.position = basePosition + window.transform.rotation * new Vector3(windowOffset + (x + .5f) * windowWidth, minWindowHeight + (y + .5f) * windowHeight, offset);
+                window.transform.position = basePosition + window.transform.rotation * new Vector3(windowOffset + (x + .5f) * windowWidth, doorHeight + (y + .5f) * windowHeight, offset);
                 window.transform.localScale = scale;
                 window.isStatic = true;
+                SetTrim(window.transform);
             }
+        }
+    }
+
+    private void SetTrim(Transform feature)
+    {
+        Renderer[] renderers = feature.GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] newMaterials = renderer.sharedMaterials;
+            for (int i = 0; i < renderer.sharedMaterials.Length; i++)
+            {
+                if (renderer.sharedMaterials[i] == placeholderTrimMaterial)
+                {
+                    newMaterials[i] = trimOptions[trimStyle];
+                }
+            }
+            renderer.sharedMaterials = newMaterials;
         }
     }
 }
