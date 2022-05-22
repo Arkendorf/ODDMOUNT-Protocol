@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 
 #if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+
 public class GenerateNavMeshEdgeMask : MonoBehaviour
 {
 
@@ -22,13 +23,14 @@ public class GenerateNavMeshEdgeMask : MonoBehaviour
 
         // Get scale of texture relative to target object UV
         Vector2 scale = new Vector2(uvSize.x * transform.localScale.x / maskSize.x, uvSize.y * transform.localScale.y / maskSize.y);
+        Vector2 offset = new Vector2(-transform.position.x, -transform.position.z);
 
         for (int y = 0; y < mask.height; y++)
         {
             for (int x = 0; x < mask.width; x++)
             {
                 // Convert texture coordinate to world coordinate for this object
-                Vector3 worldPos = transform.rotation * new Vector3(- (x - mask.width / 2 + .5f) * scale.x, 0, - (y - mask.height / 2 + .5f) * scale.y);
+                Vector3 worldPos = transform.rotation * new Vector3(- ((x - mask.width / 2 + .5f) * scale.x + offset.x), 0, - ((y - mask.height / 2 + .5f) * scale.y + offset.y));
 
                 float distance = 0;
 
