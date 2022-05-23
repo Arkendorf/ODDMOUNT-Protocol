@@ -64,11 +64,13 @@ public class GenerateNavMeshEdgeMask : MonoBehaviour
 [CanEditMultipleObjects]
 public class GenerateNavMeshEdgeMaskEditor : Editor
 {
-    GenerateNavMeshEdgeMask script;
+    GenerateNavMeshEdgeMask[] scripts;
 
     void OnEnable()
     {
-        script = (GenerateNavMeshEdgeMask)target;
+        scripts = new GenerateNavMeshEdgeMask[targets.Length];
+        for (int i = 0; i < targets.Length; i++)
+            scripts[i] = (GenerateNavMeshEdgeMask)targets[i];
     }
 
     public override void OnInspectorGUI()
@@ -79,7 +81,8 @@ public class GenerateNavMeshEdgeMaskEditor : Editor
         EditorGUILayout.Space();
         if (GUILayout.Button("Generate And Save"))
         {
-            script.Generate();
+            foreach (GenerateNavMeshEdgeMask script in scripts)
+                script.Generate();
         }
 
         serializedObject.ApplyModifiedProperties();

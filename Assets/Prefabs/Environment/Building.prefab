@@ -142,6 +142,6 @@ MonoBehaviour:
   roofHeight: 0.5
   roofOverhang: 0.5
   front: 1
-  back: 1
+  back: 0
   left: 0
-  right: 1
+  right: 0

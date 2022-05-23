@@ -138,11 +138,13 @@ public class BuildingCreator : MonoBehaviour
 [CanEditMultipleObjects]
 public class BuildingCreatorEditor : Editor
 {
-    BuildingCreator script;
+    BuildingCreator[] scripts;
 
     void OnEnable()
     {
-        script = (BuildingCreator)target;
+        scripts = new BuildingCreator[targets.Length];
+        for (int i = 0; i < targets.Length; i++)
+            scripts[i] = (BuildingCreator)targets[i];
     }
 
     public override void OnInspectorGUI()
@@ -153,7 +155,8 @@ public class BuildingCreatorEditor : Editor
         EditorGUILayout.Space();
         if (GUILayout.Button("Create"))
         {
-            script.Create();
+            foreach (BuildingCreator script in scripts)
+                script.Create();
         }
 
         serializedObject.ApplyModifiedProperties();
