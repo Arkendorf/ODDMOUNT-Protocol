@@ -8,7 +8,6 @@ using UnityEngine.AI;
 public class PlaceOnEdge : MonoBehaviour
 {
 
-#if UNITY_EDITOR
     public float edgeOffset = .5f;
     public float minAngleOffset = -30;
     public float maxAngleOffset = 30;
@@ -17,6 +16,7 @@ public class PlaceOnEdge : MonoBehaviour
     [Min(0)]
     public float maxScale = 1;
 
+#if UNITY_EDITOR
     private float angleOffset;
     private float scale;
 

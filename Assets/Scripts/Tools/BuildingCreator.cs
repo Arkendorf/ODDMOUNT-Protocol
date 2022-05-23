@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_EDITOR
 public class BuildingCreator : MonoBehaviour
 {
+    public Material baseBuildingMaterial;
     public List<Material> materialOptions;
+    public Material baseTrimMaterial;
     public List<Material> trimOptions;
     public Material placeholderTrimMaterial;
     [Space()]
@@ -28,6 +29,7 @@ public class BuildingCreator : MonoBehaviour
     public bool left;
     public bool right;
 
+#if UNITY_EDITOR
     private int doorStyle;
     private int windowStyle;
     private float height;
@@ -35,6 +37,51 @@ public class BuildingCreator : MonoBehaviour
     private float windowWidth;
     private float windowHeight;
     private int trimStyle;
+#endif
+
+    private void OnEnable()
+    {
+        Renderer renderer = GetComponent<Renderer>();
+        renderer.SetPropertyBlock(CreatePropertyBlock(renderer.sharedMaterial));
+        renderer.sharedMaterial = baseBuildingMaterial;
+
+        Material trimMat = transform.Find("Roof").GetComponent<Renderer>().sharedMaterial;
+        MaterialPropertyBlock trimBlock = CreatePropertyBlock(trimMat);
+        SetTrimProperties(trimMat, trimBlock);
+
+        this.enabled = false;
+    }
+
+    private MaterialPropertyBlock CreatePropertyBlock(Material baseMat)
+    {
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
+        block.SetTexture("_MainTex", baseMat.GetTexture("_MainTex"));
+        block.SetTexture("_Metallic", baseMat.GetTexture("_Metallic"));
+        block.SetTexture("_Normal", baseMat.GetTexture("_Normal"));
+        block.SetFloat("_Scale", baseMat.GetFloat("_Scale"));
+        return block;
+    }
+
+    private void SetTrimProperties(Material mat, MaterialPropertyBlock block)
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            Material[] newMaterials = renderer.sharedMaterials;
+            for (int i = 0; i < renderer.sharedMaterials.Length; i++)
+            {
+                if (renderer.sharedMaterials[i] == mat)
+                {
+                    newMaterials[i] = baseTrimMaterial;
+                    renderer.SetPropertyBlock(block, i);
+                }
+            }
+            renderer.sharedMaterials = newMaterials;
+        }
+    }
+
+#if UNITY_EDITOR
 
     // Start is called before the first frame update
     public void Create()
@@ -74,10 +121,10 @@ public class BuildingCreator : MonoBehaviour
         roof.transform.position = new Vector3(transform.position.x, height + roofHeight / 2, transform.position.z);
         roof.transform.localScale = new Vector3(1 + roofOverhang * 2 / transform.localScale.x, roofHeight / transform.localScale.y, 1 + roofOverhang * 2 / transform.localScale.z);
         roof.isStatic = true;
-        roof.GetComponent<Renderer>().material = trimOptions[trimStyle];
+        roof.GetComponent<Renderer>().sharedMaterial = trimOptions[trimStyle];
 
         // Set material
-        GetComponent<Renderer>().material = materialOptions[Random.Range(0, materialOptions.Count)];
+        GetComponent<Renderer>().sharedMaterial = materialOptions[Random.Range(0, materialOptions.Count)];
     }
 
     private void DecorateWall(string name, Vector3 forward, float offset, float width)
@@ -94,7 +141,7 @@ public class BuildingCreator : MonoBehaviour
             door.transform.position = basePosition + door.transform.rotation * new Vector3(Random.Range(-width / 3, width / 3), 0, offset);
             door.transform.localScale = scale;
             door.isStatic = true;
-            SetTrim(door.transform);
+            SetTrim(door.transform, trimOptions[trimStyle]);
         }
 
         int windowCount = (int)(width / windowWidth);
@@ -110,12 +157,12 @@ public class BuildingCreator : MonoBehaviour
                 window.transform.position = basePosition + window.transform.rotation * new Vector3(windowOffset + (x + .5f) * windowWidth, doorHeight + (y + .5f) * windowHeight, offset);
                 window.transform.localScale = scale;
                 window.isStatic = true;
-                SetTrim(window.transform);
+                SetTrim(window.transform, trimOptions[trimStyle]);
             }
         }
     }
 
-    private void SetTrim(Transform feature)
+    private void SetTrim(Transform feature, Material mat)
     {
         Renderer[] renderers = feature.GetComponentsInChildren<Renderer>();
 
@@ -126,7 +173,7 @@ public class BuildingCreator : MonoBehaviour
             {
                 if (renderer.sharedMaterials[i] == placeholderTrimMaterial)
                 {
-                    newMaterials[i] = trimOptions[trimStyle];
+                    newMaterials[i] = mat;
                 }
             }
             renderer.sharedMaterials = newMaterials;
@@ -161,5 +208,5 @@ public class BuildingCreatorEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
     }
-}
 #endif
+}

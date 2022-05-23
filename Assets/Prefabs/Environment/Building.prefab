@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486b04d963bdbcd48817e5dc22ad0ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseBuildingMaterial: {fileID: 2100000, guid: de7c49e55ba77054aae87469d2e3e7d7, type: 2}
   materialOptions:
   - {fileID: 2100000, guid: 5be4c5ce2b7820443bf6678017481160, type: 2}
   - {fileID: 2100000, guid: dc71aee79d2751e46be7b6934a8f614a, type: 2}
@@ -119,6 +120,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f5d7323ecbac6714691815600684269b, type: 2}
   - {fileID: 2100000, guid: 10d04cca2c139eb46a6f23a0d337df15, type: 2}
   - {fileID: 2100000, guid: cba310308052eb447adfe6b0d01adc0f, type: 2}
+  baseTrimMaterial: {fileID: 2100000, guid: 547cb530fdc7dd743998c8f0ad0f1895, type: 2}
   trimOptions:
   - {fileID: 2100000, guid: cf548aba5ab52c14895fb27c59837e99, type: 2}
   - {fileID: 2100000, guid: b7f71ab7730393448906ccbadfdd1170, type: 2}

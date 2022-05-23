@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 
 public class GenerateNavMeshEdgeMask : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class GenerateNavMeshEdgeMask : MonoBehaviour
     [Min(0)]
     public float maxEdgeDistance;
 
+#if UNITY_EDITOR
     // Start is called before the first frame update
     public void Generate()
     {
@@ -87,6 +89,6 @@ public class GenerateNavMeshEdgeMaskEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
     }
-}
 #endif
+}
 
