@@ -15,6 +15,18 @@ public class GenerateNavMeshEdgeMask : MonoBehaviour
     public Vector2 uvSize;
     [Min(0)]
     public float maxEdgeDistance;
+    [Space()]
+    public Texture2D edgeMask;
+
+    private void OnEnable()
+    {
+        MaterialPropertyBlock block = new MaterialPropertyBlock();
+        block.SetTexture("_NavMeshEdgeMask", edgeMask);
+        GetComponent<Renderer>().SetPropertyBlock(block);
+
+        this.enabled = false;
+    }
+
 
 #if UNITY_EDITOR
     // Start is called before the first frame update
@@ -53,12 +65,13 @@ public class GenerateNavMeshEdgeMask : MonoBehaviour
         // Apply changes to texture
         mask.Apply();
 
-        // Set texture (optional)
-        GetComponent<Renderer>().sharedMaterial.SetTexture("_NavMeshEdgeMask", mask);
-
         // Save file
         byte[] _bytes = mask.EncodeToPNG();
-        System.IO.File.WriteAllBytes(Application.dataPath + "/Textures/NavMeshEdgeMasks/" + EditorSceneManager.GetActiveScene().name + "_" + name + ".png", _bytes);
+        string path =  "/Textures/NavMeshEdgeMasks/" + EditorSceneManager.GetActiveScene().name + "_" + name + ".png";
+        System.IO.File.WriteAllBytes(Application.dataPath + path, _bytes);
+        // Load saved file
+        AssetDatabase.Refresh();
+        edgeMask = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets" + path, typeof(Texture2D));
     }
 }
 
