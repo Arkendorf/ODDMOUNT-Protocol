@@ -26,7 +26,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
+  m_CustomRenderQueue: 1995
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
@@ -107,7 +107,7 @@ Material:
     - _Metallic: 0.329
     - _OcclusionStrength: 1
     - _Parallax: 0.005
-    - _QueueOffset: 0
+    - _QueueOffset: -5
     - _ReceiveShadows: 1
     - _Smoothness: 0.903
     - _SmoothnessTextureChannel: 0

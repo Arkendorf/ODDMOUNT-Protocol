@@ -57,10 +57,10 @@ public class WheelControl : PhysicalControl
     {
         base.Start();
 
-        defaultXAngle = shaft.eulerAngles.x;
+        defaultXAngle = shaft.localEulerAngles.x;
         if (defaultXAngle < 0)
             defaultXAngle = 0;
-        defaultYAngle = shaft.eulerAngles.y;
+        defaultYAngle = shaft.localEulerAngles.y;
         defaultZAngle = 0;
     }
 
