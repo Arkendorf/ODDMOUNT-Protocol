@@ -142,6 +142,7 @@ public class BuildingCreator : MonoBehaviour
             door.transform.localScale = scale;
             door.isStatic = true;
             SetTrim(door.transform, trimOptions[trimStyle]);
+            door.GetComponent<MeshRenderer>().receiveGI = ReceiveGI.LightProbes;
         }
 
         int windowCount = (int)(width / windowWidth);
@@ -158,6 +159,7 @@ public class BuildingCreator : MonoBehaviour
                 window.transform.localScale = scale;
                 window.isStatic = true;
                 SetTrim(window.transform, trimOptions[trimStyle]);
+                window.GetComponent<MeshRenderer>().receiveGI = ReceiveGI.LightProbes;
             }
         }
     }
