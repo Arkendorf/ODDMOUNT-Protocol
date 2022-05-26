@@ -8,9 +8,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/AnimaticScene.unity
     guid: 7584036a209f26f429a6608c4785ef7a
-  - enabled: 0
-    path: Assets/Scenes/TutorialScene.unity
-    guid: 9cd039a4f5c8b5b44a682a96b05f7526
   - enabled: 1
     path: Assets/Scenes/DemoScene.unity
     guid: 191a280f864704e40b2896455dc327d3

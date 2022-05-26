@@ -16,9 +16,10 @@ public class MechHandController : MonoBehaviour
     public ParticleSystem[] dragSystems;
     private List<Collider> collisions;
     [Header("Audio Properties")]
-    public new AudioSource audio;
+    public AudioManager audioManager;
     public AudioClip punchSound;
     public AudioClip scrapeSound;
+
 
     private new Rigidbody rigidbody;
 
@@ -26,6 +27,7 @@ public class MechHandController : MonoBehaviour
     private Vector3 prevPrevVelocity;
 
     // Audio effect info
+    private AudioSource scrapeAudio;
     private float punchNoiseReduction = 2f;
     private float scrapeNoiseReduction = 10;
     private float scrapePitchScale = .8f;
@@ -44,17 +46,17 @@ public class MechHandController : MonoBehaviour
     void Update()
     {
         // Fade out audio
-        if (audio && audio.clip == scrapeSound)
+        if (scrapeAudio)
         {
-            audio.volume += (goalScrapeVolume - audio.pitch) * Time.deltaTime * scrapeFadeSpeed;
+            scrapeAudio.volume += (goalScrapeVolume - scrapeAudio.volume) * Time.deltaTime * scrapeFadeSpeed;
             goalScrapeVolume -= Time.deltaTime * scrapeFadeSpeed;
             if (goalScrapeVolume <= 0)
             {
-                audio.Stop();
+                audioManager.Stop(scrapeAudio);
             }
 
-            audio.volume = goalScrapeVolume;
-            audio.pitch = 1 + audio.volume * scrapePitchScale;
+            scrapeAudio.volume = goalScrapeVolume;
+            scrapeAudio.pitch = 1 + scrapeAudio.volume * scrapePitchScale;
         }
 
         // Check for colliders on objects that were deleted
@@ -130,14 +132,10 @@ public class MechHandController : MonoBehaviour
             }
 
             // Sound
-            if (audio)
+            if (audioManager)
             {
-                audio.pitch = Random.Range(0.75f, 1.2f);
-                audio.volume = (magnitude - velocityThreshold) / punchNoiseReduction;
-                audio.time = 0;
-                audio.loop = false;
-                audio.clip = punchSound;
-                audio.Play();
+                audioManager.Play(punchSound, false, (magnitude - velocityThreshold) / punchNoiseReduction, Random.Range(0.75f, 1.2f));
+                scrapeAudio = audioManager.Play(scrapeSound, true, 0);
             }
         }    
     }
@@ -155,17 +153,7 @@ public class MechHandController : MonoBehaviour
             UpdateTransform(system.transform, point);
         }
 
-        if (!audio.isPlaying)
-        {
-            audio.time = Random.Range(0, scrapeSound.length);
-            audio.loop = true;
-            audio.clip = scrapeSound;
-            audio.Play();
-        }
-        if (audio.clip == scrapeSound)
-        {
-            goalScrapeVolume = Mathf.Max(0, prevPrevVelocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
-        }
+        goalScrapeVolume = Mathf.Max(0, prevPrevVelocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
     }
 
     private void OnCollisionExit(Collision collision)

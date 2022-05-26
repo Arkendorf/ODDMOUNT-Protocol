@@ -39,7 +39,7 @@ public class MechFootPlacer : MonoBehaviour
     public ParticleSystem burstSystem;
     public ParticleSystem[] dragSystems;
     [Header("Audio Properties")]
-    public new AudioSource audio;
+    public AudioManager audioManager;
     public AudioClip footstepSound;
     public AudioClip scrapeSound;
 
@@ -72,6 +72,7 @@ public class MechFootPlacer : MonoBehaviour
     private bool dragging;
 
     // Audio effect info
+    private AudioSource scrapeAudio;
     private float scrapeNoiseReduction = 12f;
 
 
@@ -239,18 +240,9 @@ public class MechFootPlacer : MonoBehaviour
         else if ((walking || mech.airborne) && dragging)
             StopDrag();
 
-        if (dragging && audio)
+        if (dragging && scrapeAudio)
         {
-            // If footstep occured while dragging, and it finished, restart dragging
-            if (audio.clip == footstepSound)
-            {
-                if (!audio.isPlaying)
-                    dragging = false;
-            }
-            else
-            {
-                audio.volume = (rigidbody.velocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
-            }             
+            scrapeAudio.volume = (rigidbody.velocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
         }        
 
         // Play impact effects when mech lands
@@ -286,16 +278,10 @@ public class MechFootPlacer : MonoBehaviour
             burstSystem.Play();
 
         // Play sound
-        if (audio)
+        if (audioManager)
         {
-            audio.pitch = Random.Range(0.75f, 1.2f);
-            audio.volume = 1;
-            audio.time = 0;
-            audio.loop = false;
-            audio.clip = footstepSound;
-            audio.Play();
+            audioManager.Play(footstepSound, false, 1, Random.Range(0.75f, 1.2f));
         }
-
     }
 
     private void StartDrag()
@@ -306,13 +292,10 @@ public class MechFootPlacer : MonoBehaviour
                 system.Play();
         }
 
-        if (audio)
+        if (audioManager)
         {
-            audio.pitch = 1;
-            audio.loop = true;
-            audio.clip = scrapeSound;
-            audio.time = Random.Range(0, audio.clip.length);
-            audio.Play();
+            scrapeAudio = audioManager.Play(scrapeSound, true, 0, 1);
+            scrapeAudio.time = Random.Range(0, scrapeAudio.clip.length - .0001f);
         }
 
         dragging = true;
@@ -327,9 +310,9 @@ public class MechFootPlacer : MonoBehaviour
         }
 
 
-        if (audio && audio.clip == scrapeSound)
+        if (audioManager && scrapeAudio)
         {
-            audio.Stop();
+            audioManager.Stop(scrapeAudio);
         }
 
         dragging = false;

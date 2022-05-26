@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public CounterController boostCounter;
     public float warningThreshold = .25f;
     public LightingEffect lightingEffect;
+    public GameObject alarm;
     public AudioSource alarmAudio;
 
     private MechController playerMech;
@@ -56,8 +57,8 @@ public class PlayerController : MonoBehaviour
         // Flash lights when damaged
         if (playerMech.health / playerMech.maxHealth < warningThreshold)
         {
-            if (!alarmAudio.isPlaying)
-                alarmAudio.Play();
+            if (!alarm.activeSelf)
+                alarm.SetActive(true);
 
             if (warningDelay <= 0)
             {
