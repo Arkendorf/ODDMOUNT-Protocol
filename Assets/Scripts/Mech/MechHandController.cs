@@ -105,7 +105,7 @@ public class MechHandController : MonoBehaviour
                     // If enemy found, add punch damage
                     if (hostileMech)
                     {
-                        mechController.DealDamage(hostileMech, magnitude * punchDamage);
+                        mechController.DealDamage(hostileMech, magnitude * punchDamage, MechController.MechDamageType.Collision);
                     }
                 }
 

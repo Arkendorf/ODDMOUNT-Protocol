@@ -49,7 +49,7 @@ public class ArmControl : PhysicalControl
         else
             target.transform.position = ik.transform.position;
         target.transform.rotation = ik.transform.rotation;
-        goalPosition = target.transform.position - transform.position;
+        goalPosition = Quaternion.Inverse(transform.rotation) * (target.transform.position - transform.position);
         goalRotation = target.transform.rotation;
 
         // Set initial IK state

@@ -62,6 +62,9 @@ public class WheelControl : PhysicalControl
             defaultXAngle = 0;
         defaultYAngle = shaft.localEulerAngles.y;
         defaultZAngle = 0;
+
+        prevShaftRotation = Quaternion.Inverse(transform.rotation) * shaft.rotation;
+        prevWheelRotation = wheel.rotation;
     }
 
     // Update is called once per frame

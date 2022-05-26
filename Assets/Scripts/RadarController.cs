@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(25)]
 public class RadarController : MonoBehaviour
 {
     [Tooltip("Mech to center the radar on")]
     public MechController center;
-    [Tooltip("Transform of the grid")]
+    [Tooltip("Sprite of the grid")]
     public SpriteRenderer grid;
+    [Tooltip("Sprite of the player")]
+    public SpriteRenderer player;
     [Tooltip("Sprite to use to represent enemies")]
     public Sprite enemySprite;
     [Tooltip("Color to use for enemy sprites")]
@@ -51,7 +54,6 @@ public class RadarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         // Update grid position and rotation
         Vector3 position = - new Vector3((center.mech.position.x / range) % gridTileScale, (center.mech.position.z / range) % gridTileScale, 0);
         grid.transform.localPosition = position;
@@ -83,7 +85,7 @@ public class RadarController : MonoBehaviour
         renderer.sprite = enemySprite;
         renderer.color = enemyColor;
         renderer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-        renderer.sortingOrder = 1;
+        renderer.sortingOrder = -2;
         // Add it to the list
         enemyRenderers.Add(renderer);
     }

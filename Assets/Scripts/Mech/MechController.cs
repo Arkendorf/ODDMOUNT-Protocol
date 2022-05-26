@@ -66,10 +66,13 @@ public class MechController : MonoBehaviour
 
     [HideInInspector] public bool dead { get; private set; }
 
+    public enum MechDamageType {Collision, Projectile}
+
     public delegate void MechEvent();
     public MechEvent OnDeath;
-    public MechEvent OnTakeDamage;
-    public MechEvent OnDealDamage;
+    public delegate void MechDamageEvent(MechDamageType damageType);
+    public MechDamageEvent OnTakeDamage;
+    public MechDamageEvent OnDealDamage;
 
     // Start is called before the first frame update
     void Start()
@@ -267,12 +270,12 @@ public class MechController : MonoBehaviour
         fuel = Mathf.Min(maxFuel, fuel + amount);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, MechDamageType damageType = MechDamageType.Collision)
     {
         // Do damage to mech
         health -= damage;
 
-        OnTakeDamage?.Invoke();
+        OnTakeDamage?.Invoke(damageType);
 
         // Invoke death event if damage killed mech
         if (!dead && health <= 0)
@@ -282,10 +285,10 @@ public class MechController : MonoBehaviour
         }
     }
     
-    public void DealDamage(MechController enemy, float damage)
+    public void DealDamage(MechController enemy, float damage, MechDamageType damageType = MechDamageType.Collision)
     {
-        enemy.TakeDamage(damage);
+        enemy.TakeDamage(damage, damageType);
 
-        OnDealDamage?.Invoke();
+        OnDealDamage?.Invoke(damageType);
     }
 }

@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 4096347564381887228}
   - component: {fileID: 4096347564381887231}
   m_Layer: 0
-  m_Name: ShotSystem
+  m_Name: Tracer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,7 +330,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.025
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -436,7 +436,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.025
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1407,7 +1407,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
-    enabled: 0
+    enabled: 1
     mode: 0
     timeMode: 0
     fps: 30
@@ -1519,8 +1519,8 @@ ParticleSystem:
         m_RotationOrder: 4
     speedRange: {x: 0, y: 1}
     tilesX: 1
-    tilesY: 1
-    animationType: 0
+    tilesY: 5
+    animationType: 1
     rowIndex: 0
     cycles: 1
     uvChannelMask: -1
@@ -4804,7 +4804,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6e625d12c2d1f974d9b57659b04b308d, type: 2}
+  - {fileID: 2100000, guid: 925ac1d885e12784e94520648cacb8cd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4917,7 +4917,7 @@ MonoBehaviour:
   burstDelay: 0.5
   minSpray: 1
   maxSpray: 5
-  shotSystem: {fileID: 4096347564381887228}
+  tracer: {fileID: 4096347564381887228}
   muzzleFlash: {fileID: 4590333076112223900}
   shotSound: {fileID: 8300000, guid: 2c18d22b4b745ff42a17e90c0d688ca2, type: 3}
 --- !u!1001 &3868832309005344195

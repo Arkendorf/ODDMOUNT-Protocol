@@ -26,16 +26,19 @@ public class HitscanWeapon : Weapon
     [Header("Spray Parameters")]
     public float minSpray;
     public float maxSpray;
-    [Header("Particle Properties")]
-    public ParticleSystem shotSystem;
+    [Header("Effect Properties")]
+    public ParticleSystem tracer;
     public ParticleSystem muzzleFlash;
-    [Header("Sound Properties")]
     public AudioClip shotSound;
+    public LightingEffect lightFlash;
 
     // Current delay before the next shot
     private float delay;
+    private float maxDelay;
     // Number of shots in the current burst
     private int burst;
+
+    private float flashDelay;
 
 
     protected override void Start()
@@ -47,9 +50,12 @@ public class HitscanWeapon : Weapon
             rigidbody = GetComponentInParent<Rigidbody>();
         }
 
-        if (shotSystem)
+        // How long muzzle flash lasts
+        flashDelay = muzzleFlash ? muzzleFlash.main.startLifetime.constant : .02f;
+
+        if (tracer)
         {
-            ParticleSystemRenderer renderer = shotSystem.GetComponent<ParticleSystemRenderer>();
+            ParticleSystemRenderer renderer = tracer.GetComponent<ParticleSystemRenderer>();
             renderer.maxParticleSize = range;
         }
     }
@@ -62,6 +68,11 @@ public class HitscanWeapon : Weapon
         {
             delay -= Time.deltaTime;
         }
+
+        if (lightFlash && delay <= Mathf.Max(0, maxDelay - flashDelay))
+        {
+            lightFlash.SetLight(false);
+        }
     }
 
     public override void StartFire()
@@ -72,8 +83,8 @@ public class HitscanWeapon : Weapon
         burst = 0;
 
         // Play particles
-        if (shotSystem)
-            shotSystem.Play();
+        if (tracer)
+            tracer.Play();
         if (muzzleFlash)
             muzzleFlash.Play();
     }
@@ -91,12 +102,14 @@ public class HitscanWeapon : Weapon
                 if (burst >= burstCount)
                 {
                     burst = 0;
-                    delay = burstDelay;
+                    maxDelay = burstDelay;
                 }
                 else
                 {
-                    delay = fireRate;
+                    maxDelay = fireRate;
                 }
+                delay = maxDelay;
+
             }
             return true;
         }
@@ -108,8 +121,8 @@ public class HitscanWeapon : Weapon
         base.StopFire();
 
         // Stop particles
-        if (shotSystem)
-            shotSystem.Stop();
+        if (tracer)
+            tracer.Stop();
         if (muzzleFlash)
             muzzleFlash.Stop();
     }
@@ -140,7 +153,7 @@ public class HitscanWeapon : Weapon
                     // If enemy found, add shot damage
                     if (hostileMech)
                     {
-                        mechController.DealDamage(hostileMech, damage);
+                        mechController.DealDamage(hostileMech, damage, MechController.MechDamageType.Projectile);
                     }
                 }
                 
@@ -152,13 +165,13 @@ public class HitscanWeapon : Weapon
             rigidbody.AddForce(-dir * recoil);
 
         // Shot particles
-        if (shotSystem)
+        if (tracer)
         {
             // Get the particle system's main module
-            ParticleSystem.MainModule main = shotSystem.main;
+            ParticleSystem.MainModule main = tracer.main;
 
             // Rotate particle to face target
-            shotSystem.transform.rotation = rot;
+            tracer.transform.rotation = rot;
 
             // Elongate particle to reach target
             ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams
@@ -167,7 +180,7 @@ public class HitscanWeapon : Weapon
             };
 
             // Play the particle
-            shotSystem.Emit(emitParams, 1);
+            tracer.Emit(emitParams, 1);
         }
 
         if (muzzleFlash)
@@ -180,6 +193,12 @@ public class HitscanWeapon : Weapon
         if (audioManager)
         {
             audioManager.Play(shotSound, false, .3f, Random.Range(0.75f, 1.2f));
+        }
+
+        // Play lighting Effect
+        if (lightFlash)
+        {
+            lightFlash.SetLight(true);
         }
     }
 }

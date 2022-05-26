@@ -114,6 +114,10 @@ public class MechNavMeshInput : MonoBehaviour
                     // Reload weapon if it's out of ammo
                     if (weapon.ammo <= 0)
                     {
+                        // Stop firing while reloading
+                        if (weapon.firing)
+                            weapon.StopFire();
+
                         weapon.Reload();
                     }
                     else // If weapon has ammo and is facing a player, fire

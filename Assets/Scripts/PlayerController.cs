@@ -7,12 +7,16 @@ public class PlayerController : MonoBehaviour
 {
     public CounterController healthCounter;
     public CounterController boostCounter;
+    public float warningThreshold = .25f;
+    public LightingEffect lightingEffect;
+    public AudioSource alarmAudio;
 
     private MechController playerMech;
+    private float warningInterval;
+    private float warningDelay;
 
     private void Start()
     {
-
         if (healthCounter)
         {
             healthCounter.percent = true;
@@ -24,6 +28,8 @@ public class PlayerController : MonoBehaviour
             boostCounter.percent = true;
             boostCounter.SetValue(100);
         }
+
+        warningInterval = alarmAudio.clip.length / 8;
     }
 
     private void OnEnable()
@@ -45,6 +51,20 @@ public class PlayerController : MonoBehaviour
         if (boostCounter && playerMech.boosting)
         {
             boostCounter.SetValue((int)(playerMech.fuel * 100 / playerMech.maxFuel));
+        }
+
+        // Flash lights when damaged
+        if (playerMech.health / playerMech.maxHealth < warningThreshold)
+        {
+            if (!alarmAudio.isPlaying)
+                alarmAudio.Play();
+
+            if (warningDelay <= 0)
+            {
+                lightingEffect.ToggleLight();
+                warningDelay = warningInterval;
+            }
+            warningDelay -= Time.deltaTime;
         }
     }
 
@@ -70,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void OnTakeDamage()
+    private void OnTakeDamage(MechController.MechDamageType damageType)
     {
         if (healthCounter)
             healthCounter.SetValue((int)(playerMech.health * 100 / playerMech.maxHealth));

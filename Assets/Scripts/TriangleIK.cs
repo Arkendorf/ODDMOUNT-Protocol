@@ -35,7 +35,7 @@ public class TriangleIK : MonoBehaviour
         lowerLength = (transform.position - elbow.position).magnitude;
         upperLength = (elbow.position - root.position).magnitude;
 
-        rootRotation = Quaternion.Inverse(Quaternion.LookRotation(elbow.position - root.position, axis)) * Quaternion.Euler(0, angle, 0);
+        rootRotation = Quaternion.Inverse(Quaternion.LookRotation(Quaternion.Inverse(transform.rotation) * (transform.position - root.position), axis)) * Quaternion.Euler(0, angle, 0);
 
         SetAttachTransform(attachTransform);
     }

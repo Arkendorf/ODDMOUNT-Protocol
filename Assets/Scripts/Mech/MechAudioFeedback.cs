@@ -25,12 +25,13 @@ public class MechAudioFeedback : MonoBehaviour
         mechController.OnTakeDamage -= OnTakeDamage;
     }
 
-    private void OnDealDamage()
+    private void OnDealDamage(MechController.MechDamageType damageType)
     {
-        audioManager.Play(dealDamageClip, false, .5f);
+        if (damageType != MechController.MechDamageType.Collision)
+            audioManager.Play(dealDamageClip, false, .5f);
     }
 
-    private void OnTakeDamage()
+    private void OnTakeDamage(MechController.MechDamageType damageType)
     {
         audioManager.Play(takeDamageClip, false, .25f, Random.Range(0.75f, 1.2f));
     }
