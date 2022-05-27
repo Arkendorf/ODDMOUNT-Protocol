@@ -70,6 +70,8 @@ public class MechController : MonoBehaviour
 
     public delegate void MechEvent();
     public MechEvent OnDeath;
+    public MechEvent OnBoostStart;
+    public MechEvent OnBoostStop;
     public delegate void MechDamageEvent(MechDamageType damageType);
     public MechDamageEvent OnTakeDamage;
     public MechDamageEvent OnDealDamage;
@@ -225,6 +227,8 @@ public class MechController : MonoBehaviour
             {
                 directionalBoostForce = Quaternion.LookRotation(mech.transform.rotation * new Vector3(moveInput.x, 0, moveInput.y).normalized) * boostForce;
             }
+
+            OnBoostStart?.Invoke();
         }
     }
 
@@ -242,6 +246,8 @@ public class MechController : MonoBehaviour
         {
             rigidbodyController.gravityResistance = gravityResistance;
         }
+
+        OnBoostStop?.Invoke();
     }
 
     private void CollisionEnter(Collision collision)

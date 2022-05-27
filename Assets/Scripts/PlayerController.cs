@@ -88,7 +88,6 @@ public class PlayerController : MonoBehaviour
 
         // Disable mech controller
         playerMech.enabled = false;
-
     }
 
     private void OnTakeDamage(MechController.MechDamageType damageType)

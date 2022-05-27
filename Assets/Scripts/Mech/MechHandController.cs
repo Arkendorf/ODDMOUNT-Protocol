@@ -49,14 +49,13 @@ public class MechHandController : MonoBehaviour
         if (scrapeAudio)
         {
             scrapeAudio.volume += (goalScrapeVolume - scrapeAudio.volume) * Time.deltaTime * scrapeFadeSpeed;
+            scrapeAudio.pitch = 1 + scrapeAudio.volume * scrapePitchScale;
+
             goalScrapeVolume -= Time.deltaTime * scrapeFadeSpeed;
-            if (goalScrapeVolume <= 0)
+            if (scrapeAudio.volume <= 0)
             {
                 audioManager.Stop(scrapeAudio);
             }
-
-            scrapeAudio.volume = goalScrapeVolume;
-            scrapeAudio.pitch = 1 + scrapeAudio.volume * scrapePitchScale;
         }
 
         // Check for colliders on objects that were deleted
@@ -135,7 +134,8 @@ public class MechHandController : MonoBehaviour
             if (audioManager)
             {
                 audioManager.Play(punchSound, false, (magnitude - velocityThreshold) / punchNoiseReduction, Random.Range(0.75f, 1.2f));
-                scrapeAudio = audioManager.Play(scrapeSound, true, 0);
+                if (!scrapeAudio)
+                    scrapeAudio = audioManager.Play(scrapeSound, true, 0.1f);
             }
         }    
     }
@@ -153,7 +153,8 @@ public class MechHandController : MonoBehaviour
             UpdateTransform(system.transform, point);
         }
 
-        goalScrapeVolume = Mathf.Max(0, prevPrevVelocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
+        if (scrapeAudio)
+            goalScrapeVolume = (prevPrevVelocity.magnitude - velocityThreshold) / scrapeNoiseReduction;
     }
 
     private void OnCollisionExit(Collision collision)

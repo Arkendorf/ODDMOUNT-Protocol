@@ -73,7 +73,7 @@ public class MechFootPlacer : MonoBehaviour
 
     // Audio effect info
     private AudioSource scrapeAudio;
-    private float scrapeNoiseReduction = 12f;
+    private float scrapeNoiseReduction = 16f;
 
 
     // Start is called before the first frame update
@@ -292,7 +292,7 @@ public class MechFootPlacer : MonoBehaviour
                 system.Play();
         }
 
-        if (audioManager)
+        if (audioManager && !scrapeAudio)
         {
             scrapeAudio = audioManager.Play(scrapeSound, true, 0, 1);
             scrapeAudio.time = Random.Range(0, scrapeAudio.clip.length - .0001f);

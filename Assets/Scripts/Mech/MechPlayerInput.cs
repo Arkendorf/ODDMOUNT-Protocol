@@ -63,8 +63,8 @@ public class MechPlayerInput : MonoBehaviour
         //turn.action.canceled += context => { mechController.StopTurn(); turnPerformed = false; };
 
         jump.action.performed += context => { mechController.Jump(); };
-        boost.action.performed += context => { mechController.StartBoost(); boostPerformed = true; };
-        boost.action.canceled += context => { mechController.StopBoost(); boostPerformed = false; };
+        boost.action.performed += StartBoost;
+        boost.action.canceled += StopBoost;
 
         // Combat
         // Left weapon
@@ -94,5 +94,23 @@ public class MechPlayerInput : MonoBehaviour
         // Right weapon
         rightWeaponTrigger.action.performed -= context => { mechController.weapons[1]?.StartFire(); rightWeaponPerformed = true; };
         rightWeaponTrigger.action.canceled -= context => { mechController.weapons[1]?.StopFire(); rightWeaponPerformed = false; };
+    }
+
+    private void StartBoost(InputAction.CallbackContext context)
+    {
+        if (!mechController.boosting)
+        {
+            mechController.StartBoost();
+            boostPerformed = true;
+        }
+    }
+
+    private void StopBoost(InputAction.CallbackContext context)
+    {
+        if (boostPerformed)
+        {
+            mechController.StopBoost();
+            boostPerformed = false;
+        }
     }
 }
