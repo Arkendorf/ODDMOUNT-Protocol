@@ -129,6 +129,8 @@ public class HitscanWeapon : Weapon
 
     protected virtual void FireShot()
     {
+        OnFireShot?.Invoke();
+
         // Create spray
         float spray = Random.Range(0, Mathf.Lerp(minSpray, maxSpray, burst / Mathf.Max(1, (float)burstCount - 1)));
         Quaternion rot = origin.rotation * Quaternion.Euler(0, 0, Random.Range(0, 360)) * Quaternion.Euler(spray, 0, 0);

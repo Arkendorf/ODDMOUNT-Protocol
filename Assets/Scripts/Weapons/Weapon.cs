@@ -29,6 +29,9 @@ public class Weapon : MonoBehaviour
     [Tooltip("Maximum range of a hitscan shot")]
     public float range;
 
+    public delegate void WeaponEvent();
+    public WeaponEvent OnFireShot;
+
 
     [HideInInspector] public int ammo { get; protected set; }
     [HideInInspector] public bool firing { get; private set; }

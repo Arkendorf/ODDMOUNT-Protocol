@@ -30,6 +30,9 @@ public class ArmControl : PhysicalControl
 
     private GameObject[] rigidbodyTargets;
 
+    private MechHandController handController;
+    private Weapon weapon;
+
     // Audio variables
     private float audioThreshold = .001f;
 
@@ -59,6 +62,15 @@ public class ArmControl : PhysicalControl
         input.Selected += Selected;
         input.Deselected += Deselected;
 
+        // Attach haptic callbacks
+        handController = mechWrist.GetComponent<MechHandController>();
+        if (handController)
+            handController.OnCollision += OnHandCollision;
+        weapon = mechWrist.GetComponentInChildren<Weapon>();
+        if (weapon)
+            weapon.OnFireShot += OnWeaponFire;
+
+
         // Attach controllers
         AssignControl(3);
     }
@@ -68,6 +80,12 @@ public class ArmControl : PhysicalControl
         // Remove callbacks
         input.Selected -= Selected;
         input.Deselected -= Deselected;
+
+        // Remove haptic callbacks
+        if (handController)
+            handController.OnCollision -= OnHandCollision;
+        if (weapon)
+            weapon.OnFireShot += OnWeaponFire;
     }
 
     // Create and assign RigidbodyController targets
@@ -144,4 +162,16 @@ public class ArmControl : PhysicalControl
             currentSpeed = 0;
         }
     }    
+
+    private void OnHandCollision()
+    {
+        if (input.controller)
+            HapticsManager.Instance.SendHapticImpulse(.4f, .1f, input.controller);
+    }
+
+    private void OnWeaponFire()
+    {
+        if (input.controller)
+            HapticsManager.Instance.SendHapticImpulse(.4f, .1f, input.controller);
+    }
 }

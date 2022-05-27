@@ -10,7 +10,7 @@ public class BoostEffects : MonoBehaviour
     public List<ParticleSystem> systems;
 
     private AudioSource boostAudio;
-    private float boostNoiseReduction = 16f;
+    private float boostNoiseReduction = 20f;
     private float boostPitchScale = .5f;
     private float boostFadeSpeed = 8;
     private float goalBoostVolume;
@@ -35,10 +35,17 @@ public class BoostEffects : MonoBehaviour
 
     void Update()
     {
-        if (boostAudio)
+        if (mechController.boosting)
         {
+            // Set goal volume
             goalBoostVolume = mechController.mech.velocity.magnitude / boostNoiseReduction;
 
+            // Play haptics
+            HapticsManager.Instance.SendHapticImpulse(.4f, .1f, HapticsManager.Controller.Both);
+        }
+
+        if (boostAudio)
+        {
             boostAudio.volume += (goalBoostVolume - boostAudio.volume) * Time.deltaTime * boostFadeSpeed;
             boostAudio.pitch = 1 + boostAudio.volume * boostPitchScale;
 
@@ -54,7 +61,7 @@ public class BoostEffects : MonoBehaviour
     {
         if (!boostAudio)
         {
-            boostAudio = audioManager.Play(boostSound, true, .1f);
+            boostAudio = audioManager.Play(boostSound, true, 0);
             boostAudio.time = Random.Range(0, boostAudio.clip.length - .0001f);
         }         
 

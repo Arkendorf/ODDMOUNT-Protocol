@@ -20,6 +20,8 @@ public class MechHandController : MonoBehaviour
     public AudioClip punchSound;
     public AudioClip scrapeSound;
 
+    public delegate void CollisionEvent();
+    public CollisionEvent OnCollision;
 
     private new Rigidbody rigidbody;
 
@@ -33,6 +35,7 @@ public class MechHandController : MonoBehaviour
     private float scrapePitchScale = .8f;
     private float scrapeFadeSpeed = 2;
     private float goalScrapeVolume;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -52,7 +55,7 @@ public class MechHandController : MonoBehaviour
             scrapeAudio.pitch = 1 + scrapeAudio.volume * scrapePitchScale;
 
             goalScrapeVolume -= Time.deltaTime * scrapeFadeSpeed;
-            if (scrapeAudio.volume <= 0)
+            if (collisions.Count <= 0 && scrapeAudio.volume <= 0)
             {
                 audioManager.Stop(scrapeAudio);
             }
@@ -78,6 +81,8 @@ public class MechHandController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        OnCollision?.Invoke();
+
         collisions.Add(collision.collider);
 
         // Get contact point
@@ -135,7 +140,7 @@ public class MechHandController : MonoBehaviour
             {
                 audioManager.Play(punchSound, false, (magnitude - velocityThreshold) / punchNoiseReduction, Random.Range(0.75f, 1.2f));
                 if (!scrapeAudio)
-                    scrapeAudio = audioManager.Play(scrapeSound, true, 0.1f);
+                    scrapeAudio = audioManager.Play(scrapeSound, true, 0);
             }
         }    
     }
