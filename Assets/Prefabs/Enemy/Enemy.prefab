@@ -623,7 +623,7 @@ MonoBehaviour:
   targetMoveThreshold: 0.3
   moveThreshold: 0.1
   angleThreshold: 1
-  followRange: 75
+  followRange: 50
   stopDistance: 10
 --- !u!114 &1516890604589067666
 MonoBehaviour:

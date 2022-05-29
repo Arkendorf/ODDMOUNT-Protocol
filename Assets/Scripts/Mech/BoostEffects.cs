@@ -10,7 +10,7 @@ public class BoostEffects : MonoBehaviour
     public List<ParticleSystem> systems;
 
     private AudioSource boostAudio;
-    private float boostNoiseReduction = 20f;
+    private float boostNoiseReduction = 40f;
     private float boostPitchScale = .5f;
     private float boostFadeSpeed = 8;
     private float goalBoostVolume;

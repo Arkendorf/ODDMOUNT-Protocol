@@ -22,6 +22,8 @@ public class MechNavMeshInput : MonoBehaviour
     [Tooltip("Distance between target and current transform when slowing should start")]
     public float stopDistance = .5f;
 
+    [HideInInspector] public bool active;
+
     // Distance from target on xz plane
     public float distance { get; private set; }
 
@@ -91,7 +93,7 @@ public class MechNavMeshInput : MonoBehaviour
             delta.y = 0;
 
             // Check if target is in follow range
-            bool active = delta.sqrMagnitude <= followRange * followRange;
+            active = delta.sqrMagnitude <= followRange * followRange;
             if (active)
             {
                 // Enable nav agent
