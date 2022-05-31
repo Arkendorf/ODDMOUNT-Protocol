@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 1699141462532660794}
   - component: {fileID: 2322533308621820319}
   - component: {fileID: 567379837677364565}
-  - component: {fileID: 255248359183074324}
+  - component: {fileID: 9138402241134098140}
+  - component: {fileID: 5113157594078507208}
   m_Layer: 0
   m_Name: RubblePile
   m_TagString: Untagged
@@ -83,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &255248359183074324
-BoxCollider:
+--- !u!136 &9138402241134098140
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -93,6 +94,21 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 429.92572, y: 320.86203, z: 660.26556}
-  m_Center: {x: -0.0009765625, y: 155.6652, z: 0.00048828125}
+  m_Radius: 175
+  m_Height: 650
+  m_Direction: 2
+  m_Center: {x: 0, y: 50, z: 0}
+--- !u!136 &5113157594078507208
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080452492773409920}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 150
+  m_Height: 350
+  m_Direction: 2
+  m_Center: {x: 0, y: 175, z: -100}
